@@ -1,0 +1,219 @@
+<!-- File: templates/donations/donation_page.html - PAYMENT GATEWAY SELECTION SECTION -->
+<!-- Add this section to your existing donation_page.html template -->
+
+<!-- This goes BEFORE the existing "Payment Method" section in your donation form -->
+
+<!-- ========================================== -->
+<!-- PAYMENT GATEWAY SELECTION -->
+<!-- ========================================== -->
+
+<div class="form-section">
+    <label class="form-label">Select Payment Gateway</label>
+    <div class="payment-grid" style="grid-template-columns: repeat(2, 1fr);">
+        
+        <!-- Paystack Option -->
+        <label class="payment-card selected gateway-card" data-gateway="paystack">
+            <input type="radio" name="payment_gateway" value="paystack" checked>
+            <div class="payment-icon" style="color: #00C3F7;">
+                <!-- Paystack Icon -->
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+                </svg>
+            </div>
+            <div class="payment-label" style="font-size: 1.1rem; font-weight: 600;">Paystack</div>
+            <div class="payment-sublabel" style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem;">
+                💳 Cards • 🏦 Bank Transfer • 📱 USSD
+            </div>
+            <div class="badge" style="background: #10b981; color: white; font-size: 0.65rem; padding: 0.25rem 0.5rem; border-radius: 1rem; margin-top: 0.5rem; display: inline-block;">
+                RECOMMENDED
+            </div>
+        </label>
+        
+        <!-- Flutterwave Option -->
+        <label class="payment-card gateway-card" data-gateway="flutterwave">
+            <input type="radio" name="payment_gateway" value="flutterwave">
+            <div class="payment-icon" style="color: #FFA500;">
+                <!-- Flutterwave Icon -->
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                </svg>
+            </div>
+            <div class="payment-label" style="font-size: 1.1rem; font-weight: 600;">Flutterwave</div>
+            <div class="payment-sublabel" style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem;">
+                💳 Cards • 📱 Mobile Money • 🏦 Bank
+            </div>
+            <div class="badge" style="background: #3b82f6; color: white; font-size: 0.65rem; padding: 0.25rem 0.5rem; border-radius: 1rem; margin-top: 0.5rem; display: inline-block;">
+                ALTERNATIVE
+            </div>
+        </label>
+        
+    </div>
+    
+    <!-- Gateway Info Box -->
+    <div class="info-box" style="margin-top: 1rem; padding: 1rem; background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; border-radius: 0.5rem;">
+        <p style="color: #1e40af; font-size: 0.875rem; margin: 0;">
+            <strong>🌍 International Donations Welcome!</strong> Both gateways accept Visa & Mastercard from anywhere in the world.
+        </p>
+    </div>
+</div>
+
+<!-- Your existing "Payment Method" section stays below this -->
+
+<!-- ========================================== -->
+<!-- ADDITIONAL STYLES (Add to <style> section) -->
+<!-- ========================================== -->
+
+<style>
+/* Gateway Card Specific Styles */
+.gateway-card {
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.gateway-card .badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+/* When gateway card is selected */
+.gateway-card.selected {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Hover effect for gateway cards */
+.gateway-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .payment-grid[style*="grid-template-columns: repeat(2, 1fr)"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+
+<!-- ========================================== -->
+<!-- JAVASCRIPT (Add to <script> section) -->
+<!-- ========================================== -->
+
+<script>
+// Payment gateway selection handler
+document.querySelectorAll('.gateway-card').forEach(card => {
+    card.addEventListener('click', function() {
+        // Remove selected class from all gateway cards
+        document.querySelectorAll('.gateway-card').forEach(c => c.classList.remove('selected'));
+        
+        // Add selected class to clicked card
+        this.classList.add('selected');
+        
+        // Check the radio button
+        this.querySelector('input[type="radio"]').checked = true;
+        
+        // Optional: Show gateway-specific info
+        const gateway = this.getAttribute('data-gateway');
+        console.log('Selected gateway:', gateway);
+    });
+});
+
+// Existing payment method card selection (keep your existing code)
+// Make sure this doesn't interfere with gateway selection
+document.querySelectorAll('.payment-card:not(.gateway-card)').forEach(card => {
+    card.addEventListener('click', function() {
+        document.querySelectorAll('.payment-card:not(.gateway-card)').forEach(c => {
+            c.classList.remove('selected');
+        });
+        this.classList.add('selected');
+        const radio = this.querySelector('input[type="radio"]');
+        if (radio) {
+            radio.checked = true;
+        }
+    });
+});
+</script>
+
+<!-- ========================================== -->
+<!-- COMPLETE EXAMPLE INTEGRATION -->
+<!-- ========================================== -->
+
+<!--
+Here's how your form structure should look:
+
+<form method="post" action="{% url 'process_payment' donation.id %}">
+    {% csrf_token %}
+    
+    <!-- Amount Section -->
+    <div class="form-section">
+        ...
+    </div>
+    
+    <!-- Donation Type Section -->
+    <div class="form-section">
+        ...
+    </div>
+    
+    <!-- PAYMENT GATEWAY SELECTION (NEW!) -->
+    <div class="form-section">
+        [Copy the gateway selection code above]
+    </div>
+    
+    <!-- Payment Method Section (EXISTING) -->
+    <div class="form-section">
+        <label class="form-label">Payment Method</label>
+        <div class="payment-grid">
+            <label class="payment-card selected">
+                <input type="radio" name="payment_method" value="card" checked>
+                <div class="payment-icon">💳</div>
+                <div class="payment-label">Card</div>
+            </label>
+            ... other payment methods ...
+        </div>
+    </div>
+    
+    <!-- Personal Information Section -->
+    <div class="form-section">
+        ...
+    </div>
+    
+    <!-- Submit Button -->
+    <button type="submit" class="submit-btn">
+        🔒 Proceed to Payment
+    </button>
+</form>
+-->
+<script>
+    // Payment gateway selection
+    document.querySelectorAll('.payment-card[data-gateway]').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.payment-card[data-gateway]').forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+            this.querySelector('input[type="radio"]').checked = true;
+        });
+    });
+    
+    // Payment method card selection (existing code)
+    document.querySelectorAll('.payment-card').forEach(card => {
+        card.addEventListener('click', function() {
+            if (!this.hasAttribute('data-gateway')) {
+                document.querySelectorAll('.payment-card').forEach(c => {
+                    if (!c.hasAttribute('data-gateway')) {
+                        c.classList.remove('selected');
+                    }
+                });
+                this.classList.add('selected');
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                }
+            }
+        });
+    });
+</script>

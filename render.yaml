@@ -1,0 +1,22 @@
+databases:
+  - name: ministry_db
+    databaseName: ministry_donation_db
+    user: ministry_user
+
+services:
+  - type: web
+    name: ministry-donation-site
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn ministry_donation_site.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.4
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ministry_db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DJANGO_SETTINGS_MODULE
+        value: ministry_donation_site.settings

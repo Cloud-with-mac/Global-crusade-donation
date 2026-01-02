@@ -1,0 +1,315 @@
+<!-- File: templates/admin_dashboard/prayer_requests.html -->
+<!-- Location: ministry_donation_site/templates/admin_dashboard/prayer_requests.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prayer Requests - Ministry Admin</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8f9fa;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 260px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            padding: 2rem 0;
+            z-index: 1000;
+        }
+
+        .sidebar-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .prayer-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .prayer-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .prayer-card.answered {
+            border-left: 4px solid #10b981;
+            background: #f0fdf4;
+        }
+
+        .prayer-card.unanswered {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .prayer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .donor-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .donor-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .prayer-text {
+            color: #1e293b;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .prayer-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .toggle-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn.answered {
+            background: #10b981;
+            color: white;
+        }
+
+        .toggle-btn.unanswered {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .badge-answered {
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+
+        .badge-unanswered {
+            background: #f59e0b;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            ⛪ Ministry Admin
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="{% url 'admin_dashboard' %}">📊 Dashboard</a></li>
+            <li><a href="{% url 'donations_list' %}">💰 Donations</a></li>
+            <li><a href="{% url 'donors_list' %}">👥 Donors</a></li>
+            <li><a href="{% url 'prayer_requests_list' %}" class="active">🙏 Prayer Requests</a></li>
+            <li><a href="{% url 'dashboard_settings' %}">⚙️ Settings</a></li>
+            <li><a href="{% url 'donation_page' %}">🏠 Public Site</a></li>
+            <li><a href="{% url 'dashboard_logout' %}">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1 style="font-size: 1.75rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">Prayer Requests</h1>
+            <p style="color: #64748b;">Manage prayer requests from donors</p>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-value">{{ total_count }}</div>
+                <div class="stat-label">Total Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="color: #f59e0b;">
+                    {{ unanswered_count }}
+                </div>
+                <div class="stat-label">Unanswered</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="color: #10b981;">
+                    {{ answered_count }}
+                </div>
+                <div class="stat-label">Answered</div>
+            </div>
+        </div>
+
+        <!-- Prayer Requests List -->
+        {% for prayer in prayer_requests %}
+        <div class="prayer-card {% if prayer.is_answered %}answered{% else %}unanswered{% endif %}">
+            <div class="prayer-header">
+                <div class="donor-info">
+                    <div class="donor-avatar">
+                        {{ prayer.donor.first_name.0|upper }}{{ prayer.donor.last_name.0|upper }}
+                    </div>
+                    <div>
+                        <strong>{{ prayer.donor.full_name }}</strong>
+                        <div style="font-size: 0.875rem; color: #64748b;">{{ prayer.donor.email }}</div>
+                    </div>
+                </div>
+                <div>
+                    {% if prayer.is_answered %}
+                        <span class="badge-answered">✓ Answered</span>
+                    {% else %}
+                        <span class="badge-unanswered">⏳ Pending</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="prayer-text">
+                "{{ prayer.request_text }}"
+            </div>
+
+            <div class="prayer-footer">
+                <span style="font-size: 0.875rem; color: #64748b;">
+                    📅 {{ prayer.created_at|date:"F d, Y" }} at {{ prayer.created_at|date:"H:i" }}
+                    {% if prayer.donation %}
+                        • 💰 With ${{ prayer.donation.amount }} donation
+                    {% endif %}
+                </span>
+                <form method="post" action="{% url 'mark_prayer_answered' prayer.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="toggle-btn {% if prayer.is_answered %}answered{% else %}unanswered{% endif %}">
+                        {% if prayer.is_answered %}
+                            Mark as Unanswered
+                        {% else %}
+                            Mark as Answered ✓
+                        {% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <div class="prayer-card" style="text-align: center; padding: 3rem;">
+            <div style="color: #94a3b8;">
+                <svg width="64" height="64" fill="currentColor" viewBox="0 0 24 24" style="margin-bottom: 1rem;">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+                <h3 style="color: #1e293b; margin-bottom: 0.5rem;">No Prayer Requests Yet</h3>
+                <p>Prayer requests will appear here when donors submit them with their donations</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

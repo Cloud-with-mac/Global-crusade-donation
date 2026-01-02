@@ -1,0 +1,350 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Confirmation - Ministry</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .confirmation-container {
+            background: #2d3748;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            color: white;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        
+        .success-icon svg {
+            width: 50px;
+            height: 50px;
+            color: white;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #cbd5e1;
+            margin-bottom: 30px;
+        }
+        
+        .amount-display {
+            text-align: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: #10b981;
+            margin: 20px 0;
+            font-family: monospace;
+        }
+        
+        .details-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .details-box h3 {
+            color: #10b981;
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            color: white;
+            font-weight: 600;
+        }
+        
+        .bank-details {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid #3b82f6;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 12px;
+        }
+        
+        .bank-details h3 {
+            color: #60a5fa;
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .bank-info {
+            margin: 10px 0;
+        }
+        
+        .bank-info strong {
+            display: block;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+        
+        .bank-info span {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .next-steps {
+            background: rgba(251, 191, 36, 0.1);
+            border: 2px solid #fbbf24;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+        }
+        
+        .next-steps h3 {
+            color: #fbbf24;
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .next-steps ol {
+            margin: 0;
+            padding-left: 20px;
+            color: #fef3c7;
+        }
+        
+        .next-steps li {
+            margin: 8px 0;
+        }
+        
+        .btn-home {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        
+        .btn-home:hover {
+            transform: translateY(-2px);
+        }
+        
+        .footer-note {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        .tax-info {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .tax-info p {
+            color: #d1fae5;
+            font-size: 13px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-container">
+        <div class="success-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        
+        <h1>🙏 Thank You for Your Donation!</h1>
+        <p class="subtitle">Dear {{ donation.donor.full_name }},</p>
+        <p class="subtitle" style="margin-top: -20px;">Thank you for your generous {{ donation.get_donation_type_display }} donation of 
+            {% if donation.currency == 'NGN' %}
+                <strong style="color: #10b981;">₦{{ donation.amount|floatformat:0|intcomma }}</strong>
+            {% elif donation.currency == 'EUR' %}
+                <strong style="color: #10b981;">€{{ donation.amount|floatformat:2|intcomma }}</strong>
+            {% elif donation.currency == 'GBP' %}
+                <strong style="color: #10b981;">£{{ donation.amount|floatformat:2|intcomma }}</strong>
+            {% else %}
+                <strong style="color: #10b981;">${{ donation.amount|floatformat:2|intcomma }}</strong>
+            {% endif %}
+            to support our global crusade ministry. Your contribution is making a real difference in communities around the world!
+        </p>
+        
+        <div class="details-box">
+            <h3>📋 Donation Details</h3>
+            
+            <div class="detail-row">
+                <span class="detail-label">Receipt Number:</span>
+                <span class="detail-value">#{{ donation.id }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Date:</span>
+                <span class="detail-value">{{ donation.created_at|date:"F d, Y at h:i A" }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Amount:</span>
+                <span class="detail-value" style="color: #10b981;">
+                    {% if donation.currency == 'NGN' %}
+                        ₦{{ donation.amount|floatformat:0|intcomma }}
+                    {% elif donation.currency == 'EUR' %}
+                        €{{ donation.amount|floatformat:2|intcomma }}
+                    {% elif donation.currency == 'GBP' %}
+                        £{{ donation.amount|floatformat:2|intcomma }}
+                    {% else %}
+                        ${{ donation.amount|floatformat:2|intcomma }}
+                    {% endif %}
+                </span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Type:</span>
+                <span class="detail-value">{{ donation.get_donation_type_display }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Payment Method:</span>
+                <span class="detail-value">Bank Transfer</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Transaction ID:</span>
+                <span class="detail-value">Processing</span>
+            </div>
+        </div>
+
+        <div class="tax-info">
+            <p>💚 <strong>Tax Deductible:</strong> This donation is tax-deductible to the extent allowed by law. Please retain this receipt for your tax records.</p>
+        </div>
+        
+        <div class="bank-details">
+            <h3>
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path>
+                    <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path>
+                </svg>
+                🏦 Bank Transfer Details
+            </h3>
+            
+            <div class="bank-info">
+                <strong>Bank Name:</strong>
+                <span>United Bank Africa PLC</span>
+            </div>
+            
+            <div class="bank-info">
+                <strong>Account Number:</strong>
+                <span style="font-family: monospace; font-size: 18px;">1023888802</span>
+            </div>
+            
+            <div class="bank-info">
+                <strong>Account Name:</strong>
+                <span>Eternity Voice International Ministry</span>
+            </div>
+        </div>
+        
+        <div class="next-steps">
+            <h3>
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                </svg>
+                📌 Important: Next Steps
+            </h3>
+            <ol>
+                <li><strong>{% if donation.donation_type == 'monthly' %}For monthly donations: Make this transfer now. We'll send you a reminder each month.{% else %}After making the transfer, you'll receive instructions via email.{% endif %}</strong></li>
+            </ol>
+        </div>
+
+        <div class="details-box" style="margin-top: 30px;">
+            <h3>🌍 Your Impact</h3>
+            <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6;">
+                Your generous gift is helping us bring the Gospel to nations around the world through powerful crusades, healing ministries, and community outreach. Together, we are transforming lives and building God's kingdom!
+            </p>
+        </div>
+
+        <div class="details-box" style="margin-top: 20px;">
+            <h3>📧 Stay Connected</h3>
+            <p style="color: #cbd5e1; font-size: 14px;">
+                Follow our crusade updates, testimonies, and prayer points:
+            </p>
+            <div style="margin-top: 10px;">
+                <div style="margin: 5px 0;">
+                    <strong style="color: #94a3b8;">Email:</strong> <span style="color: white;">eternityvoiceministry@gmail.com</span>
+                </div>
+                <div style="margin: 5px 0;">
+                    <strong style="color: #94a3b8;">Phone:</strong> <span style="color: white;">+447411583033</span>
+                </div>
+            </div>
+        </div>
+        
+        <a href="/" class="btn-home">← Back to Home</a>
+        
+        <div class="footer-note">
+            Questions? Contact us at eternityvoiceministry@gmail.com or +447411583033
+        </div>
+        
+        <div class="footer-note" style="margin-top: 10px;">
+            God bless you! 🙏
+        </div>
+    </div>
+</body>
+</html>

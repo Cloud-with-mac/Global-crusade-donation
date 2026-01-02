@@ -1,0 +1,154 @@
+<!-- SIMPLIFIED DONATION FORM - BANK TRANSFER + PAYPAL ONLY -->
+<!-- Add this to your donation form, replacing the payment gateway section -->
+
+<!-- Payment Method Selection -->
+<div class="form-section">
+    <label class="form-label">Payment Method</label>
+    <div class="payment-grid" style="grid-template-columns: repeat(2, 1fr);">
+        
+        <!-- Bank Transfer Option -->
+        <label class="payment-card selected">
+            <input type="radio" name="payment_method" value="bank" checked>
+            <div class="payment-icon">🏦</div>
+            <div class="payment-label">Bank Transfer</div>
+            <div class="payment-sublabel" style="font-size: 0.75rem; color: #94a3b8;">Instant (Nigerian Banks)</div>
+        </label>
+        
+        <!-- PayPal Option -->
+        <label class="payment-card">
+            <input type="radio" name="payment_method" value="paypal">
+            <div class="payment-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#94a3b8">
+                    <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 0 1 .923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z"/>
+                </svg>
+            </div>
+            <div class="payment-label">PayPal</div>
+            <div class="payment-sublabel" style="font-size: 0.75rem; color: #94a3b8;">International Payments</div>
+        </label>
+        
+    </div>
+</div>
+
+<!-- Bank Transfer Instructions (Show when bank selected) -->
+<div id="bank-instructions" class="payment-instructions" style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 1rem; padding: 1.5rem; margin-top: 1rem;">
+    <h4 style="color: #1e40af; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+        <span>🏦</span> Bank Transfer Details
+    </h4>
+    
+    <div style="background: white; padding: 1.25rem; border-radius: 0.75rem; margin-bottom: 1rem;">
+        <div style="margin-bottom: 0.75rem;">
+            <span style="color: #64748b; font-size: 0.875rem;">Bank Name:</span>
+            <div style="color: #1e293b; font-weight: 600; font-size: 1rem;">United Bank Africa PLC</div>
+        </div>
+        <div style="margin-bottom: 0.75rem;">
+            <span style="color: #64748b; font-size: 0.875rem;">Account Number:</span>
+            <div style="color: #1e293b; font-weight: 600; font-size: 1.125rem; font-family: monospace;">1023888802</div>
+        </div>
+        <div>
+            <span style="color: #64748b; font-size: 0.875rem;">Account Name:</span>
+            <div style="color: #1e293b; font-weight: 600; font-size: 1rem;">Eternity Voice International Ministry</div>
+        </div>
+    </div>
+    
+    <div style="background: #dbeafe; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #3b82f6;">
+        <p style="color: #1e40af; font-size: 0.875rem; margin: 0;">
+            <strong>📌 Important:</strong> After making the transfer, please fill in the form below with your transaction details so we can confirm your donation.
+        </p>
+    </div>
+</div>
+
+<!-- PayPal Instructions (Show when PayPal selected) -->
+<div id="paypal-instructions" class="payment-instructions" style="background: #fefce8; border: 2px solid #eab308; border-radius: 1rem; padding: 1.5rem; margin-top: 1rem; display: none;">
+    <h4 style="color: #854d0e; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+        <span>💳</span> PayPal Payment
+    </h4>
+    
+    <div style="background: white; padding: 1.25rem; border-radius: 0.75rem; margin-bottom: 1rem;">
+        <p style="color: #475569; margin-bottom: 1rem;">You'll be redirected to PayPal to complete your donation securely.</p>
+        <div style="text-align: center;">
+            <div style="display: inline-block; background: #ffc439; padding: 0.75rem 2rem; border-radius: 2rem;">
+                <strong style="color: #003087;">PayPal</strong> <span style="color: #009cde;">Secure</span>
+            </div>
+        </div>
+    </div>
+    
+    <div style="background: #fef3c7; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #eab308;">
+        <p style="color: #854d0e; font-size: 0.875rem; margin: 0;">
+            <strong>🌍 Perfect for International Donors:</strong> PayPal accepts all major currencies and credit cards worldwide.
+        </p>
+    </div>
+</div>
+
+<!-- Additional Field for Bank Transfer (Reference Number) -->
+<div id="bank-transfer-fields" style="margin-top: 1.5rem;">
+    <div class="input-group">
+        <label class="input-label">Transaction Reference (Optional)</label>
+        <input type="text" name="transaction_reference" class="text-input" placeholder="e.g., 123456789 or leave blank until transfer is complete">
+        <p style="color: #64748b; font-size: 0.75rem; margin-top: 0.5rem;">
+            You can submit this form now and email us the reference later at: <strong>eternityvoiceministry@gmail.com</strong>
+        </p>
+    </div>
+</div>
+
+<!-- Submit Button -->
+<button type="submit" class="submit-btn">
+    <span id="submit-text">📝 Submit Donation Details</span>
+</button>
+
+<div class="security-text" style="text-align: center; color: #64748b; font-size: 0.875rem; margin-top: 1rem;">
+    🔒 Your information is secure and confidential
+</div>
+
+<!-- JavaScript to Toggle Instructions -->
+<script>
+document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const bankInstructions = document.getElementById('bank-instructions');
+        const paypalInstructions = document.getElementById('paypal-instructions');
+        const bankFields = document.getElementById('bank-transfer-fields');
+        const submitText = document.getElementById('submit-text');
+        
+        if (this.value === 'bank') {
+            bankInstructions.style.display = 'block';
+            paypalInstructions.style.display = 'none';
+            bankFields.style.display = 'block';
+            submitText.textContent = '📝 Submit Donation Details';
+        } else if (this.value === 'paypal') {
+            bankInstructions.style.display = 'none';
+            paypalInstructions.style.display = 'block';
+            bankFields.style.display = 'none';
+            submitText.textContent = '💳 Proceed to PayPal';
+        }
+    });
+});
+
+// Payment card selection
+document.querySelectorAll('.payment-card').forEach(card => {
+    card.addEventListener('click', function() {
+        document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('selected'));
+        this.classList.add('selected');
+        this.querySelector('input[type="radio"]').checked = true;
+        
+        // Trigger change event
+        const event = new Event('change');
+        this.querySelector('input[type="radio"]').dispatchEvent(event);
+    });
+});
+</script>
+
+<style>
+.payment-instructions {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>

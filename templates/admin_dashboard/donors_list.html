@@ -1,0 +1,338 @@
+<!-- File: templates/admin_dashboard/donors_list.html -->
+<!-- CURRENCY-AWARE VERSION - MULTI-CURRENCY SUPPORT -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Donors - Ministry Admin</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8f9fa;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 260px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            padding: 2rem 0;
+            z-index: 1000;
+        }
+
+        .sidebar-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            color: #1e293b;
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .table-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .btn-export {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-export:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .rank-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+        .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); }
+        .rank-3 { background: linear-gradient(135deg, #fb923c, #ea580c); }
+        .rank-other { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8fafc;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            color: #1e293b;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .amount-green {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        /* CURRENCY BADGES */
+        .currency-badge {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        /* MULTI-CURRENCY BREAKDOWN */
+        .currency-breakdown {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        .currency-item {
+            display: inline-block;
+            margin-right: 0.75rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #64748b;
+        }
+
+        .empty-state svg {
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            ⛪ Ministry Admin
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="{% url 'admin_dashboard' %}">📊 Dashboard</a></li>
+            <li><a href="{% url 'donations_list' %}">💰 Donations</a></li>
+            <li><a href="{% url 'donors_list' %}" class="active">👥 Donors</a></li>
+            <li><a href="{% url 'prayer_requests_list' %}">🙏 Prayer Requests</a></li>
+            <li><a href="{% url 'dashboard_settings' %}">⚙️ Settings</a></li>
+            <li><a href="{% url 'donation_page' %}">🏠 Public Site</a></li>
+            <li><a href="{% url 'dashboard_logout' %}">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1 style="font-size: 1.75rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">All Donors</h1>
+                <p style="color: #64748b;">Manage and view all donor information</p>
+            </div>
+            <a href="{% url 'export_donors_csv' %}" class="btn-export">
+                📥 Export to CSV
+            </a>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">Total Donors</div>
+                <div class="stat-value">{{ total_donors }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Supporters</div>
+                <div class="stat-value">{{ active_donors }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Top Donor</div>
+                <div class="stat-value" style="color: #10b981; font-size: 1.25rem;">
+                    {% if donors %}
+                        {{ donors.0.primary_amount }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Donors Table -->
+        <div class="table-card">
+            {% if donors %}
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Country</th>
+                            <th>Total Donated</th>
+                            <th># of Donations</th>
+                            <th>Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in donors %}
+                        <tr>
+                            <td>
+                                <div class="rank-badge {% if forloop.counter == 1 %}rank-1{% elif forloop.counter == 2 %}rank-2{% elif forloop.counter == 3 %}rank-3{% else %}rank-other{% endif %}">
+                                    {{ forloop.counter }}
+                                </div>
+                            </td>
+                            <td><strong>{{ item.donor.full_name }}</strong></td>
+                            <td>{{ item.donor.email }}</td>
+                            <td>{{ item.donor.phone|default:"—" }}</td>
+                            <td>{{ item.donor.country }}</td>
+                            <td>
+                                <!-- PRIMARY CURRENCY DISPLAY -->
+                                <div>
+                                    <span class="amount-green">{{ item.primary_amount }}</span>
+                                    <span class="currency-badge">{{ item.primary_currency }}</span>
+                                </div>
+                                
+                                <!-- MULTI-CURRENCY BREAKDOWN (if donor has multiple currencies) -->
+                                {% if item.currency_breakdown|length > 1 %}
+                                <div class="currency-breakdown">
+                                    {% for curr_code, curr_data in item.currency_breakdown.items %}
+                                    <span class="currency-item">{{ curr_data.symbol }}{{ curr_data.total|floatformat:2 }} {{ curr_code }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>{{ item.donation_count }}</td>
+                            <td>{{ item.donor.created_at|date:"M d, Y" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <svg width="64" height="64" fill="#cbd5e1" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <h3 style="color: #475569; margin-bottom: 0.5rem;">No Donors Yet</h3>
+                <p>When people make donations, they'll appear here.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

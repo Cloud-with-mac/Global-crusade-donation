@@ -1,0 +1,319 @@
+<!-- File: templates/admin_dashboard/donations_list.html -->
+<!-- OPTION A VERSION - CURRENCY AWARE + DELETE/VERIFY BUTTONS -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donations List - Ministry Admin</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8f9fa;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 260px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            padding: 2rem 0;
+            z-index: 1000;
+        }
+
+        .sidebar-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-bar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .table-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .badge-completed { background: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; }
+        .badge-pending { background: #f59e0b; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; }
+        .badge-failed { background: #ef4444; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; }
+        .badge-refunded { background: #6b7280; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; }
+
+        .btn-export {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-export:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 5px;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .filter-btn:hover {
+            border-color: #3b82f6;
+        }
+
+        /* CURRENCY BADGE */
+        .currency-badge {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* ACTION BUTTONS */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-verify {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-verify:hover {
+            background: #059669;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            ⛪ Ministry Admin
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="{% url 'admin_dashboard' %}">📊 Dashboard</a></li>
+            <li><a href="{% url 'donations_list' %}" class="active">💰 Donations</a></li>
+            <li><a href="{% url 'donors_list' %}">👥 Donors</a></li>
+            <li><a href="{% url 'prayer_requests_list' %}">🙏 Prayer Requests</a></li>
+            <li><a href="{% url 'dashboard_settings' %}">⚙️ Settings</a></li>
+            <li><a href="{% url 'donation_page' %}">🏠 Public Site</a></li>
+            <li><a href="{% url 'dashboard_logout' %}">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1 style="font-size: 1.75rem; font-weight: 700; color: #1e293b;">All Donations</h1>
+                <p style="color: #64748b;">Manage and track all donation transactions</p>
+            </div>
+            <a href="{% url 'export_donations_csv' %}" class="btn-export">📥 Export to CSV</a>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="d-flex align-items-center">
+                <span style="font-weight: 600; margin-right: 1rem;">Filter by Status:</span>
+                <a href="{% url 'donations_list' %}" class="filter-btn {% if status_filter == 'all' %}active{% endif %}">All</a>
+                <a href="?status=completed" class="filter-btn {% if status_filter == 'completed' %}active{% endif %}">Completed</a>
+                <a href="?status=pending" class="filter-btn {% if status_filter == 'pending' %}active{% endif %}">Pending</a>
+                <a href="?status=failed" class="filter-btn {% if status_filter == 'failed' %}active{% endif %}">Failed</a>
+            </div>
+        </div>
+
+        <!-- Donations Table -->
+        <div class="table-card">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead style="background: #f1f5f9;">
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Donor</th>
+                            <th>Email</th>
+                            <th>Amount</th>
+                            <th>Currency</th>
+                            <th>Type</th>
+                            <th>Gateway</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for donation in donations %}
+                        <tr>
+                            <td><strong>#{{ donation.id }}</strong></td>
+                            <td>{{ donation.created_at|date:"M d, Y H:i" }}</td>
+                            <td><strong>{{ donation.donor.full_name }}</strong></td>
+                            <td>{{ donation.donor.email }}</td>
+                            <td><strong style="color: #10b981;">{{ donation.formatted_amount }}</strong></td>
+                            <td>
+                                <span class="currency-badge">{{ donation.currency_code }}</span>
+                            </td>
+                            <td>{{ donation.get_donation_type_display }}</td>
+                            <td>{{ donation.get_payment_gateway_display }}</td>
+                            <td>
+                                <span class="badge-{{ donation.status }}">{{ donation.get_status_display }}</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    {% if donation.status == 'pending' %}
+                                    <form method="post" action="{% url 'manual_payment_verify' donation.id %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-verify" onclick="return confirm('Mark this donation as completed?')">✓ Verify</button>
+                                    </form>
+                                    {% endif %}
+                                    <form method="post" action="{% url 'delete_donation' donation.id %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this donation from {{ donation.donor.full_name }}?')">🗑️ Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="10" class="text-center" style="padding: 3rem;">
+                                <div style="color: #94a3b8;">
+                                    <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24" style="margin-bottom: 1rem;">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                                    </svg>
+                                    <p><strong>No donations found</strong></p>
+                                    <p>Donations will appear here once people start donating</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Summary -->
+            {% if donations %}
+            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
+                <p style="color: #64748b;">
+                    <strong>Total Donations:</strong> {{ donations|length }}
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

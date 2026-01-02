@@ -1,0 +1,168 @@
+<!-- File: templates/emails/donation_receipt.html -->
+<!-- Location: ministry_donation_site/templates/emails/donation_receipt.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Receipt</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f3f4f6;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f3f4f6; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <!-- Main Container -->
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">
+                                ⛪ Thank You for Your Donation!
+                            </h1>
+                        </td>
+                    </tr>
+
+                    <!-- Greeting -->
+                    <tr>
+                        <td style="padding: 40px 30px 20px;">
+                            <h2 style="color: #1f2937; margin: 0 0 15px; font-size: 24px;">
+                                Dear {{ donor_name }},
+                            </h2>
+                            <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin: 0;">
+                                Thank you for your generous {{ donation_type }} donation of <strong style="color: #059669;">${{ amount }}</strong> to support our global crusade ministry. Your contribution is making a real difference in communities around the world!
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Donation Details Card -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb;">
+                                <tr>
+                                    <td style="padding: 25px;">
+                                        <h3 style="color: #1f2937; margin: 0 0 20px; font-size: 18px; font-weight: 600;">
+                                            📋 Donation Details
+                                        </h3>
+                                        
+                                        <table width="100%" cellpadding="8" cellspacing="0">
+                                            <tr>
+                                                <td style="color: #6b7280; font-size: 14px; padding: 8px 0;">Receipt Number:</td>
+                                                <td style="color: #1f2937; font-size: 14px; font-weight: 600; text-align: right; padding: 8px 0;">#{{ donation_id }}</td>
+                                            </tr>
+                                            <tr style="border-top: 1px solid #e5e7eb;">
+                                                <td style="color: #6b7280; font-size: 14px; padding: 8px 0;">Date:</td>
+                                                <td style="color: #1f2937; font-size: 14px; font-weight: 600; text-align: right; padding: 8px 0;">{{ donation_date }}</td>
+                                            </tr>
+                                            <tr style="border-top: 1px solid #e5e7eb;">
+                                                <td style="color: #6b7280; font-size: 14px; padding: 8px 0;">Amount:</td>
+                                                <td style="color: #059669; font-size: 18px; font-weight: 700; text-align: right; padding: 8px 0;">${{ amount }}</td>
+                                            </tr>
+                                            <tr style="border-top: 1px solid #e5e7eb;">
+                                                <td style="color: #6b7280; font-size: 14px; padding: 8px 0;">Type:</td>
+                                                <td style="color: #1f2937; font-size: 14px; font-weight: 600; text-align: right; padding: 8px 0;">{{ donation_type|title }}</td>
+                                            </tr>
+                                            <tr style="border-top: 1px solid #e5e7eb;">
+                                                <td style="color: #6b7280; font-size: 14px; padding: 8px 0;">Payment Method:</td>
+                                                <td style="color: #1f2937; font-size: 14px; font-weight: 600; text-align: right; padding: 8px 0;">{{ payment_method|title }}</td>
+                                            </tr>
+                                            {% if transaction_id %}
+                                            <tr style="border-top: 1px solid #e5e7eb;">
+                                                <td style="color: #6b7280; font-size: 14px; padding: 8px 0;">Transaction ID:</td>
+                                                <td style="color: #1f2937; font-size: 11px; font-family: monospace; text-align: right; padding: 8px 0;">{{ transaction_id }}</td>
+                                            </tr>
+                                            {% endif %}
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Tax Deductible Notice -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 20px; border-radius: 8px;">
+                                <p style="color: #065f46; font-size: 14px; line-height: 1.6; margin: 0;">
+                                    <strong>💚 Tax Deductible:</strong> This donation is tax-deductible to the extent allowed by law. Please retain this receipt for your tax records.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    {% if prayer_request %}
+                    <!-- Prayer Request -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 20px; border-radius: 8px;">
+                                <h4 style="color: #1e40af; margin: 0 0 10px; font-size: 16px;">
+                                    🙏 Your Prayer Request
+                                </h4>
+                                <p style="color: #1e40af; font-size: 14px; line-height: 1.6; margin: 0; font-style: italic;">
+                                    "{{ prayer_request }}"
+                                </p>
+                                <p style="color: #3b82f6; font-size: 13px; margin: 10px 0 0;">
+                                    Our team is praying for you. God bless you!
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    <!-- Impact Message -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <h3 style="color: #1f2937; margin: 0 0 15px; font-size: 20px; font-weight: 600;">
+                                🌍 Your Impact
+                            </h3>
+                            <p style="color: #4b5563; font-size: 15px; line-height: 1.6; margin: 0;">
+                                Your generous gift is helping us bring the Gospel to nations around the world through powerful crusades, healing ministries, and community outreach. Together, we are transforming lives and building God's kingdom!
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Stay Connected -->
+                    <tr>
+                        <td style="padding: 0 30px 40px;">
+                            <h3 style="color: #1f2937; margin: 0 0 15px; font-size: 18px; font-weight: 600;">
+                                📬 Stay Connected
+                            </h3>
+                            <p style="color: #4b5563; font-size: 14px; line-height: 1.6; margin: 0 0 15px;">
+                                Follow our crusade updates, testimonies, and prayer points:
+                            </p>
+                            <table cellpadding="5" cellspacing="0">
+                                <tr>
+                                    <td>
+                                        <a href="#" style="color: #3b82f6; text-decoration: none; font-size: 14px;">📘 Facebook</a>
+                                    </td>
+                                    <td style="padding-left: 15px;">
+                                        <a href="#" style="color: #3b82f6; text-decoration: none; font-size: 14px;">🐦 Twitter</a>
+                                    </td>
+                                    <td style="padding-left: 15px;">
+                                        <a href="#" style="color: #3b82f6; text-decoration: none; font-size: 14px;">📸 Instagram</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                            <p style="color: #6b7280; font-size: 13px; line-height: 1.6; margin: 0 0 10px;">
+                                Global Crusade Ministry<br>
+                                Bringing Hope to the Nations
+                            </p>
+                            <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                                Questions? Contact us at <a href="mailto:info@ministry.org" style="color: #3b82f6; text-decoration: none;">info@ministry.org</a>
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

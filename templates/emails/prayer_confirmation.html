@@ -1,0 +1,161 @@
+<!-- File: templates/emails/prayer_confirmation.html -->
+<!-- Location: ministry_donation_site/templates/emails/prayer_confirmation.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prayer Request Received</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f3f4f6;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f3f4f6; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); padding: 40px 30px; text-align: center;">
+                            <div style="font-size: 48px; margin-bottom: 15px;">🙏</div>
+                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">
+                                We're Praying for You
+                            </h1>
+                        </td>
+                    </tr>
+
+                    <!-- Greeting -->
+                    <tr>
+                        <td style="padding: 40px 30px 30px;">
+                            <h2 style="color: #1f2937; margin: 0 0 15px; font-size: 24px;">
+                                Dear {{ donor_name }},
+                            </h2>
+                            <p style="color: #4b5563; font-size: 16px; line-height: 1.8; margin: 0;">
+                                Thank you for sharing your prayer request with us. Our prayer team has received it and is already lifting you up before the throne of grace.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Prayer Request -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <div style="background: linear-gradient(135deg, #ede9fe, #ddd6fe); padding: 25px; border-radius: 10px; border-left: 4px solid #8b5cf6;">
+                                <h3 style="color: #5b21b6; margin: 0 0 15px; font-size: 18px; font-weight: 600;">
+                                    Your Prayer Request
+                                </h3>
+                                <p style="color: #6d28d9; font-size: 15px; line-height: 1.7; margin: 0; font-style: italic;">
+                                    "{{ prayer_request }}"
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Scripture -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <div style="background-color: #fef3c7; padding: 25px; border-radius: 10px; text-align: center;">
+                                <p style="color: #78350f; font-size: 16px; line-height: 1.7; margin: 0 0 10px; font-style: italic;">
+                                    <strong>"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God. And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus."</strong>
+                                </p>
+                                <p style="color: #92400e; font-size: 14px; margin: 0; font-weight: 600;">
+                                    - Philippians 4:6-7
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- What Happens Next -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <h3 style="color: #1f2937; margin: 0 0 20px; font-size: 20px; font-weight: 600;">
+                                💜 What Happens Next
+                            </h3>
+                            
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td style="padding: 15px; background-color: #faf5ff; border-radius: 8px; margin-bottom: 10px;">
+                                        <div style="display: flex; align-items: start;">
+                                            <div style="color: #8b5cf6; font-size: 24px; margin-right: 15px;">1️⃣</div>
+                                            <div>
+                                                <strong style="color: #5b21b6; font-size: 15px;">Prayer Team Intercession</strong>
+                                                <p style="color: #6d28d9; font-size: 14px; margin: 5px 0 0; line-height: 1.5;">
+                                                    Our dedicated prayer team will intercede for you during our daily prayer sessions
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr><td style="height: 10px;"></td></tr>
+                                <tr>
+                                    <td style="padding: 15px; background-color: #faf5ff; border-radius: 8px; margin-bottom: 10px;">
+                                        <div style="display: flex; align-items: start;">
+                                            <div style="color: #8b5cf6; font-size: 24px; margin-right: 15px;">2️⃣</div>
+                                            <div>
+                                                <strong style="color: #5b21b6; font-size: 15px;">Ongoing Prayer Support</strong>
+                                                <p style="color: #6d28d9; font-size: 14px; margin: 5px 0 0; line-height: 1.5;">
+                                                    Your request will remain on our prayer list for continued intercession
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr><td style="height: 10px;"></td></tr>
+                                <tr>
+                                    <td style="padding: 15px; background-color: #faf5ff; border-radius: 8px;">
+                                        <div style="display: flex; align-items: start;">
+                                            <div style="color: #8b5cf6; font-size: 24px; margin-right: 15px;">3️⃣</div>
+                                            <div>
+                                                <strong style="color: #5b21b6; font-size: 15px;">Testimonies Welcome!</strong>
+                                                <p style="color: #6d28d9; font-size: 14px; margin: 5px 0 0; line-height: 1.5;">
+                                                    When God answers, we'd love to hear your testimony to encourage others
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Encouragement -->
+                    <tr>
+                        <td style="padding: 0 30px 40px;">
+                            <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 20px; border-radius: 8px;">
+                                <p style="color: #065f46; font-size: 15px; line-height: 1.7; margin: 0;">
+                                    <strong>Remember:</strong> God hears your prayers, and He cares deeply about every detail of your life. Trust that He is working all things together for your good. We stand with you in faith believing for breakthrough!
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Submit Another Prayer -->
+                    <tr>
+                        <td style="padding: 0 30px 40px; text-align: center;">
+                            <p style="color: #6b7280; font-size: 14px; margin: 0 0 15px;">
+                                Have another prayer request?
+                            </p>
+                            <a href="{{ website_url }}" style="display: inline-block; background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: #ffffff; text-decoration: none; padding: 12px 30px; border-radius: 8px; font-size: 14px; font-weight: 600;">
+                                Submit Another Request
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                            <p style="color: #6b7280; font-size: 13px; line-height: 1.6; margin: 0 0 10px;">
+                                <strong>Global Crusade Ministry Prayer Team</strong><br>
+                                Standing with you in faith
+                            </p>
+                            <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                                Need to talk? Contact us at <a href="mailto:prayers@ministry.org" style="color: #8b5cf6; text-decoration: none;">prayers@ministry.org</a>
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

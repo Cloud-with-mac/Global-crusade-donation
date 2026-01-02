@@ -1,0 +1,148 @@
+<!-- File: templates/emails/welcome_email.html -->
+<!-- Location: ministry_donation_site/templates/emails/welcome_email.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Our Ministry Family</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f3f4f6;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f3f4f6; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 50px 30px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0 0 10px; font-size: 32px; font-weight: 700;">
+                                🎉 Welcome to the Family!
+                            </h1>
+                            <p style="color: #d1fae5; font-size: 16px; margin: 0;">
+                                Thank you for becoming a ministry partner
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Greeting -->
+                    <tr>
+                        <td style="padding: 40px 30px 30px;">
+                            <h2 style="color: #1f2937; margin: 0 0 15px; font-size: 24px;">
+                                Dear {{ donor_name }},
+                            </h2>
+                            <p style="color: #4b5563; font-size: 16px; line-height: 1.8; margin: 0;">
+                                We are thrilled to welcome you to our ministry family! Your first donation of <strong style="color: #059669;">${{ amount }}</strong> marks the beginning of an incredible journey of faith and impact together.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- What Your Support Enables -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <h3 style="color: #1f2937; margin: 0 0 20px; font-size: 20px; font-weight: 600;">
+                                🌟 What Your Support Enables
+                            </h3>
+                            
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td style="padding: 15px; background-color: #f0fdf4; border-radius: 8px; margin-bottom: 10px;">
+                                        <div style="color: #059669; font-size: 24px; margin-bottom: 8px;">🙏</div>
+                                        <strong style="color: #065f46; font-size: 15px;">Powerful Crusades</strong>
+                                        <p style="color: #047857; font-size: 14px; margin: 5px 0 0; line-height: 1.5;">
+                                            Reaching thousands with the Gospel through mass crusades across nations
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr><td style="height: 10px;"></td></tr>
+                                <tr>
+                                    <td style="padding: 15px; background-color: #eff6ff; border-radius: 8px;">
+                                        <div style="color: #3b82f6; font-size: 24px; margin-bottom: 8px;">❤️</div>
+                                        <strong style="color: #1e40af; font-size: 15px;">Community Outreach</strong>
+                                        <p style="color: #1e3a8a; font-size: 14px; margin: 5px 0 0; line-height: 1.5;">
+                                            Providing food, medical care, and support to underserved communities
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr><td style="height: 10px;"></td></tr>
+                                <tr>
+                                    <td style="padding: 15px; background-color: #fef3c7; border-radius: 8px;">
+                                        <div style="color: #d97706; font-size: 24px; margin-bottom: 8px;">📖</div>
+                                        <strong style="color: #92400e; font-size: 15px;">Discipleship Training</strong>
+                                        <p style="color: #78350f; font-size: 14px; margin: 5px 0 0; line-height: 1.5;">
+                                            Equipping believers to become bold witnesses and leaders
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- What's Next -->
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <h3 style="color: #1f2937; margin: 0 0 15px; font-size: 20px; font-weight: 600;">
+                                📅 What's Next?
+                            </h3>
+                            <ul style="color: #4b5563; font-size: 15px; line-height: 1.8; margin: 0; padding-left: 20px;">
+                                <li style="margin-bottom: 10px;">You'll receive <strong>monthly updates</strong> about our crusades and their impact</li>
+                                <li style="margin-bottom: 10px;">Get exclusive <strong>prayer requests</strong> from our mission fields</li>
+                                <li style="margin-bottom: 10px;">Access to <strong>crusade photos and testimonies</strong> from the field</li>
+                                <li>Invitations to <strong>special events</strong> and ministry gatherings</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+                    <!-- Call to Action -->
+                    <tr>
+                        <td style="padding: 0 30px 40px; text-align: center;">
+                            <table cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td align="center">
+                                        <a href="{{ website_url }}" style="display: inline-block; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #ffffff; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; margin: 10px;">
+                                            🌍 View Crusade Updates
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Personal Touch -->
+                    <tr>
+                        <td style="padding: 0 30px 40px;">
+                            <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 25px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                                <p style="color: #78350f; font-size: 15px; line-height: 1.7; margin: 0 0 15px;">
+                                    <em>"Every soul reached, every life transformed, every community impacted - it all starts with partners like you. Thank you for saying YES to God's call to reach the nations!"</em>
+                                </p>
+                                <p style="color: #92400e; font-size: 14px; margin: 0; font-weight: 600;">
+                                    - Ministry Leadership Team
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                            <p style="color: #6b7280; font-size: 13px; line-height: 1.6; margin: 0 0 15px;">
+                                <strong>Global Crusade Ministry</strong><br>
+                                Bringing Hope to the Nations
+                            </p>
+                            <p style="color: #9ca3af; font-size: 12px; margin: 0 0 15px;">
+                                Questions? We're here to help!<br>
+                                Email: <a href="mailto:info@ministry.org" style="color: #3b82f6; text-decoration: none;">info@ministry.org</a>
+                            </p>
+                            <p style="color: #9ca3af; font-size: 11px; margin: 0;">
+                                You're receiving this because you made a donation to our ministry.
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

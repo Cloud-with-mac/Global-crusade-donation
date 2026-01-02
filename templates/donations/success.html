@@ -1,0 +1,154 @@
+<!-- File: templates/donations/success.html -->
+<!-- Location: ministry_donation_site/templates/donations/success.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You for Your Donation!</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .success-card {
+            background: white;
+            border-radius: 2rem;
+            padding: 3rem;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .checkmark {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .amount {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #10b981;
+            margin: 1rem 0;
+        }
+
+        .info-grid {
+            background: #f8fafc;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #3b82f6;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 2rem;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-card">
+        <div class="checkmark">
+            <svg width="60" height="60" fill="white" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+        </div>
+
+        <h1>Thank You!</h1>
+        <p style="font-size: 1.125rem; color: #64748b; margin-bottom: 2rem;">
+            Your donation has been successfully processed. You're making a real difference!
+        </p>
+
+        <div class="amount">${{ donation.amount }}</div>
+
+        <div class="info-grid">
+            <div class="info-row">
+                <span style="color: #64748b;">Donor:</span>
+                <strong>{{ donation.donor.full_name }}</strong>
+            </div>
+            <div class="info-row">
+                <span style="color: #64748b;">Email:</span>
+                <strong>{{ donation.donor.email }}</strong>
+            </div>
+            <div class="info-row">
+                <span style="color: #64748b;">Donation Type:</span>
+                <strong>{{ donation.get_donation_type_display }}</strong>
+            </div>
+            <div class="info-row">
+                <span style="color: #64748b;">Payment Method:</span>
+                <strong>{{ donation.get_payment_method_display }}</strong>
+            </div>
+            <div class="info-row">
+                <span style="color: #64748b;">Transaction ID:</span>
+                <strong>{{ donation.stripe_payment_id|default:"Processing" }}</strong>
+            </div>
+            <div class="info-row">
+                <span style="color: #64748b;">Date:</span>
+                <strong>{{ donation.created_at|date:"F d, Y H:i" }}</strong>
+            </div>
+        </div>
+
+        <p style="color: #64748b; font-size: 0.9rem;">
+            📧 A receipt has been sent to your email address.<br>
+            Your donation is tax-deductible.
+        </p>
+
+        <a href="{% url 'donation_page' %}" class="btn">Make Another Donation</a>
+
+        <p style="color: #94a3b8; font-size: 0.875rem; margin-top: 2rem;">
+            🙏 Thank you for your generous support of our global crusade ministry!
+        </p>
+    </div>
+</body>
+</html>

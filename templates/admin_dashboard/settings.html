@@ -1,0 +1,475 @@
+<!-- File: templates/admin_dashboard/settings.html -->
+<!-- Location: ministry_donation_site/templates/admin_dashboard/settings.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Settings - Ministry Admin</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8f9fa;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 260px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            padding: 2rem 0;
+            z-index: 1000;
+        }
+
+        .sidebar-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .settings-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-card h3 {
+            color: #1e293b;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .settings-card p {
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn-save {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-save:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-refresh {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-left: 1rem;
+        }
+
+        .btn-refresh:hover {
+            background: #059669;
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            border: 1px solid #6ee7b7;
+            color: #065f46;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .info-box p {
+            color: #1e40af;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        .stat-readonly {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            color: #1e293b;
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            ⛪ Ministry Admin
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="{% url 'admin_dashboard' %}">📊 Dashboard</a></li>
+            <li><a href="{% url 'donations_list' %}">💰 Donations</a></li>
+            <li><a href="{% url 'donors_list' %}">👥 Donors</a></li>
+            <li><a href="{% url 'prayer_requests_list' %}">🙏 Prayer Requests</a></li>
+            <li><a href="{% url 'dashboard_settings' %}" class="active">⚙️ Settings</a></li>
+            <li><a href="{% url 'donation_page' %}">🏠 Public Site</a></li>
+            <li><a href="{% url 'dashboard_logout' %}">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1 style="font-size: 1.75rem; font-weight: 700; color: #1e293b;">Dashboard Settings</h1>
+            <p style="color: #64748b; margin: 0;">Manage your ministry dashboard configuration</p>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Current Statistics (Read-Only) -->
+        <div class="settings-card">
+            <h3>📊 Current Statistics</h3>
+            <p>These values are calculated automatically from your donation data</p>
+
+            <div class="stat-readonly">
+                <div class="stat-item">
+                    <div class="stat-label">Total Raised</div>
+                    <div class="stat-value">${{ stats.total_raised|floatformat:0 }}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Total Donors</div>
+                    <div class="stat-value">{{ stats.total_donors }}</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <p><strong>ℹ️ Auto-calculated:</strong> These stats are automatically updated from your completed donations. They cannot be manually edited.</p>
+            </div>
+        </div>
+
+        <!-- Crusade Goals Settings -->
+        <div class="settings-card">
+            <h3>🎯 Crusade Goals</h3>
+            <p>Set your ministry's crusade targets and goals</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="update_stats">
+
+                <div class="form-group">
+                    <label class="form-label">Budgeted Amount ($)</label>
+                    <input 
+                        type="number" 
+                        name="budgeted_amount" 
+                        class="form-input" 
+                        value="{{ stats.budgeted_amount }}"
+                        step="0.01"
+                        min="0"
+                        required
+                    >
+                    <small style="color: #64748b;">The total amount you're aiming to raise for all crusades</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Number of Crusades Planned</label>
+                    <input 
+                        type="number" 
+                        name="crusades_planned" 
+                        class="form-input" 
+                        value="{{ stats.crusades_planned }}"
+                        min="0"
+                        required
+                    >
+                    <small style="color: #64748b;">How many crusades are you planning this year</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Countries List</label>
+                    <input 
+                        type="text" 
+                        name="countries_list" 
+                        class="form-input" 
+                        value="{{ stats.countries_list|default:'' }}"
+                        placeholder="Nigeria, Ghana, Kenya, Uganda"
+                    >
+                    <small style="color: #64748b;">Enter countries separated by commas (e.g., Nigeria, Ghana, Kenya)</small>
+                </div>
+
+                <div class="info-box">
+                    <p><strong>💡 Tip:</strong> These values are displayed on your public donation page to show supporters your ministry's goals and progress.</p>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <button type="submit" class="btn-save">
+                        💾 Save Settings
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Crusade Flyers Management -->
+        <div class="settings-card">
+            <h3>📸 Crusade Flyers</h3>
+            <p>Upload and manage crusade flyer images shown on the donation page</p>
+
+            <!-- Upload New Flyer -->
+            <form method="post" enctype="multipart/form-data" style="margin-bottom: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 0.75rem;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="upload_flyer">
+                
+                <div class="form-group">
+                    <label class="form-label">Flyer Title *</label>
+                    <input 
+                        type="text" 
+                        name="flyer_title" 
+                        class="form-input" 
+                        placeholder="Nigeria Crusade 2025"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Flyer Description (Optional)</label>
+                    <textarea 
+                        name="flyer_description" 
+                        class="form-input" 
+                        rows="2"
+                        placeholder="Join us for our biggest crusade event..."
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Upload Image *</label>
+                    <input 
+                        type="file" 
+                        name="flyer_image" 
+                        class="form-input" 
+                        accept="image/*"
+                        required
+                    >
+                    <small style="color: #64748b;">Recommended: 800x600px or similar ratio</small>
+                </div>
+
+                <button type="submit" class="btn-save">
+                    📤 Upload Flyer
+                </button>
+            </form>
+
+            <!-- Existing Flyers -->
+            {% if crusade_flyers %}
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 1.5rem;">
+                <h4 style="margin-bottom: 1rem;">Existing Flyers</h4>
+                <div style="display: grid; gap: 1rem;">
+                    {% for flyer in crusade_flyers %}
+                    <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: #f8fafc; border-radius: 0.75rem;">
+                        <img src="{{ flyer.image.url }}" alt="{{ flyer.title }}" style="width: 100px; height: 75px; object-fit: cover; border-radius: 0.5rem;">
+                        <div style="flex: 1;">
+                            <strong>{{ flyer.title }}</strong>
+                            <div style="color: #64748b; font-size: 0.875rem;">
+                                {% if flyer.is_active %}
+                                    <span style="color: #10b981;">● Active</span>
+                                {% else %}
+                                    <span style="color: #ef4444;">● Inactive</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <form method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="toggle_flyer">
+                                <input type="hidden" name="flyer_id" value="{{ flyer.id }}">
+                                <button type="submit" class="btn-refresh" style="padding: 0.5rem 1rem; margin: 0;">
+                                    {% if flyer.is_active %}Hide{% else %}Show{% endif %}
+                                </button>
+                            </form>
+                            <form method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete_flyer">
+                                <input type="hidden" name="flyer_id" value="{{ flyer.id }}">
+                                <button type="submit" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer;" onclick="return confirm('Delete this flyer?')">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+            <p style="color: #64748b; text-align: center; padding: 2rem;">No flyers uploaded yet. Upload your first crusade flyer above!</p>
+            {% endif %}
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="settings-card">
+            <h3>⚡ Quick Actions</h3>
+            <p>Helpful shortcuts for managing your dashboard</p>
+
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <a href="{% url 'admin_dashboard' %}" class="btn-save" style="text-decoration: none;">
+                    📊 View Dashboard
+                </a>
+                <a href="{% url 'donations_list' %}" class="btn-save" style="text-decoration: none;">
+                    💰 View Donations
+                </a>
+                <a href="{% url 'export_donors_csv' %}" class="btn-refresh" style="text-decoration: none;">
+                    📥 Export Donors
+                </a>
+                <a href="{% url 'export_donations_csv' %}" class="btn-refresh" style="text-decoration: none;">
+                    📥 Export Donations
+                </a>
+            </div>
+        </div>
+
+        <!-- System Information -->
+        <div class="settings-card">
+            <h3>ℹ️ System Information</h3>
+            <p>Details about your dashboard installation</p>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td style="color: #64748b;">Last Updated</td>
+                        <td><strong>{{ stats.last_updated|date:"F d, Y H:i" }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="color: #64748b;">Logged in as</td>
+                        <td><strong>{{ user.username }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="color: #64748b;">Public Site</td>
+                        <td><a href="{% url 'donation_page' %}" target="_blank">View Public Donation Page →</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
