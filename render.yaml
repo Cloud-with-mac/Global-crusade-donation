@@ -8,7 +8,7 @@ services:
     name: ministry-donation-site
     env: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn ministry_donation_site.wsgi:application"
+    startCommand: "gunicorn global_crusade.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.4
