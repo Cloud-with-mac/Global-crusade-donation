@@ -117,7 +117,7 @@ STATICFILES_DIRS = [
 ] if os.path.exists(os.path.join(BASE_DIR, 'static')) else []
 
 # Whitenoise configuration - FIXED
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 
 # ═══════════════════════════════════════════════════════════════
