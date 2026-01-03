@@ -10,20 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-# Add Cloudinary configuration
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
 from pathlib import Path
 from decouple import config
 import os
 import dj_database_url  # ✅ FIXED: Uncommented this
-from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv()
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -47,18 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'donations',
     'crispy_forms',
-    'cloudinary',
     'crispy_bootstrap4',
     'django.contrib.humanize',
 ]
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('dqupmxpwf'),
-    'API_KEY': os.getenv('425336727968135'),
-    'API_SECRET': os.getenv('ru1CI3kgkG0mTgxZum8P-sj7Ga8'),
-}
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -202,18 +188,3 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
-
-# Cloudinary Configuration
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('dqupmxpwf'),
-    'API_KEY': os.getenv('425336727968135'),
-    'API_SECRET': os.getenv('ru1CI3kgkG0mTgxZum8P-sj7Ga8'),
-}
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-
