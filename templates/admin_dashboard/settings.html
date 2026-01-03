@@ -1,475 +1,1221 @@
-<!-- File: templates/admin_dashboard/settings.html -->
-<!-- Location: ministry_donation_site/templates/admin_dashboard/settings.html -->
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Settings - Ministry Admin</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+    <title>Dashboard Settings | Global Crusade Ministry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --navy-dark: #0f1419;
+            --navy-base: #1a2332;
+            --gold-base: #d4a574;
+            --gold-light: #e8c9a0;
+            --gold-dark: #b88a5f;
+            --cream: #faf8f5;
+            --warm-white: #ffffff;
+            --gray-50: #f9f7f4;
+            --gray-200: #e2ddd5;
+            --gray-300: #cdc7bd;
+            --gray-500: #7a7269;
+            --gray-600: #5a5349;
+            --gray-700: #3d3930;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'DM Sans', sans-serif;
+            --success: #10b981;
+            --danger: #ef4444;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f8f9fa;
+            font-family: var(--font-body);
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--gray-700);
+            background: var(--cream);
         }
-
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 260px;
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-            padding: 2rem 0;
-            z-index: 1000;
+        
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            color: var(--navy-dark);
+            font-weight: 600;
         }
-
-        .sidebar-brand {
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 700;
-            padding: 0 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .sidebar-nav {
-            list-style: none;
-        }
-
-        .sidebar-nav li {
+        
+        h1 {
+            font-size: 2.5rem;
             margin-bottom: 0.5rem;
         }
-
-        .sidebar-nav a {
-            color: #94a3b8;
-            text-decoration: none;
-            padding: 0.75rem 1.5rem;
-            display: block;
-            transition: all 0.3s;
-        }
-
-        .sidebar-nav a:hover,
-        .sidebar-nav a.active {
-            background: rgba(59, 130, 246, 0.1);
-            color: #60a5fa;
-            border-left: 3px solid #3b82f6;
-        }
-
-        .main-content {
-            margin-left: 260px;
-            padding: 2rem;
-        }
-
-        .header {
-            background: white;
-            padding: 1.5rem 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-        }
-
-        .settings-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        
+        h2 {
+            font-size: 1.75rem;
             margin-bottom: 1.5rem;
         }
-
-        .settings-card h3 {
-            color: #1e293b;
+        
+        h3 {
             font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
-
-        .settings-card p {
-            color: #64748b;
-            font-size: 0.875rem;
-            margin-bottom: 1.5rem;
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--navy-base), var(--navy-dark));
+            color: var(--warm-white);
+            padding: 2rem 0;
+            box-shadow: var(--shadow-md);
         }
-
-        .form-group {
-            margin-bottom: 1.5rem;
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
-
-        .form-label {
-            display: block;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 0.5rem;
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
-        .form-input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            transition: all 0.3s;
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        
+        .logo-icon {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
         }
-
-        .btn-save {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-save:hover {
-            background: #2563eb;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-refresh {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-left: 1rem;
-        }
-
-        .btn-refresh:hover {
-            background: #059669;
-        }
-
-        .alert {
-            padding: 1rem 1.5rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .alert-success {
-            background: #d1fae5;
-            border: 1px solid #6ee7b7;
-            color: #065f46;
-        }
-
-        .alert-error {
-            background: #fee2e2;
-            border: 1px solid #fca5a5;
-            color: #991b1b;
-        }
-
-        .info-box {
-            background: #eff6ff;
-            border-left: 4px solid #3b82f6;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .info-box p {
-            color: #1e40af;
-            font-size: 0.875rem;
+        
+        .logo-text h1 {
+            color: var(--warm-white);
+            font-size: 1.5rem;
             margin: 0;
         }
-
-        .stat-readonly {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .stat-item {
-            background: #f8fafc;
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            border: 1px solid #e2e8f0;
-        }
-
-        .stat-label {
-            color: #64748b;
+        
+        .logo-tagline {
             font-size: 0.875rem;
+            color: var(--gold-light);
+            font-weight: 500;
+        }
+        
+        .header-nav {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--gold-base);
+            color: var(--warm-white);
+        }
+        
+        .btn-primary:hover {
+            background: var(--gold-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: var(--warm-white);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 3rem 0;
+        }
+        
+        /* Messages */
+        .messages {
+            margin-bottom: 2rem;
+        }
+        
+        .message {
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 500;
+        }
+        
+        .message-success {
+            background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.05));
+            border: 2px solid rgba(16,185,129,0.3);
+            color: #065f46;
+        }
+        
+        .message-error {
+            background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(239,68,68,0.05));
+            border: 2px solid rgba(239,68,68,0.3);
+            color: #991b1b;
+        }
+        
+        /* Section Card */
+        .section-card {
+            background: var(--warm-white);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-200);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .section-icon {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .section-badge {
+            background: var(--gold-base);
+            color: var(--warm-white);
+            padding: 0.375rem 0.875rem;
+            border-radius: 100px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        /* Upload Box */
+        .upload-box {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 2px dashed var(--gold-base);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--navy-dark);
+            font-size: 0.9375rem;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            padding: 0.875rem;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--gold-base);
+            box-shadow: 0 0 0 3px rgba(212,165,116,0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+        
+        .btn-submit {
+            padding: 1rem 2rem;
+            background: var(--gold-base);
+            color: var(--warm-white);
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        
+        .btn-submit:hover {
+            background: var(--gold-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Grid Display */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .item-card {
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        
+        .item-card:hover {
+            border-color: var(--gold-base);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .item-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .item-content {
+            padding: 1rem;
+        }
+        
+        .item-title {
+            font-weight: 600;
+            color: var(--navy-dark);
             margin-bottom: 0.5rem;
         }
-
+        
+        .item-meta {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .btn-icon {
+            padding: 0.625rem 1rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-active {
+            background: var(--success);
+            color: var(--warm-white);
+        }
+        
+        .btn-inactive {
+            background: var(--gray-500);
+            color: var(--warm-white);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: var(--warm-white);
+        }
+        
+        .btn-edit {
+            background: var(--gold-base);
+            color: var(--warm-white);
+        }
+        
+        .btn-icon:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 0.375rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+        }
+        
+        .badge-active {
+            background: rgba(16,185,129,0.1);
+            color: var(--success);
+        }
+        
+        .badge-inactive {
+            background: rgba(122,114,105,0.1);
+            color: var(--gray-600);
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
         .stat-value {
-            color: #1e293b;
-            font-size: 1.75rem;
-            font-weight: 700;
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--navy-dark);
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--gray-200);
+            padding-bottom: 0.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            font-family: var(--font-body);
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--gray-600);
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            background: var(--gold-base);
+            color: var(--warm-white);
+        }
+        
+        .tab:hover {
+            background: var(--gray-200);
+        }
+        
+        .tab.active:hover {
+            background: var(--gold-dark);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Testimony Card */
+        .testimony-card {
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .testimony-card:hover {
+            border-color: var(--gold-base);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .testimony-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        
+        .testimony-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--warm-white);
+        }
+        
+        .author-info h4 {
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .author-location {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+        
+        .testimony-text {
+            font-style: italic;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            color: var(--gray-700);
+        }
+        
+        .testimony-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--gray-600);
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15,20,25,0.75);
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: var(--warm-white);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-200);
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+        }
+        
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-600);
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        
+        .btn-close:hover {
+            background: var(--gray-200);
+            color: var(--navy-dark);
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .header-nav {
+                width: 100%;
+                flex-direction: column;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-brand">
-            ⛪ Ministry Admin
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">✝</div>
+                    <div class="logo-text">
+                        <h1>Dashboard Settings</h1>
+                        <div class="logo-tagline">Global Crusade Ministry</div>
+                    </div>
+                </div>
+                <div class="header-nav">
+                    <a href="{% url 'admin_dashboard' %}" class="nav-btn btn-secondary">← Dashboard</a>
+                    <a href="{% url 'ministry_home' %}" class="nav-btn btn-primary">View Ministry Site</a>
+                </div>
+            </div>
         </div>
-        <ul class="sidebar-nav">
-            <li><a href="{% url 'admin_dashboard' %}">📊 Dashboard</a></li>
-            <li><a href="{% url 'donations_list' %}">💰 Donations</a></li>
-            <li><a href="{% url 'donors_list' %}">👥 Donors</a></li>
-            <li><a href="{% url 'prayer_requests_list' %}">🙏 Prayer Requests</a></li>
-            <li><a href="{% url 'dashboard_settings' %}" class="active">⚙️ Settings</a></li>
-            <li><a href="{% url 'donation_page' %}">🏠 Public Site</a></li>
-            <li><a href="{% url 'dashboard_logout' %}">🚪 Logout</a></li>
-        </ul>
-    </div>
+    </header>
 
     <!-- Main Content -->
-    <div class="main-content">
-        <!-- Header -->
-        <div class="header">
-            <h1 style="font-size: 1.75rem; font-weight: 700; color: #1e293b;">Dashboard Settings</h1>
-            <p style="color: #64748b; margin: 0;">Manage your ministry dashboard configuration</p>
-        </div>
-
-        <!-- Messages -->
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- Messages -->
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="message message-{% if message.tags %}{{ message.tags }}{% endif %}">
+                    <span>{{ message }}</span>
                 </div>
-            {% endfor %}
-        {% endif %}
-
-        <!-- Current Statistics (Read-Only) -->
-        <div class="settings-card">
-            <h3>📊 Current Statistics</h3>
-            <p>These values are calculated automatically from your donation data</p>
-
-            <div class="stat-readonly">
-                <div class="stat-item">
-                    <div class="stat-label">Total Raised</div>
-                    <div class="stat-value">${{ stats.total_raised|floatformat:0 }}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Total Donors</div>
-                    <div class="stat-value">{{ stats.total_donors }}</div>
-                </div>
+                {% endfor %}
             </div>
+            {% endif %}
 
-            <div class="info-box">
-                <p><strong>ℹ️ Auto-calculated:</strong> These stats are automatically updated from your completed donations. They cannot be manually edited.</p>
-            </div>
-        </div>
 
-        <!-- Crusade Goals Settings -->
-        <div class="settings-card">
-            <h3>🎯 Crusade Goals</h3>
-            <p>Set your ministry's crusade targets and goals</p>
-
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="update_stats">
-
-                <div class="form-group">
-                    <label class="form-label">Budgeted Amount ($)</label>
-                    <input 
-                        type="number" 
-                        name="budgeted_amount" 
-                        class="form-input" 
-                        value="{{ stats.budgeted_amount }}"
-                        step="0.01"
-                        min="0"
-                        required
-                    >
-                    <small style="color: #64748b;">The total amount you're aiming to raise for all crusades</small>
+            <!-- Section 1: Testimonies Management -->
+            <section class="section-card">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon">💬</div>
+                        <div>
+                            <h2 style="margin:0;">Testimonies Management</h2>
+                            <p style="margin:0;color:var(--gray-600);font-size:0.9375rem;">Add, edit, and manage testimonies displayed on your website</p>
+                        </div>
+                    </div>
+                    <span class="section-badge">{{ testimonies|length }} Total</span>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Number of Crusades Planned</label>
-                    <input 
-                        type="number" 
-                        name="crusades_planned" 
-                        class="form-input" 
-                        value="{{ stats.crusades_planned }}"
-                        min="0"
-                        required
-                    >
-                    <small style="color: #64748b;">How many crusades are you planning this year</small>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Countries List</label>
-                    <input 
-                        type="text" 
-                        name="countries_list" 
-                        class="form-input" 
-                        value="{{ stats.countries_list|default:'' }}"
-                        placeholder="Nigeria, Ghana, Kenya, Uganda"
-                    >
-                    <small style="color: #64748b;">Enter countries separated by commas (e.g., Nigeria, Ghana, Kenya)</small>
-                </div>
-
-                <div class="info-box">
-                    <p><strong>💡 Tip:</strong> These values are displayed on your public donation page to show supporters your ministry's goals and progress.</p>
-                </div>
-
-                <div style="margin-top: 2rem;">
-                    <button type="submit" class="btn-save">
-                        💾 Save Settings
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Crusade Flyers Management -->
-        <div class="settings-card">
-            <h3>📸 Crusade Flyers</h3>
-            <p>Upload and manage crusade flyer images shown on the donation page</p>
-
-            <!-- Upload New Flyer -->
-            <form method="post" enctype="multipart/form-data" style="margin-bottom: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 0.75rem;">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="upload_flyer">
-                
-                <div class="form-group">
-                    <label class="form-label">Flyer Title *</label>
-                    <input 
-                        type="text" 
-                        name="flyer_title" 
-                        class="form-input" 
-                        placeholder="Nigeria Crusade 2025"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Flyer Description (Optional)</label>
-                    <textarea 
-                        name="flyer_description" 
-                        class="form-input" 
-                        rows="2"
-                        placeholder="Join us for our biggest crusade event..."
-                    ></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Upload Image *</label>
-                    <input 
-                        type="file" 
-                        name="flyer_image" 
-                        class="form-input" 
-                        accept="image/*"
-                        required
-                    >
-                    <small style="color: #64748b;">Recommended: 800x600px or similar ratio</small>
-                </div>
-
-                <button type="submit" class="btn-save">
-                    📤 Upload Flyer
-                </button>
-            </form>
-
-            <!-- Existing Flyers -->
-            {% if crusade_flyers %}
-            <div style="border-top: 1px solid #e2e8f0; padding-top: 1.5rem;">
-                <h4 style="margin-bottom: 1rem;">Existing Flyers</h4>
-                <div style="display: grid; gap: 1rem;">
-                    {% for flyer in crusade_flyers %}
-                    <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: #f8fafc; border-radius: 0.75rem;">
-                        <img src="{{ flyer.image.url }}" alt="{{ flyer.title }}" style="width: 100px; height: 75px; object-fit: cover; border-radius: 0.5rem;">
-                        <div style="flex: 1;">
-                            <strong>{{ flyer.title }}</strong>
-                            <div style="color: #64748b; font-size: 0.875rem;">
-                                {% if flyer.is_active %}
-                                    <span style="color: #10b981;">● Active</span>
-                                {% else %}
-                                    <span style="color: #ef4444;">● Inactive</span>
-                                {% endif %}
+                <!-- Add New Testimony -->
+                <div class="upload-box">
+                    <h3>✨ Add New Testimony</h3>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="add_testimony">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Person's Name *</label>
+                                <input type="text" name="testimony_name" class="form-input" placeholder="e.g., Mary Johnson" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location *</label>
+                                <input type="text" name="testimony_location" class="form-input" placeholder="e.g., Lagos, Nigeria" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Display Order</label>
+                                <input type="number" name="display_order" class="form-input" value="0" min="0" placeholder="0 = First">
                             </div>
                         </div>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <form method="post" style="display: inline;">
+                        <div class="form-group" style="margin-top:1.5rem;">
+                            <label class="form-label">Testimony Text *</label>
+                            <textarea name="testimony_text" class="form-textarea" placeholder="Enter the person's testimony here..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">💬 Add Testimony</button>
+                    </form>
+                </div>
+
+                <!-- Existing Testimonies -->
+                {% if testimonies %}
+                <div style="margin-top:2rem;">
+                    <h3 style="margin-bottom:1.5rem;">📋 All Testimonies ({{ testimonies|length }})</h3>
+                    {% for testimony in testimonies %}
+                    <div class="testimony-card">
+                        <div class="testimony-header">
+                            <div class="testimony-author">
+                                <div class="author-avatar">{{ testimony.get_initial }}</div>
+                                <div class="author-info">
+                                    <h4>{{ testimony.name }}</h4>
+                                    <div class="author-location">📍 {{ testimony.location }}</div>
+                                </div>
+                            </div>
+                            <span class="badge {% if testimony.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                                {% if testimony.is_active %}✓ Active{% else %}Hidden{% endif %}
+                            </span>
+                        </div>
+                        <div class="testimony-text">"{{ testimony.testimony_text }}"</div>
+                        <div style="font-size:0.875rem;color:var(--gray-600);margin-bottom:1rem;">
+                            Order: {{ testimony.display_order }} | Created: {{ testimony.created_at|date:"M d, Y" }}
+                        </div>
+                        <div class="testimony-actions">
+                            <form method="post" style="display:inline;">
                                 {% csrf_token %}
-                                <input type="hidden" name="action" value="toggle_flyer">
-                                <input type="hidden" name="flyer_id" value="{{ flyer.id }}">
-                                <button type="submit" class="btn-refresh" style="padding: 0.5rem 1rem; margin: 0;">
-                                    {% if flyer.is_active %}Hide{% else %}Show{% endif %}
+                                <input type="hidden" name="action" value="toggle_testimony">
+                                <input type="hidden" name="testimony_id" value="{{ testimony.id }}">
+                                <button type="submit" class="btn-icon {% if testimony.is_active %}btn-inactive{% else %}btn-active{% endif %}">
+                                    {% if testimony.is_active %}Hide{% else %}Show{% endif %}
                                 </button>
                             </form>
-                            <form method="post" style="display: inline;">
+                            <button type="button" class="btn-icon btn-edit" onclick="editTestimony({{ testimony.id }}, '{{ testimony.name|escapejs }}', '{{ testimony.location|escapejs }}', `{{ testimony.testimony_text|escapejs }}`, {{ testimony.display_order }})">
+                                ✏️ Edit
+                            </button>
+                            <form method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this testimony?');">
                                 {% csrf_token %}
-                                <input type="hidden" name="action" value="delete_flyer">
-                                <input type="hidden" name="flyer_id" value="{{ flyer.id }}">
-                                <button type="submit" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer;" onclick="return confirm('Delete this flyer?')">
-                                    Delete
-                                </button>
+                                <input type="hidden" name="action" value="delete_testimony">
+                                <input type="hidden" name="testimony_id" value="{{ testimony.id }}">
+                                <button type="submit" class="btn-icon btn-danger">🗑️ Delete</button>
                             </form>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
-            </div>
-            {% else %}
-            <p style="color: #64748b; text-align: center; padding: 2rem;">No flyers uploaded yet. Upload your first crusade flyer above!</p>
-            {% endif %}
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">💬</div>
+                    <h3>No Testimonies Yet</h3>
+                    <p>Add your first testimony using the form above</p>
+                </div>
+                {% endif %}
+            </section>
+
+            <!-- Section 2: Ministry Website Photos -->
+            <section class="section-card">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon">📸</div>
+                        <div>
+                            <h2 style="margin:0;">Ministry Website Photos</h2>
+                            <p style="margin:0;color:var(--gray-600);font-size:0.9375rem;">Upload photos for homepage, about page, crusades, testimonies, and gallery</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Form -->
+                <div class="upload-box">
+                    <h3>📤 Upload New Photo</h3>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="upload_ministry_image">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Image Title *</label>
+                                <input type="text" name="image_title" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Image Type *</label>
+                                <select name="image_type" class="form-select" required>
+                                    <option value="hero">🎯 Homepage Hero Image</option>
+                                    <option value="about">📖 About Page</option>
+                                    <option value="crusade">🌍 Crusade Events</option>
+                                    <option value="testimony">💬 Testimonies</option>
+                                    <option value="gallery">📸 Ministry Gallery</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description (Optional)</label>
+                                <input type="text" name="image_description" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Upload Image *</label>
+                                <input type="file" name="ministry_image" class="form-input" accept="image/*" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit">📤 Upload Photo</button>
+                    </form>
+                </div>
+
+                <!-- Image Tabs -->
+                <div class="tabs">
+                    <button class="tab active" onclick="showImageType('all')">All Photos</button>
+                    <button class="tab" onclick="showImageType('hero')">🎯 Hero</button>
+                    <button class="tab" onclick="showImageType('about')">📖 About</button>
+                    <button class="tab" onclick="showImageType('crusade')">🌍 Crusades</button>
+                    <button class="tab" onclick="showImageType('testimony')">💬 Testimonies</button>
+                    <button class="tab" onclick="showImageType('gallery')">📸 Gallery</button>
+                </div>
+
+                <!-- Images Grid -->
+                <div id="all-images" class="tab-content active">
+                    {% for type, images in ministry_images.items %}
+                        {% if images %}
+                            <h3 style="margin-top:2rem;margin-bottom:1rem;text-transform:capitalize;">{{ type }} Images ({{ images|length }})</h3>
+                            <div class="items-grid">
+                                {% for image in images %}
+                                <div class="item-card">
+                                    <img src="{{ image.image.url }}" alt="{{ image.title }}" class="item-image">
+                                    <div class="item-content">
+                                        <div class="item-title">{{ image.title }}</div>
+                                        <div class="item-meta">
+                                            <span class="badge {% if image.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                                                {% if image.is_active %}Active{% else %}Hidden{% endif %}
+                                            </span>
+                                            <span style="margin-left:0.5rem;">{{ image.created_at|date:"M d, Y" }}</span>
+                                        </div>
+                                        <div class="item-actions">
+                                            <form method="post" style="display:inline;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="action" value="toggle_ministry_image">
+                                                <input type="hidden" name="image_id" value="{{ image.id }}">
+                                                <button type="submit" class="btn-icon {% if image.is_active %}btn-inactive{% else %}btn-active{% endif %}">
+                                                    {% if image.is_active %}Hide{% else %}Show{% endif %}
+                                                </button>
+                                            </form>
+                                            <form method="post" style="display:inline;" onsubmit="return confirm('Delete this image?');">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="action" value="delete_ministry_image">
+                                                <input type="hidden" name="image_id" value="{{ image.id }}">
+                                                <button type="submit" class="btn-icon btn-danger">🗑️</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                {% for type, images in ministry_images.items %}
+                <div id="images-{{ type }}" class="tab-content">
+                    {% if images %}
+                    <div class="items-grid">
+                        {% for image in images %}
+                        <div class="item-card">
+                            <img src="{{ image.image.url }}" alt="{{ image.title }}" class="item-image">
+                            <div class="item-content">
+                                <div class="item-title">{{ image.title }}</div>
+                                <div class="item-meta">
+                                    <span class="badge {% if image.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                                        {% if image.is_active %}Active{% else %}Hidden{% endif %}
+                                    </span>
+                                    <span style="margin-left:0.5rem;">{{ image.created_at|date:"M d, Y" }}</span>
+                                </div>
+                                <div class="item-actions">
+                                    <form method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="toggle_ministry_image">
+                                        <input type="hidden" name="image_id" value="{{ image.id }}">
+                                        <button type="submit" class="btn-icon {% if image.is_active %}btn-inactive{% else %}btn-active{% endif %}">
+                                            {% if image.is_active %}Hide{% else %}Show{% endif %}
+                                        </button>
+                                    </form>
+                                    <form method="post" style="display:inline;" onsubmit="return confirm('Delete this image?');">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="delete_ministry_image">
+                                        <input type="hidden" name="image_id" value="{{ image.id }}">
+                                        <button type="submit" class="btn-icon btn-danger">🗑️</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">📸</div>
+                        <h3>No {{ type|title }} Images Yet</h3>
+                        <p>Upload your first {{ type }} image using the form above</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </section>
+
+
+            <!-- Section 3: Current Statistics -->
+            <section class="section-card">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon">📊</div>
+                        <div>
+                            <h2 style="margin:0;">Current Statistics</h2>
+                            <p style="margin:0;color:var(--gray-600);font-size:0.9375rem;">Auto-calculated from donations</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">💰 Total Raised</div>
+                        <div class="stat-value">${{ stats.total_raised|floatformat:2 }}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">👥 Total Donors</div>
+                        <div class="stat-value">{{ stats.total_donors }}</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Crusade Goals -->
+            <section class="section-card">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon">🎯</div>
+                        <div>
+                            <h2 style="margin:0;">Crusade Goals</h2>
+                            <p style="margin:0;color:var(--gray-600);font-size:0.9375rem;">Set your ministry's crusade targets</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_stats">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">💵 Budgeted Amount ($)</label>
+                            <input type="number" name="budgeted_amount" class="form-input" value="{{ stats.budgeted_amount }}" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">🌍 Crusades Planned</label>
+                            <input type="number" name="crusades_planned" class="form-input" value="{{ stats.crusades_planned }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:1.5rem;">
+                        <label class="form-label">📍 Countries List (comma-separated)</label>
+                        <textarea name="countries_list" class="form-textarea" style="min-height:80px;">{{ stats.countries_list }}</textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">💾 Save Crusade Goals</button>
+                </form>
+            </section>
+
+            <!-- Section 5: Crusade Flyers - Donation Page -->
+            <section class="section-card">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon">🎨</div>
+                        <div>
+                            <h2 style="margin:0;">Crusade Flyers - Donation Page</h2>
+                            <p style="margin:0;color:var(--gray-600);font-size:0.9375rem;">Upload flyers displayed on the donation page</p>
+                        </div>
+                    </div>
+                    <span class="section-badge">{{ crusade_flyers|length }} Total</span>
+                </div>
+
+                <!-- Upload Form -->
+                <div class="upload-box">
+                    <h3>📤 Upload New Flyer</h3>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="upload_flyer">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Flyer Title *</label>
+                                <input type="text" name="flyer_title" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description (Optional)</label>
+                                <input type="text" name="flyer_description" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Upload Flyer *</label>
+                                <input type="file" name="flyer_image" class="form-input" accept="image/*" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit">📤 Upload Flyer</button>
+                    </form>
+                </div>
+
+                <!-- Existing Flyers -->
+                {% if crusade_flyers %}
+                <div class="items-grid">
+                    {% for flyer in crusade_flyers %}
+                    <div class="item-card">
+                        <img src="{{ flyer.image.url }}" alt="{{ flyer.title }}" class="item-image">
+                        <div class="item-content">
+                            <div class="item-title">{{ flyer.title }}</div>
+                            <div class="item-meta">
+                                <span class="badge {% if flyer.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                                    {% if flyer.is_active %}Shown{% else %}Hidden{% endif %}
+                                </span>
+                                <span style="margin-left:0.5rem;">{{ flyer.created_at|date:"M d, Y" }}</span>
+                            </div>
+                            <div class="item-actions">
+                                <form method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="toggle_flyer">
+                                    <input type="hidden" name="flyer_id" value="{{ flyer.id }}">
+                                    <button type="submit" class="btn-icon {% if flyer.is_active %}btn-inactive{% else %}btn-active{% endif %}">
+                                        {% if flyer.is_active %}Hide{% else %}Show{% endif %}
+                                    </button>
+                                </form>
+                                <form method="post" style="display:inline;" onsubmit="return confirm('Delete this flyer?');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="delete_flyer">
+                                    <input type="hidden" name="flyer_id" value="{{ flyer.id }}">
+                                    <button type="submit" class="btn-icon btn-danger">🗑️</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">🎨</div>
+                    <h3>No Flyers Yet</h3>
+                    <p>Upload your first crusade flyer using the form above</p>
+                </div>
+                {% endif %}
+            </section>
+
+            <!-- Section 6: Quick Actions -->
+            <section class="section-card">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon">⚡</div>
+                        <div>
+                            <h2 style="margin:0;">Quick Actions</h2>
+                            <p style="margin:0;color:var(--gray-600);font-size:0.9375rem;">Manage your website and donations</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <a href="{% url 'admin_dashboard' %}" style="text-decoration:none;">
+                        <div class="stat-card" style="cursor:pointer;transition:all 0.2s;">
+                            <div class="stat-label">📊 Dashboard</div>
+                            <div style="font-size:1rem;color:var(--gray-600);">View Overview</div>
+                        </div>
+                    </a>
+                    <a href="{% url 'donations_list' %}" style="text-decoration:none;">
+                        <div class="stat-card" style="cursor:pointer;transition:all 0.2s;">
+                            <div class="stat-label">💰 Donations</div>
+                            <div style="font-size:1rem;color:var(--gray-600);">View All</div>
+                        </div>
+                    </a>
+                    <a href="{% url 'export_donors_csv' %}" style="text-decoration:none;">
+                        <div class="stat-card" style="cursor:pointer;transition:all 0.2s;">
+                            <div class="stat-label">📥 Export CSV</div>
+                            <div style="font-size:1rem;color:var(--gray-600);">Download Data</div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Section 7: System Information -->
+            <section class="section-card">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon">ℹ️</div>
+                        <div>
+                            <h2 style="margin:0;">System Information</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">🕐 Last Updated</div>
+                        <div style="font-size:1rem;color:var(--navy-dark);">{{ stats.last_updated|date:"M d, Y H:i" }}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">👤 Logged In As</div>
+                        <div style="font-size:1rem;color:var(--navy-dark);">{{ user.username }}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">🌐 Ministry Site</div>
+                        <a href="{% url 'ministry_home' %}" style="font-size:1rem;color:var(--gold-base);">Visit Website →</a>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">💵 Donation Page</div>
+                        <a href="{% url 'donation_page' %}" style="font-size:1rem;color:var(--gold-base);">View Page →</a>
+                    </div>
+                </div>
+            </section>
+
         </div>
+    </main>
 
-        <!-- Quick Actions -->
-        <div class="settings-card">
-            <h3>⚡ Quick Actions</h3>
-            <p>Helpful shortcuts for managing your dashboard</p>
-
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                <a href="{% url 'admin_dashboard' %}" class="btn-save" style="text-decoration: none;">
-                    📊 View Dashboard
-                </a>
-                <a href="{% url 'donations_list' %}" class="btn-save" style="text-decoration: none;">
-                    💰 View Donations
-                </a>
-                <a href="{% url 'export_donors_csv' %}" class="btn-refresh" style="text-decoration: none;">
-                    📥 Export Donors
-                </a>
-                <a href="{% url 'export_donations_csv' %}" class="btn-refresh" style="text-decoration: none;">
-                    📥 Export Donations
-                </a>
+    <!-- Edit Testimony Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Testimony</h2>
+                <button class="btn-close" onclick="closeEditModal()">×</button>
             </div>
-        </div>
-
-        <!-- System Information -->
-        <div class="settings-card">
-            <h3>ℹ️ System Information</h3>
-            <p>Details about your dashboard installation</p>
-
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td style="color: #64748b;">Last Updated</td>
-                        <td><strong>{{ stats.last_updated|date:"F d, Y H:i" }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td style="color: #64748b;">Logged in as</td>
-                        <td><strong>{{ user.username }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td style="color: #64748b;">Public Site</td>
-                        <td><a href="{% url 'donation_page' %}" target="_blank">View Public Donation Page →</a></td>
-                    </tr>
-                </tbody>
-            </table>
+            <form method="post" id="editForm">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="edit_testimony">
+                <input type="hidden" name="testimony_id" id="edit_testimony_id">
+                <div class="form-group">
+                    <label class="form-label">Person's Name *</label>
+                    <input type="text" name="testimony_name" id="edit_name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Location *</label>
+                    <input type="text" name="testimony_location" id="edit_location" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Display Order</label>
+                    <input type="number" name="display_order" id="edit_order" class="form-input" min="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Testimony Text *</label>
+                    <textarea name="testimony_text" id="edit_text" class="form-textarea" required></textarea>
+                </div>
+                <button type="submit" class="btn-submit">💾 Save Changes</button>
+            </form>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Tab switching for ministry images
+        function showImageType(type) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            if (type === 'all') {
+                document.getElementById('all-images').classList.add('active');
+                document.querySelectorAll('.tab')[0].classList.add('active');
+            } else {
+                document.getElementById('images-' + type).classList.add('active');
+                event.target.classList.add('active');
+            }
+        }
+        
+        // Edit testimony modal
+        function editTestimony(id, name, location, text, order) {
+            document.getElementById('edit_testimony_id').value = id;
+            document.getElementById('edit_name').value = name;
+            document.getElementById('edit_location').value = location;
+            document.getElementById('edit_text').value = text;
+            document.getElementById('edit_order').value = order;
+            document.getElementById('editModal').classList.add('active');
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
+        
+        // Hover effect for stat cards
+        document.querySelectorAll('.stat-card').forEach(card => {
+            if (card.parentElement.tagName === 'A') {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px)';
+                    this.style.boxShadow = 'var(--shadow-md)';
+                    this.style.borderColor = 'var(--gold-base)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                    this.style.borderColor = 'var(--gray-200)';
+                });
+            }
+        });
+    </script>
 </body>
 </html>

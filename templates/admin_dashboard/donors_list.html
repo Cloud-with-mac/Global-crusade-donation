@@ -1,219 +1,324 @@
-<!-- File: templates/admin_dashboard/donors_list.html -->
-<!-- CURRENCY-AWARE VERSION - MULTI-CURRENCY SUPPORT -->
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Donors - Ministry Admin</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+    <title>All Donors | Global Crusade Ministry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --navy-dark: #0f1419;
+            --navy-base: #1a2332;
+            --gold-base: #d4a574;
+            --gold-light: #e8c9a0;
+            --gold-dark: #b88a5f;
+            --cream: #faf8f5;
+            --warm-white: #ffffff;
+            --gray-50: #f9f7f4;
+            --gray-200: #e2ddd5;
+            --gray-500: #7a7269;
+            --gray-700: #3d3930;
+            --success: #10b981;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'DM Sans', sans-serif;
         }
-
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f8f9fa;
+            font-family: var(--font-body);
+            background: var(--cream);
+            color: var(--gray-700);
         }
-
+        
+        /* Sidebar */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
             width: 260px;
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            background: linear-gradient(180deg, var(--navy-base), var(--navy-dark));
             padding: 2rem 0;
             z-index: 1000;
+            box-shadow: 4px 0 12px rgba(0,0,0,0.1);
         }
-
+        
         .sidebar-brand {
-            color: white;
+            color: var(--warm-white);
+            font-family: var(--font-display);
             font-size: 1.5rem;
             font-weight: 700;
             padding: 0 1.5rem;
             margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
-
+        
+        .sidebar-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
         .sidebar-nav {
             list-style: none;
         }
-
+        
         .sidebar-nav li {
             margin-bottom: 0.5rem;
         }
-
+        
         .sidebar-nav a {
-            color: #94a3b8;
+            color: var(--gold-light);
             text-decoration: none;
-            padding: 0.75rem 1.5rem;
-            display: block;
+            padding: 0.875rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             transition: all 0.3s;
+            font-weight: 500;
         }
-
+        
         .sidebar-nav a:hover,
         .sidebar-nav a.active {
-            background: rgba(59, 130, 246, 0.1);
-            color: #60a5fa;
-            border-left: 3px solid #3b82f6;
+            background: rgba(212, 165, 116, 0.15);
+            color: var(--warm-white);
+            border-left: 3px solid var(--gold-base);
         }
-
+        
+        /* Main Content */
         .main-content {
             margin-left: 260px;
             padding: 2rem;
         }
-
+        
         .header {
-            background: white;
-            padding: 1.5rem 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background: linear-gradient(135deg, var(--navy-base), var(--navy-dark));
+            color: var(--warm-white);
+            padding: 2rem;
+            border-radius: 12px;
             margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .stat-label {
-            color: #64748b;
-            font-size: 0.875rem;
+        
+        .header h1 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
-
-        .stat-value {
-            color: #1e293b;
-            font-size: 1.75rem;
-            font-weight: 700;
+        
+        .header p {
+            color: var(--gold-light);
         }
-
-        .table-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
+        
         .btn-export {
-            background: #3b82f6;
-            color: white;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            color: var(--warm-white);
             border: none;
             padding: 0.75rem 1.5rem;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
             text-decoration: none;
             display: inline-block;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-
+        
         .btn-export:hover {
-            background: #2563eb;
-            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+            color: var(--warm-white);
         }
-
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--warm-white);
+            padding: 1.75rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 2px solid var(--gray-200);
+        }
+        
+        .stat-icon {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-label {
+            color: var(--gray-500);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+        }
+        
+        /* Table Card */
+        .table-card {
+            background: var(--warm-white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 2px solid var(--gray-200);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: var(--gray-50);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--navy-dark);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--gray-200);
+        }
+        
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            color: var(--gray-700);
+        }
+        
+        tr:hover {
+            background: var(--gray-50);
+        }
+        
+        /* Rank Badge */
         .rank-badge {
-            width: 40px;
-            height: 40px;
+            width: 2.5rem;
+            height: 2.5rem;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 700;
-            font-size: 1.125rem;
+            font-size: 1rem;
         }
-
-        .rank-1 { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
-        .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); }
-        .rank-3 { background: linear-gradient(135deg, #fb923c, #ea580c); }
-        .rank-other { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        
+        .rank-1 {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
         }
-
-        th {
-            background: #f8fafc;
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            color: #475569;
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-bottom: 2px solid #e2e8f0;
+        
+        .rank-2 {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+            box-shadow: 0 2px 8px rgba(148, 163, 184, 0.3);
         }
-
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid #e2e8f0;
-            color: #1e293b;
+        
+        .rank-3 {
+            background: linear-gradient(135deg, #fb923c, #ea580c);
+            box-shadow: 0 2px 8px rgba(251, 146, 60, 0.3);
         }
-
-        tr:hover {
-            background: #f8fafc;
+        
+        .rank-other {
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            box-shadow: 0 2px 8px rgba(212, 165, 116, 0.3);
         }
-
-        .amount-green {
-            color: #10b981;
-            font-weight: 600;
-        }
-
-        /* CURRENCY BADGES */
+        
+        /* Currency Badges */
         .currency-badge {
-            display: inline-block;
-            background: #e0e7ff;
-            color: #4338ca;
-            padding: 0.25rem 0.5rem;
+            background: rgba(212, 165, 116, 0.15);
+            color: var(--gold-dark);
+            padding: 0.25rem 0.625rem;
             border-radius: 4px;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-left: 0.5rem;
         }
-
-        /* MULTI-CURRENCY BREAKDOWN */
+        
         .currency-breakdown {
             font-size: 0.875rem;
-            color: #64748b;
-            margin-top: 0.25rem;
+            color: var(--gray-500);
+            margin-top: 0.5rem;
         }
-
+        
         .currency-item {
             display: inline-block;
             margin-right: 0.75rem;
+            background: var(--gray-50);
+            padding: 0.25rem 0.625rem;
+            border-radius: 4px;
         }
-
+        
+        .amount-display {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+        
+        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
-            color: #64748b;
+            color: var(--gray-500);
         }
-
-        .empty-state svg {
+        
+        .empty-icon {
+            font-size: 3rem;
             margin-bottom: 1rem;
             opacity: 0.5;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -221,45 +326,49 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-brand">
-            ⛪ Ministry Admin
+            <div class="sidebar-icon">✝</div>
+            <span>Ministry</span>
         </div>
         <ul class="sidebar-nav">
             <li><a href="{% url 'admin_dashboard' %}">📊 Dashboard</a></li>
             <li><a href="{% url 'donations_list' %}">💰 Donations</a></li>
             <li><a href="{% url 'donors_list' %}" class="active">👥 Donors</a></li>
-            <li><a href="{% url 'prayer_requests_list' %}">🙏 Prayer Requests</a></li>
+            <li><a href="{% url 'prayer_requests_list' %}">🙏 Prayers</a></li>
             <li><a href="{% url 'dashboard_settings' %}">⚙️ Settings</a></li>
-            <li><a href="{% url 'donation_page' %}">🏠 Public Site</a></li>
+            <li><a href="{% url 'ministry_home' %}">🏠 Ministry Site</a></li>
+            <li><a href="{% url 'donation_page' %}">💵 Donation Page</a></li>
             <li><a href="{% url 'dashboard_logout' %}">🚪 Logout</a></li>
         </ul>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Header -->
         <div class="header">
             <div>
-                <h1 style="font-size: 1.75rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">All Donors</h1>
-                <p style="color: #64748b;">Manage and view all donor information</p>
+                <h1>👥 All Donors</h1>
+                <p>Manage and view all donor information</p>
             </div>
-            <a href="{% url 'export_donors_csv' %}" class="btn-export">
-                📥 Export to CSV
-            </a>
+            <a href="{% url 'export_donors_csv' %}" class="btn-export">📥 Export to CSV</a>
         </div>
 
-        <!-- Stats Row -->
-        <div class="stats-row">
+        <!-- Stats Grid -->
+        <div class="stats-grid">
             <div class="stat-card">
+                <div class="stat-icon">👥</div>
                 <div class="stat-label">Total Donors</div>
                 <div class="stat-value">{{ total_donors }}</div>
             </div>
+            
             <div class="stat-card">
+                <div class="stat-icon">✨</div>
                 <div class="stat-label">Active Supporters</div>
                 <div class="stat-value">{{ active_donors }}</div>
             </div>
+            
             <div class="stat-card">
+                <div class="stat-icon">🏆</div>
                 <div class="stat-label">Top Donor</div>
-                <div class="stat-value" style="color: #10b981; font-size: 1.25rem;">
+                <div class="stat-value" style="color: var(--success); font-size: 1.5rem;">
                     {% if donors %}
                         {{ donors.0.primary_amount }}
                     {% else %}
@@ -272,7 +381,7 @@
         <!-- Donors Table -->
         <div class="table-card">
             {% if donors %}
-            <div class="table-responsive">
+            <div style="overflow-x: auto;">
                 <table>
                     <thead>
                         <tr>
@@ -282,7 +391,7 @@
                             <th>Phone</th>
                             <th>Country</th>
                             <th>Total Donated</th>
-                            <th># of Donations</th>
+                            <th># Donations</th>
                             <th>Joined</th>
                         </tr>
                     </thead>
@@ -290,31 +399,35 @@
                         {% for item in donors %}
                         <tr>
                             <td>
-                                <div class="rank-badge {% if forloop.counter == 1 %}rank-1{% elif forloop.counter == 2 %}rank-2{% elif forloop.counter == 3 %}rank-3{% else %}rank-other{% endif %}">
+                                <div class="rank-badge 
+                                    {% if forloop.counter == 1 %}rank-1
+                                    {% elif forloop.counter == 2 %}rank-2
+                                    {% elif forloop.counter == 3 %}rank-3
+                                    {% else %}rank-other{% endif %}">
                                     {{ forloop.counter }}
                                 </div>
                             </td>
-                            <td><strong>{{ item.donor.full_name }}</strong></td>
+                            <td><strong style="color: var(--navy-dark);">{{ item.donor.full_name }}</strong></td>
                             <td>{{ item.donor.email }}</td>
                             <td>{{ item.donor.phone|default:"—" }}</td>
                             <td>{{ item.donor.country }}</td>
                             <td>
-                                <!-- PRIMARY CURRENCY DISPLAY -->
                                 <div>
-                                    <span class="amount-green">{{ item.primary_amount }}</span>
+                                    <span class="amount-display">{{ item.primary_amount }}</span>
                                     <span class="currency-badge">{{ item.primary_currency }}</span>
                                 </div>
                                 
-                                <!-- MULTI-CURRENCY BREAKDOWN (if donor has multiple currencies) -->
                                 {% if item.currency_breakdown|length > 1 %}
                                 <div class="currency-breakdown">
                                     {% for curr_code, curr_data in item.currency_breakdown.items %}
-                                    <span class="currency-item">{{ curr_data.symbol }}{{ curr_data.total|floatformat:2 }} {{ curr_code }}</span>
+                                    <span class="currency-item">
+                                        {{ curr_data.symbol }}{{ curr_data.total|floatformat:2 }} {{ curr_code }}
+                                    </span>
                                     {% endfor %}
                                 </div>
                                 {% endif %}
                             </td>
-                            <td>{{ item.donation_count }}</td>
+                            <td><strong style="color: var(--gold-dark);">{{ item.donation_count }}</strong></td>
                             <td>{{ item.donor.created_at|date:"M d, Y" }}</td>
                         </tr>
                         {% endfor %}
@@ -323,16 +436,12 @@
             </div>
             {% else %}
             <div class="empty-state">
-                <svg width="64" height="64" fill="#cbd5e1" viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
-                <h3 style="color: #475569; margin-bottom: 0.5rem;">No Donors Yet</h3>
-                <p>When people make donations, they'll appear here.</p>
+                <div class="empty-icon">👥</div>
+                <h3 style="color: var(--navy-dark); margin-bottom: 0.5rem;">No Donors Yet</h3>
+                <p>When people make donations, they'll appear here</p>
             </div>
             {% endif %}
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

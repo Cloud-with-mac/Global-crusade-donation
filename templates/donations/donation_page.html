@@ -1,17 +1,31 @@
-<!-- File: templates/donations/donation_page.html -->
-<!-- UPDATED WITH CURRENCY DISPLAY: Bank (NGN with ₦) / PayPal (no symbol) -->
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support Our Global Crusade - Ministry Donations</title>
+    <title>Support Our Global Crusade | Global Crusade Ministry</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
+        :root {
+            --navy-dark: #0f1419;
+            --navy-base: #1a2332;
+            --gold-base: #d4a574;
+            --gold-light: #e8c9a0;
+            --gold-dark: #b88a5f;
+            --cream: #faf8f5;
+            --warm-white: #ffffff;
+            --gray-50: #f9f7f4;
+            --gray-200: #e2ddd5;
+            --gray-500: #7a7269;
+            --gray-700: #3d3930;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'DM Sans', sans-serif;
+            --transition-base: 250ms cubic-bezier(0.4,0,0.2,1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -19,47 +33,178 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--navy-base) 0%, var(--navy-dark) 100%);
             min-height: 100vh;
-            padding: 0;
         }
 
-        .top-nav {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
+        /* Professional Ministry Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(250, 248, 245, 0.98);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            transition: all var(--transition-base);
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .nav-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 2rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: space-between;
+            height: 5rem;
         }
 
-        .logo {
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .login-link {
-            color: white;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             text-decoration: none;
-            padding: 0.5rem 1.5rem;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 0.5rem;
-            transition: all 0.3s;
+            transition: opacity 0.15s;
+        }
+
+        .brand:hover {
+            opacity: 0.8;
+        }
+
+        .brand-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            border-radius: 8px;
+            font-size: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .brand-name {
+            font-family: var(--font-display);
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--navy-dark);
+            letter-spacing: -0.01em;
+        }
+
+        .brand-tagline {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--gray-700);
+            text-decoration: none;
             font-weight: 500;
+            font-size: 0.9375rem;
+            transition: color 0.15s;
         }
 
-        .login-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #3b82f6;
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold-base);
+            transition: width var(--transition-base);
         }
 
+        .nav-link:hover {
+            color: var(--navy-dark);
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            color: var(--warm-white);
+            padding: 0.625rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            transition: all var(--transition-base);
+            text-decoration: none;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .admin-login-nav {
+            background: transparent;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-700);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all var(--transition-base);
+        }
+
+        .admin-login-nav:hover {
+            background: var(--navy-base);
+            color: white;
+            border-color: var(--navy-base);
+        }
+
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--navy-base);
+            border-radius: 2px;
+            transition: all var(--transition-base);
+        }
+
+        /* Main Container */
         .container {
             max-width: 900px;
             margin: 0 auto;
             padding: 2rem 1rem;
+            padding-top: 7rem;
         }
 
         .header {
@@ -69,6 +214,7 @@
         }
 
         .header h1 {
+            font-family: var(--font-display);
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
@@ -76,13 +222,10 @@
 
         .header p {
             font-size: 1.125rem;
-            color: #94a3b8;
+            color: var(--gold-light);
         }
 
-        .flyers-section {
-            margin-bottom: 3rem;
-        }
-
+        /* Flyers */
         .flyers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -91,16 +234,17 @@
         }
 
         .flyer-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(250, 248, 245, 0.05);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1rem;
+            border: 2px solid rgba(212, 165, 116, 0.2);
+            border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.3s;
+            transition: all 0.3s;
         }
 
         .flyer-card:hover {
             transform: translateY(-5px);
+            border-color: var(--gold-base);
         }
 
         .flyer-image {
@@ -121,50 +265,22 @@
         }
 
         .flyer-description {
-            color: #94a3b8;
+            color: var(--gold-light);
             font-size: 0.875rem;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
+        /* Countries Section */
         .countries-section {
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 1rem;
+            background: rgba(212, 165, 116, 0.1);
+            border: 2px solid rgba(212, 165, 116, 0.3);
+            border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 3rem;
         }
 
         .countries-title {
             color: white;
+            font-family: var(--font-display);
             font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 1rem;
@@ -179,20 +295,54 @@
         }
 
         .country-tag {
-            background: rgba(59, 130, 246, 0.2);
-            border: 1px solid rgba(59, 130, 246, 0.4);
-            color: #93c5fd;
+            background: rgba(212, 165, 116, 0.2);
+            border: 1px solid rgba(212, 165, 116, 0.4);
+            color: var(--gold-light);
             padding: 0.5rem 1rem;
             border-radius: 2rem;
             font-size: 0.875rem;
             font-weight: 500;
         }
 
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(250, 248, 245, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(212, 165, 116, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Form Card */
         .form-card {
-            background: #1e293b;
-            border-radius: 1.5rem;
+            background: var(--navy-base);
+            border-radius: 16px;
             padding: 2.5rem;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(212, 165, 116, 0.1);
         }
 
         .form-section {
@@ -207,7 +357,7 @@
             margin-bottom: 1rem;
         }
 
-        /* ✅ UPDATED: Currency-aware amount input */
+        /* Amount Input */
         .amount-input-wrapper {
             position: relative;
             display: flex;
@@ -233,9 +383,9 @@
         .amount-input {
             width: 100%;
             padding: 1.25rem 1.5rem;
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 0.75rem;
+            background: var(--navy-dark);
+            border: 2px solid rgba(212, 165, 116, 0.3);
+            border-radius: 8px;
             color: white;
             font-size: 1.5rem;
             font-weight: 600;
@@ -248,24 +398,21 @@
 
         .amount-input:focus {
             outline: none;
-            border-color: #3b82f6;
-            background: #1e293b;
-        }
-
-        .amount-input::placeholder {
-            color: #475569;
+            border-color: var(--gold-base);
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
         }
 
         .currency-note {
-            color: #94a3b8;
+            color: var(--gold-light);
             font-size: 0.875rem;
             margin-top: 0.5rem;
             padding: 0.75rem 1rem;
-            background: rgba(59, 130, 246, 0.1);
-            border-left: 3px solid #3b82f6;
-            border-radius: 0.5rem;
+            background: rgba(212, 165, 116, 0.1);
+            border-left: 3px solid var(--gold-base);
+            border-radius: 8px;
         }
 
+        /* Radio Options */
         .radio-group {
             display: flex;
             gap: 1rem;
@@ -282,10 +429,10 @@
         .radio-option label {
             display: block;
             padding: 1rem;
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 0.75rem;
-            color: #94a3b8;
+            background: var(--navy-dark);
+            border: 2px solid rgba(212, 165, 116, 0.3);
+            border-radius: 8px;
+            color: var(--gold-light);
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
@@ -293,66 +440,16 @@
         }
 
         .radio-option input[type="radio"]:checked + label {
-            background: #3b82f6;
-            border-color: #3b82f6;
+            background: var(--gold-base);
+            border-color: var(--gold-base);
             color: white;
         }
 
         .radio-option label:hover {
-            border-color: #3b82f6;
+            border-color: var(--gold-base);
         }
 
-        .monthly-info {
-            background: linear-gradient(135deg, #8b5cf6, #6366f1);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin-top: 1rem;
-            display: none;
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        .monthly-info h4 {
-            color: white;
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .monthly-info p {
-            color: #e9d5ff;
-            font-size: 0.875rem;
-            line-height: 1.6;
-        }
-
-        .monthly-benefits {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 0.75rem;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
-
-        .monthly-benefits ul {
-            list-style: none;
-            padding: 0;
-            margin: 0.5rem 0 0 0;
-        }
-
-        .monthly-benefits li {
-            color: white;
-            padding: 0.5rem 0;
-            display: flex;
-            align-items: start;
-            gap: 0.5rem;
-        }
-
-        .monthly-benefits li:before {
-            content: "✓";
-            color: #10b981;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
+        /* Payment Grid */
         .payment-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -360,26 +457,18 @@
         }
 
         .payment-card {
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 0.75rem;
+            background: var(--navy-dark);
+            border: 2px solid rgba(212, 165, 116, 0.3);
+            border-radius: 8px;
             padding: 1.5rem 1rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
         }
 
-        .payment-card input[type="radio"] {
-            display: none;
-        }
-
         .payment-card.selected {
-            background: #1e3a5f;
-            border-color: #3b82f6;
-        }
-
-        .payment-card:hover {
-            border-color: #3b82f6;
+            background: rgba(212, 165, 116, 0.15);
+            border-color: var(--gold-base);
         }
 
         .payment-icon {
@@ -388,101 +477,54 @@
         }
 
         .payment-label {
-            color: #94a3b8;
+            color: var(--gold-light);
             font-size: 0.875rem;
             font-weight: 500;
-        }
-
-        .payment-sublabel {
-            font-size: 0.75rem;
-            color: #64748b;
-            margin-top: 0.25rem;
         }
 
         .payment-card.selected .payment-label {
             color: white;
         }
 
+        /* Instructions */
         .payment-instructions {
-            background: #f0f9ff;
-            border: 2px solid #3b82f6;
-            border-radius: 1rem;
+            background: rgba(212, 165, 116, 0.1);
+            border: 2px solid var(--gold-base);
+            border-radius: 12px;
             padding: 1.5rem;
             margin-top: 1rem;
-            animation: fadeIn 0.3s ease-in;
         }
 
         .payment-instructions h4 {
-            color: #1e40af;
+            color: white;
             margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
         .bank-detail {
-            background: white;
+            background: var(--navy-dark);
             padding: 1.25rem;
-            border-radius: 0.75rem;
+            border-radius: 8px;
             margin-bottom: 1rem;
         }
 
-        .bank-detail-row {
-            margin-bottom: 0.75rem;
-        }
-
-        .bank-detail-row:last-child {
-            margin-bottom: 0;
-        }
-
         .bank-detail-label {
-            color: #64748b;
+            color: var(--gray-500);
             font-size: 0.875rem;
         }
 
         .bank-detail-value {
-            color: #1e293b;
+            color: white;
             font-weight: 600;
             font-size: 1rem;
         }
 
-        .info-box {
-            background: #dbeafe;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border-left: 4px solid #3b82f6;
-        }
-
-        .info-box p {
-            color: #1e40af;
-            font-size: 0.875rem;
-            margin: 0;
-        }
-
-        .paypal-instructions {
-            background: #fefce8;
-            border: 2px solid #eab308;
-        }
-
-        .paypal-instructions h4 {
-            color: #854d0e;
-        }
-
-        .paypal-instructions .info-box {
-            background: #fef3c7;
-            border-left-color: #eab308;
-        }
-
-        .paypal-instructions .info-box p {
-            color: #854d0e;
-        }
-
+        /* Input Fields */
         .text-input, .select-input, .textarea-input {
             width: 100%;
             padding: 1rem 1.5rem;
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 0.75rem;
+            background: var(--navy-dark);
+            border: 2px solid rgba(212, 165, 116, 0.3);
+            border-radius: 8px;
             color: white;
             font-size: 1rem;
             transition: all 0.3s;
@@ -490,25 +532,28 @@
 
         .text-input:focus, .select-input:focus, .textarea-input:focus {
             outline: none;
-            border-color: #3b82f6;
-            background: #1e293b;
+            border-color: var(--gold-base);
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
         }
 
-        .text-input::placeholder, .textarea-input::placeholder {
-            color: #475569;
-        }
-
-        .select-input {
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.25rem;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
         }
 
-        .select-input option {
-            background: #1e293b;
-        }
-
-        .textarea-input {
-            resize: vertical;
-            font-family: inherit;
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 165, 116, 0.4);
         }
 
         .input-grid {
@@ -520,133 +565,91 @@
             grid-template-columns: repeat(2, 1fr);
         }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .input-label {
-            color: #cbd5e1;
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .quick-form-section {
-            background: rgba(59, 130, 246, 0.1);
-            border: 2px solid rgba(59, 130, 246, 0.3);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .quick-form-title {
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .full-form-section {
-            margin-bottom: 2rem;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 1.25rem;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            color: white;
-            border: none;
-            border-radius: 0.75rem;
-            font-size: 1.25rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 1.5rem;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
-        }
-
-        .security-text {
-            text-align: center;
-            color: #64748b;
-            font-size: 0.875rem;
-            margin-top: 1rem;
-        }
-
-        .messages {
-            padding: 1rem;
-            border-radius: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .messages.success {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid #10b981;
-            color: #10b981;
-        }
-
-        .messages.error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid #ef4444;
-            color: #ef4444;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 5rem;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: var(--warm-white);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateX(100%);
+                transition: all var(--transition-base);
+            }
+
+            .nav-menu.active {
+                opacity: 1;
+                visibility: visible;
+                transform: translateX(0);
+            }
+
+            .mobile-toggle {
+                display: flex;
+            }
+
             .payment-grid {
                 grid-template-columns: 1fr;
             }
+
             .input-grid.two-cols {
                 grid-template-columns: 1fr;
             }
-            .header h1 {
-                font-size: 2rem;
-            }
-            .top-nav {
-                padding: 1rem;
+
+            .brand-tagline {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <div class="top-nav">
-        <div class="logo">⛪ Ministry Crusade</div>
-        <a href="{% url 'custom_login' %}" class="login-link">🔐 Admin Login</a>
-    </div>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'ministry_home' %}" class="brand">
+                <div class="brand-icon">✝</div>
+                <div class="brand-text">
+                    <span class="brand-name">Global Crusade</span>
+                    <span class="brand-tagline">OUTREACH</span>
+                </div>
+            </a>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="{% url 'ministry_home' %}" class="nav-link">Home</a></li>
+                <li><a href="{% url 'ministry_about' %}" class="nav-link">About</a></li>
+                <li><a href="{% url 'ministry_crusades' %}" class="nav-link">Crusades</a></li>
+                <li><a href="{% url 'ministry_testimonies' %}" class="nav-link">Testimonies</a></li>
+                <li><a href="{% url 'ministry_contact' %}" class="nav-link">Contact</a></li>
+                <li><a href="{% url 'donation_page' %}" class="nav-cta active">Donate</a></li>
+                <li><a href="{% url 'custom_login' %}" class="admin-login-nav">🔐 Admin</a></li>
+            </ul>
+            
+            <button class="mobile-toggle" id="mobileToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
 
     <div class="container">
         {% if crusade_flyers %}
-        <div class="flyers-section">
-            <div class="flyers-grid">
-                {% for flyer in crusade_flyers %}
-                <div class="flyer-card">
-                    <img src="{{ flyer.image.url }}" alt="{{ flyer.title }}" class="flyer-image">
-                    <div class="flyer-content">
-                        <div class="flyer-title">{{ flyer.title }}</div>
-                        {% if flyer.description %}
-                        <div class="flyer-description">{{ flyer.description }}</div>
-                        {% endif %}
-                    </div>
+        <div class="flyers-grid">
+            {% for flyer in crusade_flyers %}
+            <div class="flyer-card">
+                <img src="{{ flyer.image.url }}" alt="{{ flyer.title }}" class="flyer-image">
+                <div class="flyer-content">
+                    <div class="flyer-title">{{ flyer.title }}</div>
+                    {% if flyer.description %}
+                    <div class="flyer-description">{{ flyer.description }}</div>
+                    {% endif %}
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
         </div>
         {% endif %}
 
@@ -681,17 +684,10 @@
             </div>
         </div>
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="messages {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-
         <div class="form-card">
             <form method="post" id="donationForm">
                 {% csrf_token %}
 
-                <!-- ✅ UPDATED: Currency-aware amount input -->
                 <div class="form-section">
                     <label class="form-label">Donation Amount *</label>
                     <div class="amount-input-wrapper">
@@ -708,7 +704,6 @@
                         >
                     </div>
                     
-                    <!-- Hidden currency field (auto-set by JavaScript) -->
                     <select name="currency" id="currencySelect" style="display: none;">
                         <option value="">Auto</option>
                         <option value="NGN">NGN</option>
@@ -734,27 +729,6 @@
                             <label for="monthly">💖 Monthly</label>
                         </div>
                     </div>
-
-                    <div id="monthly-info" class="monthly-info">
-                        <h4><span>💖</span> Monthly Donation - Sustaining Partner</h4>
-                        <p>Thank you for considering a monthly donation! Your ongoing support allows us to plan and execute long-term ministry initiatives with confidence.</p>
-                        
-                        <div class="monthly-benefits">
-                            <strong style="color: white;">As a Monthly Partner, you'll receive:</strong>
-                            <ul>
-                                <li>Monthly email updates on crusade impact</li>
-                                <li>Prayer requests from the field</li>
-                                <li>Exclusive photos and testimonies</li>
-                                <li>Annual impact report</li>
-                            </ul>
-                        </div>
-
-                        <div class="info-box" style="margin-top: 1rem; background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.4);">
-                            <p style="color: white; font-size: 0.875rem;">
-                                <strong id="monthly-payment-note"></strong>
-                            </p>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="form-section">
@@ -764,124 +738,79 @@
                             <input type="radio" name="payment_method" value="bank" checked>
                             <div class="payment-icon">🏦</div>
                             <div class="payment-label">Bank Transfer</div>
-                            <div class="payment-sublabel">Instant (Nigerian Banks)</div>
                         </label>
                         <label class="payment-card">
                             <input type="radio" name="payment_method" value="paypal">
-                            <div class="payment-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="#94a3b8">
-                                    <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 0 1 .923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z"/>
-                                </svg>
-                            </div>
+                            <div class="payment-icon">💳</div>
                             <div class="payment-label">PayPal</div>
-                            <div class="payment-sublabel">International Payments</div>
                         </label>
                     </div>
                 </div>
 
                 <div id="bank-instructions" class="payment-instructions">
-                    <h4><span>🏦</span> Bank Transfer Details</h4>
+                    <h4>🏦 Bank Transfer Details</h4>
                     <div class="bank-detail">
-                        <div class="bank-detail-row">
+                        <div style="margin-bottom: 0.75rem;">
                             <span class="bank-detail-label">Bank Name:</span>
                             <div class="bank-detail-value">United Bank Africa PLC</div>
                         </div>
-                        <div class="bank-detail-row">
+                        <div style="margin-bottom: 0.75rem;">
                             <span class="bank-detail-label">Account Number:</span>
                             <div class="bank-detail-value" style="font-family: monospace; font-size: 1.125rem;">1023888802</div>
                         </div>
-                        <div class="bank-detail-row">
+                        <div>
                             <span class="bank-detail-label">Account Name:</span>
                             <div class="bank-detail-value">Eternity Voice International Ministry</div>
                         </div>
                     </div>
-                    <div class="info-box">
-                        <p><strong>📌 Important:</strong> <span id="bank-transfer-note">After making the transfer, you'll receive instructions via email.</span></p>
-                    </div>
                 </div>
 
-                <div id="paypal-instructions" class="payment-instructions paypal-instructions" style="display: none;">
-                    <h4><span>💳</span> PayPal Payment</h4>
-                    <div class="bank-detail">
-                        <p style="color: #475569; margin-bottom: 1rem;" id="paypal-donation-note">You'll be redirected to PayPal to complete your donation securely.</p>
-                        <div style="text-align: center;">
-                            <div style="display: inline-block; background: #ffc439; padding: 0.75rem 2rem; border-radius: 2rem;">
-                                <strong style="color: #003087;">PayPal</strong> <span style="color: #009cde;">Secure</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="info-box">
-                        <p><strong>🌍 Perfect for International Donors:</strong> PayPal accepts all major currencies and credit cards worldwide.</p>
-                    </div>
+                <div id="paypal-instructions" class="payment-instructions" style="display: none;">
+                    <h4>💳 PayPal Payment</h4>
+                    <p style="color: var(--gold-light);">You'll be redirected to PayPal to complete your donation securely.</p>
                 </div>
 
-                <div id="quick-form" class="quick-form-section">
-                    <h3 class="quick-form-title">✉️ Your Contact Information</h3>
+                <div id="quick-form">
                     <div class="input-grid">
-                        <div class="input-group">
-                            <label class="input-label">Email Address *</label>
+                        <div>
+                            <label class="form-label">Email Address *</label>
                             <input type="email" name="quick_email" id="quick_email" class="text-input" placeholder="your@email.com" required>
                         </div>
-                        <div class="input-group">
-                            <label class="input-label">Full Name *</label>
+                        <div>
+                            <label class="form-label">Full Name *</label>
                             <input type="text" name="quick_name" id="quick_name" class="text-input" placeholder="John Doe" required>
                         </div>
                     </div>
-                    <p style="color: #94a3b8; font-size: 0.875rem; margin-top: 1rem;">
-                        We'll send confirmation and instructions to your email address.
-                    </p>
                 </div>
 
-                <div id="full-form" class="full-form-section" style="display: none;">
-                    <label class="form-label">Your Information</label>
+                <div id="full-form" style="display: none;">
                     <div class="input-grid">
-                        <div class="input-group">
-                            <label class="input-label">Full Name *</label>
-                            <input type="text" name="full_name" id="full_name" class="text-input" placeholder="John Doe">
+                        <div>
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" name="full_name" id="full_name" class="text-input">
                         </div>
                     </div>
                     <div class="input-grid two-cols" style="margin-top: 1.5rem;">
-                        <div class="input-group">
-                            <label class="input-label">Email *</label>
-                            <input type="email" name="email" id="email" class="text-input" placeholder="john@example.com">
+                        <div>
+                            <label class="form-label">Email *</label>
+                            <input type="email" name="email" id="email" class="text-input">
                         </div>
-                        <div class="input-group">
-                            <label class="input-label">Phone</label>
-                            <input type="tel" name="phone" id="phone" class="text-input" placeholder="+234 800 000 0000">
+                        <div>
+                            <label class="form-label">Phone</label>
+                            <input type="tel" name="phone" id="phone" class="text-input">
                         </div>
                     </div>
                     <div class="input-grid" style="margin-top: 1.5rem;">
-                        <div class="input-group">
-                            <label class="input-label">Country *</label>
+                        <div>
+                            <label class="form-label">Country *</label>
                             <select name="country" id="country" class="select-input">
-                                <option value="">Select your country</option>
+                                <option value="">Select country</option>
                                 <option value="Nigeria">Nigeria</option>
                                 <option value="United States">United States</option>
                                 <option value="United Kingdom">United Kingdom</option>
                                 <option value="Canada">Canada</option>
-                                <option value="Australia">Australia</option>
-                                <option value="Ghana">Ghana</option>
-                                <option value="Kenya">Kenya</option>
-                                <option value="South Africa">South Africa</option>
-                                <option value="India">India</option>
                                 <option value="Other">Other</option>
                             </select>
-                        </div>
-                    </div>
-                    <div class="input-grid" style="margin-top: 1.5rem;">
-                        <div class="input-group">
-                            <label class="input-label">Message or Prayer Request (Optional)</label>
-                            <textarea name="message" id="message" class="textarea-input" rows="3" placeholder="Share your thoughts or prayer requests..."></textarea>
-                        </div>
-                    </div>
-
-                    <div id="bank-transfer-fields" style="margin-top: 1.5rem;">
-                        <div class="input-group">
-                            <label class="input-label">Transaction Reference (Optional)</label>
-                            <input type="text" name="transaction_reference" id="transaction_reference" class="text-input" placeholder="e.g., 123456789 or leave blank">
-                            <p style="color: #64748b; font-size: 0.75rem; margin-top: 0.5rem;">
-                                You can submit this form now and email us the reference later at: <strong>eternityvoice2007@yahoo.com</strong>
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -889,20 +818,20 @@
                 <button type="submit" class="submit-btn">
                     <span id="submit-text">📝 Submit Donation Details</span>
                 </button>
-
-                <div class="security-text">
-                    🔒 Your information is secure and confidential
-                </div>
             </form>
-        </div>
-
-        <div style="text-align: center; color: #64748b; font-size: 0.875rem; margin-top: 2rem;">
-            💚 Your donation helps us reach communities worldwide with the Gospel
         </div>
     </div>
 
     <script>
-        // ✅ Currency display update
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        if (mobileToggle && navMenu) {
+            mobileToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+        }
+
         function updateCurrencyDisplay() {
             const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value;
             const currencySymbol = document.getElementById('currencySymbol');
@@ -911,152 +840,50 @@
             const currencyNote = document.getElementById('currencyNote');
             
             if (paymentMethod === 'bank') {
-                // Bank Transfer - Show ₦, set NGN
                 currencySymbol.classList.add('active');
                 amountInput.classList.add('has-symbol');
                 currencySelect.value = 'NGN';
-                amountInput.placeholder = 'e.g., 50000';
-                currencyNote.innerHTML = '💡 Bank transfers are in Nigerian Naira (₦). Enter amount without decimals.';
-                
-            } else if (paymentMethod === 'paypal') {
-                // PayPal - No symbol, empty currency
-                currencySymbol.classList.remove('active');
-                amountInput.classList.remove('has-symbol');
-                currencySelect.value = '';
-                amountInput.placeholder = 'e.g., 100';
-                currencyNote.innerHTML = '💡 Enter amount in your local currency. PayPal will handle conversion automatically.';
-                
+                currencyNote.innerHTML = '💡 Bank transfers are in Nigerian Naira (₦)';
             } else {
-                // Card - no symbol
                 currencySymbol.classList.remove('active');
                 amountInput.classList.remove('has-symbol');
                 currencySelect.value = '';
-                amountInput.placeholder = 'Enter amount';
-                currencyNote.innerHTML = '💡 Enter the donation amount';
+                currencyNote.innerHTML = '💡 PayPal accepts all currencies';
             }
         }
 
-        // Conditional form display
-        function updateFormDisplay() {
-            const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
-            const quickForm = document.getElementById('quick-form');
-            const fullForm = document.getElementById('full-form');
-            
-            const quickEmail = document.getElementById('quick_email');
-            const quickName = document.getElementById('quick_name');
-            const fullName = document.getElementById('full_name');
-            const email = document.getElementById('email');
-            const country = document.getElementById('country');
-            
-            if (paymentMethod === 'bank' || paymentMethod === 'paypal') {
-                quickForm.style.display = 'block';
-                fullForm.style.display = 'none';
-                
-                quickEmail.required = true;
-                quickName.required = true;
-                
-                if (fullName) fullName.required = false;
-                if (email) email.required = false;
-                if (country) country.required = false;
-                
-            } else {
-                quickForm.style.display = 'none';
-                fullForm.style.display = 'block';
-                
-                if (fullName) fullName.required = true;
-                if (email) email.required = true;
-                if (country) country.required = true;
-                
-                quickEmail.required = false;
-                quickName.required = false;
-            }
-        }
-        
-        // Payment card selection
         document.querySelectorAll('.payment-card').forEach(card => {
             card.addEventListener('click', function() {
                 document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('selected'));
                 this.classList.add('selected');
                 this.querySelector('input[type="radio"]').checked = true;
-                const event = new Event('change');
-                this.querySelector('input[type="radio"]').dispatchEvent(event);
-            });
-        });
-
-        // Update monthly info
-        function updateMonthlyInfo() {
-            const donationType = document.querySelector('input[name="donation_type"]:checked').value;
-            const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
-            const monthlyInfo = document.getElementById('monthly-info');
-            const monthlyPaymentNote = document.getElementById('monthly-payment-note');
-            const bankTransferNote = document.getElementById('bank-transfer-note');
-            const paypalDonationNote = document.getElementById('paypal-donation-note');
-            
-            if (donationType === 'monthly') {
-                monthlyInfo.style.display = 'block';
                 
-                if (paymentMethod === 'bank') {
-                    monthlyPaymentNote.innerHTML = '💰 Bank Transfer: You\'ll make a manual transfer each month. We\'ll send you a reminder email.';
-                    bankTransferNote.innerHTML = 'For monthly donations: Make this transfer now. We\'ll send you a reminder each month.';
-                } else if (paymentMethod === 'paypal') {
-                    monthlyPaymentNote.innerHTML = '🔄 PayPal: You\'ll set up an automatic subscription. PayPal charges automatically each month!';
-                    paypalDonationNote.innerHTML = 'You\'ll set up a PayPal subscription that automatically charges your account each month.';
-                }
-            } else {
-                monthlyInfo.style.display = 'none';
-                bankTransferNote.innerHTML = 'After making the transfer, you\'ll receive instructions via email.';
-                paypalDonationNote.innerHTML = 'You\'ll be redirected to PayPal to complete your donation securely.';
-            }
-        }
-
-        // Payment method toggle
-        document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
-            radio.addEventListener('change', function() {
+                const method = this.querySelector('input').value;
                 const bankInstructions = document.getElementById('bank-instructions');
                 const paypalInstructions = document.getElementById('paypal-instructions');
-                const submitText = document.getElementById('submit-text');
                 
-                if (this.value === 'bank') {
+                if (method === 'bank') {
                     bankInstructions.style.display = 'block';
                     paypalInstructions.style.display = 'none';
-                    submitText.textContent = '📝 Submit Donation Details';
-                } else if (this.value === 'paypal') {
+                } else {
                     bankInstructions.style.display = 'none';
                     paypalInstructions.style.display = 'block';
-                    submitText.textContent = '💳 Continue to PayPal';
                 }
                 
-                updateMonthlyInfo();
-                updateFormDisplay();
-                updateCurrencyDisplay(); // ✅ Update currency
+                updateCurrencyDisplay();
             });
         });
 
-        // Donation type toggle
-        document.querySelectorAll('input[name="donation_type"]').forEach(radio => {
-            radio.addEventListener('change', updateMonthlyInfo);
-        });
-
-        // Form submission handler
-        document.getElementById('donationForm').addEventListener('submit', function(e) {
-            const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+        document.getElementById('donationForm').addEventListener('submit', function() {
+            const quickEmail = document.getElementById('quick_email').value;
+            const quickName = document.getElementById('quick_name').value;
             
-            if (paymentMethod === 'bank' || paymentMethod === 'paypal') {
-                const quickEmail = document.getElementById('quick_email').value;
-                const quickName = document.getElementById('quick_name').value;
-                
-                document.getElementById('full_name').value = quickName;
-                document.getElementById('email').value = quickEmail;
-                document.getElementById('country').value = 'Other';
-            }
+            document.getElementById('full_name').value = quickName;
+            document.getElementById('email').value = quickEmail;
+            document.getElementById('country').value = 'Other';
         });
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            updateFormDisplay();
-            updateMonthlyInfo();
-            updateCurrencyDisplay(); // ✅ Initialize currency display
-        });
+        updateCurrencyDisplay();
     </script>
 </body>
 </html>

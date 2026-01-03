@@ -1,358 +1,451 @@
-<!-- File: templates/admin_dashboard/login.html -->
-<!-- Location: ministry_donation_site/templates/admin_dashboard/login.html -->
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Login - Ministry Admin</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <title>Admin Login | Global Crusade Ministry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --navy-dark: #0f1419;
+            --navy-base: #1a2332;
+            --gold-base: #d4a574;
+            --gold-light: #e8c9a0;
+            --gold-dark: #b88a5f;
+            --cream: #faf8f5;
+            --warm-white: #ffffff;
+            --gray-200: #e2ddd5;
+            --gray-500: #7a7269;
+            --gray-700: #3d3930;
+            --danger: #ef4444;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--navy-base) 0%, var(--navy-dark) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 2rem;
         }
-
-        .sora {
-            font-family: 'Sora', sans-serif;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-
-        .background-shapes {
+        
+        /* Decorative Background Elements */
+        .bg-decoration {
             position: fixed;
             width: 100%;
             height: 100%;
             overflow: hidden;
             z-index: 0;
+            pointer-events: none;
         }
-
-        .shape {
+        
+        .bg-circle {
             position: absolute;
-            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 165, 116, 0.08), transparent);
         }
-
-        .shape1 {
+        
+        .bg-circle-1 {
+            width: 500px;
+            height: 500px;
+            top: -200px;
+            right: -200px;
+        }
+        
+        .bg-circle-2 {
+            width: 400px;
+            height: 400px;
+            bottom: -150px;
+            left: -150px;
+        }
+        
+        .bg-circle-3 {
             width: 300px;
             height: 300px;
-            top: 10%;
-            left: 10%;
-            animation: float 6s ease-in-out infinite;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
-
-        .shape2 {
-            width: 200px;
-            height: 200px;
-            bottom: 15%;
-            right: 15%;
-            animation: float 8s ease-in-out infinite;
-            animation-delay: 2s;
-        }
-
-        .shape3 {
-            width: 150px;
-            height: 150px;
-            top: 60%;
-            left: 5%;
-            animation: float 7s ease-in-out infinite;
-            animation-delay: 1s;
-        }
-
+        
+        /* Login Container */
         .login-container {
             position: relative;
             z-index: 1;
-            max-width: 480px;
             width: 100%;
-            animation: fadeInUp 0.6s ease-out;
+            max-width: 450px;
         }
-
+        
+        /* Logo Section */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .logo-icon {
+            width: 5rem;
+            height: 5rem;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 32px rgba(212, 165, 116, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .logo-text {
+            color: var(--warm-white);
+        }
+        
+        .logo-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .logo-subtitle {
+            color: var(--gold-light);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+        }
+        
+        /* Login Card */
         .login-card {
-            background: white;
-            border-radius: 2rem;
+            background: var(--warm-white);
+            border-radius: 20px;
             padding: 3rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(212, 165, 116, 0.1);
         }
-
-        .logo-container {
+        
+        .login-header {
             text-align: center;
             margin-bottom: 2rem;
         }
-
-        .logo-circle {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        .logo-circle svg {
-            width: 40px;
-            height: 40px;
-            fill: white;
-        }
-
-        h1 {
-            font-size: 2rem;
+        
+        .login-header h2 {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
             font-weight: 700;
-            color: #1e293b;
+            color: var(--navy-dark);
             margin-bottom: 0.5rem;
         }
-
-        .subtitle {
-            color: #64748b;
-            font-size: 1rem;
+        
+        .login-header p {
+            color: var(--gray-500);
+            font-size: 0.9375rem;
         }
-
+        
+        /* Messages */
+        .messages {
+            margin-bottom: 1.5rem;
+        }
+        
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            color: #991b1b;
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            color: #065f46;
+        }
+        
+        /* Form */
         .form-group {
             margin-bottom: 1.5rem;
         }
-
-        label {
+        
+        .form-label {
             display: block;
+            color: var(--navy-dark);
             font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
+            font-size: 0.9375rem;
+            margin-bottom: 0.625rem;
         }
-
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 1rem 1.25rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 0.75rem;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            font-family: inherit;
+        
+        .input-wrapper {
+            position: relative;
         }
-
-        input[type="text"]:focus,
-        input[type="password"]:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            border-radius: 0.75rem;
+        
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
             font-size: 1.125rem;
-            font-weight: 600;
+            pointer-events: none;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--navy-dark);
+            transition: all 0.3s;
+            background: var(--warm-white);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gold-base);
+            box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.1);
+        }
+        
+        .form-input::placeholder {
+            color: var(--gray-500);
+        }
+        
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 1.125rem;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            color: var(--warm-white);
+            border: none;
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+            letter-spacing: 0.02em;
         }
-
-        .btn-login:hover {
+        
+        .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 24px rgba(212, 165, 116, 0.4);
         }
-
-        .btn-login:active {
+        
+        .btn-submit:active {
             transform: translateY(0);
         }
-
-        .alert {
-            padding: 1rem;
-            border-radius: 0.75rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.875rem;
-        }
-
-        .alert-error {
-            background: #fee2e2;
-            border: 1px solid #fca5a5;
-            color: #991b1b;
-        }
-
-        .alert-success {
-            background: #d1fae5;
-            border: 1px solid #6ee7b7;
-            color: #065f46;
-        }
-
-        .back-link {
-            display: block;
+        
+        /* Footer Links */
+        .login-footer {
             text-align: center;
-            margin-top: 1.5rem;
-            color: #64748b;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--gray-200);
+        }
+        
+        .footer-link {
+            color: var(--gold-base);
             text-decoration: none;
-            font-size: 0.875rem;
-            transition: color 0.3s;
+            font-weight: 600;
+            transition: color 0.2s;
         }
-
+        
+        .footer-link:hover {
+            color: var(--gold-dark);
+        }
+        
+        /* Back to Site Link */
+        .back-link {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            color: var(--gold-light);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            z-index: 10;
+            background: rgba(212, 165, 116, 0.1);
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            border: 2px solid rgba(212, 165, 116, 0.2);
+        }
+        
         .back-link:hover {
-            color: #667eea;
+            background: rgba(212, 165, 116, 0.2);
+            color: var(--warm-white);
+            transform: translateX(-4px);
         }
-
-        .divider {
-            margin: 2rem 0;
-            text-align: center;
-            position: relative;
-        }
-
-        .divider::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            width: 100%;
-            height: 1px;
-            background: #e2e8f0;
-        }
-
-        .divider span {
-            background: white;
-            padding: 0 1rem;
-            position: relative;
-            color: #94a3b8;
-            font-size: 0.875rem;
-        }
-
+        
+        /* Security Badge */
         .security-badge {
+            text-align: center;
+            color: var(--gray-500);
+            font-size: 0.875rem;
+            margin-top: 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            color: #64748b;
-            font-size: 0.75rem;
-            margin-top: 1.5rem;
         }
-
-        .security-badge svg {
-            width: 14px;
-            height: 14px;
-        }
-
+        
         @media (max-width: 640px) {
             .login-card {
-                padding: 2rem;
+                padding: 2rem 1.5rem;
             }
-
-            h1 {
-                font-size: 1.75rem;
+            
+            .logo-icon {
+                width: 4rem;
+                height: 4rem;
+                font-size: 2rem;
+            }
+            
+            .logo-title {
+                font-size: 1.5rem;
+            }
+            
+            .back-link {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.625rem 1rem;
+                font-size: 0.875rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Background Shapes -->
-    <div class="background-shapes">
-        <div class="shape shape1"></div>
-        <div class="shape shape2"></div>
-        <div class="shape shape3"></div>
+    <!-- Background Decoration -->
+    <div class="bg-decoration">
+        <div class="bg-circle bg-circle-1"></div>
+        <div class="bg-circle bg-circle-2"></div>
+        <div class="bg-circle bg-circle-3"></div>
     </div>
-
+    
+    <!-- Back to Site Link -->
+    <a href="{% url 'ministry_home' %}" class="back-link">
+        <span>←</span>
+        <span>Back to Ministry Site</span>
+    </a>
+    
+    <!-- Login Container -->
     <div class="login-container">
-        <div class="login-card">
-            <!-- Logo -->
-            <div class="logo-container">
-                <div class="logo-circle">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
-                    </svg>
-                </div>
-                <h1 class="sora">Ministry Dashboard</h1>
-                <p class="subtitle">Sign in to access admin panel</p>
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <div class="logo-icon">✝</div>
+            <div class="logo-text">
+                <h1 class="logo-title">Global Crusade</h1>
+                <p class="logo-subtitle">Ministry Admin</p>
             </div>
-
+        </div>
+        
+        <!-- Login Card -->
+        <div class="login-card">
+            <div class="login-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to access the admin dashboard</p>
+            </div>
+            
             <!-- Messages -->
             {% if messages %}
+            <div class="messages">
                 {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
+                <div class="alert alert-{{ message.tags }}">
+                    <span>
+                        {% if message.tags == 'error' %}⚠️{% else %}✓{% endif %}
+                    </span>
+                    <span>{{ message }}</span>
+                </div>
                 {% endfor %}
+            </div>
             {% endif %}
-
+            
             <!-- Login Form -->
             <form method="post">
                 {% csrf_token %}
                 
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input 
-                        type="text" 
-                        id="username" 
-                        name="username" 
-                        placeholder="Enter your username"
-                        required
-                        autofocus
-                    >
+                    <label for="username" class="form-label">Username</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username" 
+                            class="form-input" 
+                            placeholder="Enter your username"
+                            required
+                            autofocus
+                        >
+                    </div>
                 </div>
-
+                
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        placeholder="Enter your password"
-                        required
-                    >
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input" 
+                            placeholder="Enter your password"
+                            required
+                        >
+                    </div>
                 </div>
-
-                <button type="submit" class="btn-login">
-                    Sign In to Dashboard
+                
+                <button type="submit" class="btn-submit">
+                    🔐 Sign In to Dashboard
                 </button>
-
+                
                 <div class="security-badge">
-                    <svg fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-                    </svg>
-                    <span>Secure authentication</span>
+                    <span>🔒</span>
+                    <span>Secure Admin Access</span>
                 </div>
             </form>
-
-            <div class="divider">
-                <span>or</span>
+            
+            <!-- Footer -->
+            <div class="login-footer">
+                <p style="color: var(--gray-500); margin-bottom: 0.75rem;">
+                    Need access?
+                </p>
+                <a href="{% url 'ministry_contact' %}" class="footer-link">
+                    Contact Ministry Administrator
+                </a>
             </div>
-
-            <a href="{% url 'donation_page' %}" class="back-link">
-                ← Back to donation page
-            </a>
+        </div>
+        
+        <!-- Copyright -->
+        <div style="text-align: center; margin-top: 2rem; color: var(--gold-light); font-size: 0.875rem;">
+            © 2026 Global Crusade Ministry. All rights reserved.
         </div>
     </div>
 </body>

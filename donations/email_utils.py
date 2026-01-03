@@ -1,5 +1,6 @@
 # File: donations/email_utils.py
 # OPTION A VERSION - USES SEPARATE CURRENCY, PAYMENT_GATEWAY, MESSAGE FIELDS
+# ✅ FIXED: Added 'currency' variable to send_donation_receipt context (line 42)
 
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -41,6 +42,7 @@ def send_donation_receipt(donation, prayer_request=None):
     context = {
         'donor_name': donation.donor.full_name,
         'amount': donation.amount,
+        'currency': currency_info['code'],  # ✅ FIXED: Added currency variable for template!
         'currency_symbol': currency_info['symbol'],
         'currency_code': currency_info['code'],
         'formatted_amount': currency_info['formatted_amount'],
@@ -48,7 +50,7 @@ def send_donation_receipt(donation, prayer_request=None):
         'donation_date': donation.created_at.strftime('%B %d, %Y at %I:%M %p'),
         'donation_type': donation.get_donation_type_display(),
         'payment_method': donation.get_payment_method_display(),
-        'payment_gateway': donation.get_payment_gateway_display(),  # ✅ NEW
+        'payment_gateway': donation.get_payment_gateway_display(),
         'transaction_id': donation.payment_reference or donation.stripe_payment_id or 'Processing',
         'prayer_request': prayer_request.request_text if prayer_request else None,
     }
@@ -100,7 +102,7 @@ def send_admin_notification(donation, is_first_time=False, prayer_request=None):
         'donation_date': donation.created_at.strftime('%B %d, %Y at %I:%M %p'),
         'donation_type': donation.get_donation_type_display(),
         'payment_method': donation.get_payment_method_display(),
-        'payment_gateway': donation.get_payment_gateway_display(),  # ✅ NEW
+        'payment_gateway': donation.get_payment_gateway_display(),
         'transaction_id': donation.payment_reference or donation.stripe_payment_id or 'Pending',
         'prayer_request': prayer_request.request_text if prayer_request else None,
         'dashboard_url': f"{settings.SITE_URL}/dashboard/",

@@ -1,9 +1,18 @@
 # File: donations/admin.py
-# OPTION A VERSION - USES SEPARATE FIELDS FROM MODELS
+# UPDATED VERSION - WITH TestimonyAdmin ADDED
 
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Donor, Donation, CrusadeStats, PrayerRequest, Newsletter, CrusadeFlyer
+from .models import (
+    Donor, 
+    Donation, 
+    CrusadeStats, 
+    PrayerRequest, 
+    Newsletter, 
+    CrusadeFlyer,
+    MinistryImage,
+    Testimony  # ⭐ NEW!
+)
 
 
 @admin.register(Donor)
@@ -26,7 +35,6 @@ class DonorAdmin(admin.ModelAdmin):
 
 @admin.register(Donation)
 class DonationAdmin(admin.ModelAdmin):
-    # ✅ USES ACTUAL FIELDS: currency, payment_gateway, message
     list_display = ['donor', 'formatted_amount', 'currency', 'donation_type', 'payment_gateway', 'payment_method', 'status', 'created_at']
     list_filter = ['status', 'currency', 'donation_type', 'payment_method', 'payment_gateway', 'created_at']
     search_fields = ['donor__full_name', 'donor__email', 'payment_reference']
@@ -50,7 +58,6 @@ class DonationAdmin(admin.ModelAdmin):
     
     actions = ['mark_as_completed', 'mark_as_failed']
     
-    # ✅ Custom method to show formatted amount with currency symbol
     def formatted_amount(self, obj):
         """Display amount with currency symbol"""
         symbols = {
@@ -77,7 +84,6 @@ class DonationAdmin(admin.ModelAdmin):
             donation.save()
             updated += 1
         
-        # ⭐ Update stats after marking as completed
         from .models import CrusadeStats
         stats = CrusadeStats.get_stats()
         stats.update_from_donations()
@@ -110,11 +116,9 @@ class CrusadeStatsAdmin(admin.ModelAdmin):
     )
     
     def has_add_permission(self, request):
-        # Only allow one stats object
         return not CrusadeStats.objects.exists()
     
     def has_delete_permission(self, request, obj=None):
-        # Don't allow deletion of stats
         return False
 
 
@@ -192,3 +196,72 @@ class CrusadeFlyerAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+
+@admin.register(MinistryImage)
+class MinistryImageAdmin(admin.ModelAdmin):
+    list_display = ['title', 'image_type', 'is_active', 'display_order', 'created_at']
+    list_filter = ['image_type', 'is_active', 'created_at']
+    search_fields = ['title', 'description']
+    readonly_fields = ['created_at', 'updated_at']
+    list_editable = ['is_active', 'display_order']
+    
+    fieldsets = (
+        ('Image Information', {
+            'fields': ('title', 'description', 'image', 'image_type')
+        }),
+        ('Display Settings', {
+            'fields': ('is_active', 'display_order')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def get_queryset(self, request):
+        """Order by image type and display order"""
+        qs = super().get_queryset(request)
+        return qs.order_by('image_type', 'display_order', '-created_at')
+
+
+# ═══════════════════════════════════════════════════
+# ⭐ NEW: TESTIMONY ADMIN
+# ═══════════════════════════════════════════════════
+
+@admin.register(Testimony)
+class TestimonyAdmin(admin.ModelAdmin):
+    list_display = ['name', 'location', 'is_active', 'display_order', 'created_at']
+    list_filter = ['is_active', 'created_at']
+    search_fields = ['name', 'location', 'testimony_text']
+    readonly_fields = ['created_at', 'updated_at']
+    list_editable = ['is_active', 'display_order']
+    
+    fieldsets = (
+        ('Person Details', {
+            'fields': ('name', 'location')
+        }),
+        ('Testimony Content', {
+            'fields': ('testimony_text',)
+        }),
+        ('Display Settings', {
+            'fields': ('is_active', 'display_order'),
+            'description': 'Control visibility and order on the website'
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['activate_testimonies', 'deactivate_testimonies']
+    
+    def activate_testimonies(self, request, queryset):
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f'{updated} testimony(ies) activated.')
+    activate_testimonies.short_description = 'Activate selected testimonies'
+    
+    def deactivate_testimonies(self, request, queryset):
+        updated = queryset.update(is_active=False)
+        self.message_user(request, f'{updated} testimony(ies) deactivated.')
+    deactivate_testimonies.short_description = 'Deactivate selected testimonies'

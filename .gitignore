@@ -1,51 +1,30 @@
-# .gitignore file
-
-.env
-*.pyc
-__pycache__/
-db.sqlite3
-/static/
-/media/
-venv/
-.DS_Store
 # Python
 *.pyc
+*.pyo
+*.pyd
 __pycache__/
-*.py[cod]
-*$py.class
 *.so
-.Python
-# Environment
-.env
-.venv
-*.env
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
 *.egg
+*.egg-info/
+dist/
+build/
 
 # Django
 *.log
-local_settings.py
 db.sqlite3
 db.sqlite3-journal
 /media
 /staticfiles
+local_settings.py
 
-# Environment
+# Environment variables
 .env
 .venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
 # IDE
 .vscode/
@@ -57,3 +36,29 @@ db.sqlite3-journal
 # OS
 .DS_Store
 Thumbs.db
+
+# Migrations (uncomment if you don't want to commit migrations)
+# */migrations/*
+# !*/migrations/__init__.py
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff
+*.log
+local_settings.py
+
+# Backup files
+*.bak
+*.backup
+
+# Uploaded media files (if you don't want to commit them)
+# media/

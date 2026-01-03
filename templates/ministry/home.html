@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Crusade Ministry - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>:root{--navy-dark:#0f1419;--navy-base:#1a2332;--navy-light:#2d3e50;--gold-base:#d4a574;--gold-light:#e8c9a0;--gold-dark:#b88a5f;--burgundy:#7a3942;--cream:#faf8f5;--warm-white:#ffffff;--gray-50:#f9f7f4;--gray-100:#f0ede8;--gray-200:#e2ddd5;--gray-300:#cdc7bd;--gray-400:#a8a099;--gray-500:#7a7269;--gray-600:#5a5349;--gray-700:#3d3930;--gray-800:#28241e;--font-display:'Cormorant Garamond',serif;--font-body:'DM Sans',sans-serif;--space-xs:0.5rem;--space-sm:1rem;--space-md:1.5rem;--space-lg:2rem;--space-xl:3rem;--space-2xl:4rem;--space-3xl:6rem;--shadow-subtle:0 1px 3px rgba(0,0,0,0.06);--shadow-sm:0 2px 8px rgba(0,0,0,0.08);--shadow-md:0 4px 16px rgba(0,0,0,0.1);--shadow-lg:0 8px 32px rgba(0,0,0,0.12);--shadow-xl:0 12px 48px rgba(0,0,0,0.15);--radius-sm:4px;--radius-md:8px;--radius-lg:12px;--radius-xl:16px;--transition-fast:150ms cubic-bezier(0.4,0,0.2,1);--transition-base:250ms cubic-bezier(0.4,0,0.2,1);--transition-slow:350ms cubic-bezier(0.4,0,0.2,1)}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}body{font-family:var(--font-body);font-size:17px;line-height:1.7;color:var(--gray-700);background:var(--cream);overflow-x:hidden}::selection{background:var(--gold-base);color:var(--warm-white)}h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:600;line-height:1.2;color:var(--navy-dark);letter-spacing:-0.02em}h1{font-size:clamp(2.5rem,6vw,5.5rem);font-weight:500}h2{font-size:clamp(2rem,4.5vw,4rem);font-weight:500}h3{font-size:clamp(1.5rem,3vw,2.5rem)}p{margin-bottom:var(--space-md);color:var(--gray-600)}.container{max-width:1280px;margin:0 auto;padding:0 var(--space-lg)}.section{padding:var(--space-3xl) 0}.section-lg{padding:7rem 0}.btn{display:inline-flex;align-items:center;gap:var(--space-sm);padding:1rem 2rem;font-family:var(--font-body);font-size:1rem;font-weight:600;letter-spacing:0.01em;text-decoration:none;border:2px solid transparent;border-radius:var(--radius-md);cursor:pointer;transition:all var(--transition-base);white-space:nowrap}.btn-primary{background:var(--gold-base);color:var(--warm-white);box-shadow:var(--shadow-sm)}.btn-primary:hover{background:var(--gold-dark);transform:translateY(-2px);box-shadow:var(--shadow-md)}.btn-secondary{background:transparent;color:var(--navy-base);border-color:var(--navy-base)}.btn-secondary:hover{background:var(--navy-base);color:var(--warm-white)}.btn-lg{padding:1.25rem 2.5rem;font-size:1.125rem}.btn-light{background:var(--warm-white);color:var(--gold-dark);box-shadow:var(--shadow-md)}.btn-light:hover{background:var(--gray-50);transform:translateY(-2px);box-shadow:var(--shadow-lg)}.btn-outline-light{background:transparent;color:var(--warm-white);border-color:var(--warm-white)}.btn-outline-light:hover{background:var(--warm-white);color:var(--gold-base)}.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(250,248,245,0.98);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,0.06);transition:all var(--transition-base)}.navbar.scrolled{box-shadow:var(--shadow-sm)}.nav-container{max-width:1440px;margin:0 auto;padding:0 var(--space-lg);display:flex;align-items:center;justify-content:space-between;height:5rem}.brand{display:flex;align-items:center;gap:var(--space-sm);text-decoration:none;transition:opacity var(--transition-fast)}.brand:hover{opacity:0.8}.brand-icon{width:2.5rem;height:2.5rem;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gold-base),var(--gold-light));border-radius:var(--radius-md);font-size:1.5rem;box-shadow:var(--shadow-subtle)}.brand-text{display:flex;flex-direction:column;line-height:1.2}.brand-name{font-family:var(--font-display);font-size:1.375rem;font-weight:600;color:var(--navy-dark);letter-spacing:-0.01em}.brand-tagline{font-size:0.75rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.08em}.nav-menu{display:flex;align-items:center;gap:var(--space-xl);list-style:none}.nav-link{position:relative;color:var(--gray-700);text-decoration:none;font-weight:500;font-size:0.9375rem;transition:color var(--transition-fast)}.nav-link::after{content:'';position:absolute;bottom:-0.5rem;left:0;width:0;height:2px;background:var(--gold-base);transition:width var(--transition-base)}.nav-link:hover{color:var(--navy-dark)}.nav-link:hover::after,.nav-link.active::after{width:100%}.nav-cta{background:linear-gradient(135deg,var(--gold-base),var(--gold-light));color:var(--warm-white);padding:0.625rem 1.5rem;border-radius:var(--radius-md);font-weight:600;font-size:0.9375rem;box-shadow:var(--shadow-subtle);transition:all var(--transition-base);text-decoration:none}.nav-cta:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm)}.mobile-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:var(--space-xs);z-index:1001}.mobile-toggle span{width:24px;height:2px;background:var(--navy-base);border-radius:2px;transition:all var(--transition-base)}.mobile-toggle.active span:nth-child(1){transform:rotate(45deg) translate(6px,6px)}.mobile-toggle.active span:nth-child(2){opacity:0}.mobile-toggle.active span:nth-child(3){transform:rotate(-45deg) translate(6px,-6px)}.hero{position:relative;min-height:100vh;display:flex;align-items:center;padding-top:7rem;padding-bottom:var(--space-3xl);background:linear-gradient(to bottom,var(--cream),var(--warm-white));overflow:hidden}.hero::before{content:'';position:absolute;top:0;right:-20%;width:50%;height:100%;background:radial-gradient(circle at center,rgba(212,165,116,0.08) 0%,transparent 70%);pointer-events:none}.hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:var(--space-3xl);align-items:center}.hero-content{position:relative;z-index:1}.hero-badge{display:inline-flex;align-items:center;gap:var(--space-xs);padding:var(--space-xs) var(--space-md);background:var(--warm-white);border:1px solid var(--gray-200);border-radius:100px;font-size:0.875rem;font-weight:600;color:var(--gold-dark);margin-bottom:var(--space-lg);box-shadow:var(--shadow-subtle)}.hero-badge::before{content:'✦';font-size:0.75rem}.hero-title{margin-bottom:var(--space-lg);line-height:1.1}.hero-title .highlight{color:var(--gold-base)}.hero-description{font-size:clamp(1.125rem,2vw,1.25rem);line-height:1.8;color:var(--gray-600);margin-bottom:var(--space-xl);max-width:580px}.hero-actions{display:flex;gap:var(--space-md);flex-wrap:wrap;margin-bottom:var(--space-2xl)}.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-xl);padding-top:var(--space-xl);border-top:1px solid var(--gray-200)}.stat-item{text-align:left}.stat-number{font-family:var(--font-display);font-size:clamp(2.5rem,4vw,3.5rem);font-weight:500;color:var(--navy-dark);line-height:1;margin-bottom:var(--space-xs)}.stat-label{font-size:0.9375rem;color:var(--gray-500);font-weight:500;text-transform:uppercase;letter-spacing:0.05em}.hero-visual{position:relative}.hero-image-main{position:relative;aspect-ratio:4/5;border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-xl);background:linear-gradient(135deg,var(--navy-light),var(--navy-base))}.hero-image-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--warm-white);font-size:4rem}.hero-accent-card{position:absolute;bottom:-2rem;left:-2rem;padding:var(--space-lg);background:var(--warm-white);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);max-width:280px}.accent-card-label{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-500);margin-bottom:var(--space-xs)}.accent-card-value{font-family:var(--font-display);font-size:2rem;font-weight:600;color:var(--gold-base)}.accent-card-text{font-size:0.9375rem;color:var(--gray-600);margin-top:var(--space-xs)}.mission{background:var(--warm-white)}.section-header{max-width:720px;margin:0 auto var(--space-3xl);text-align:center}.section-label{display:inline-block;font-size:0.875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--gold-base);margin-bottom:var(--space-md)}.section-title{margin-bottom:var(--space-md)}.section-description{font-size:1.125rem;line-height:1.8;color:var(--gray-600)}.mission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-lg)}.mission-card{padding:var(--space-xl);background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-lg);transition:all var(--transition-slow);position:relative}.mission-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold-base),var(--gold-light));opacity:0;transition:opacity var(--transition-base)}.mission-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--gold-base)}.mission-card:hover::before{opacity:1}.mission-icon{font-size:3rem;margin-bottom:var(--space-md);line-height:1}.mission-card h3{font-size:1.5rem;margin-bottom:var(--space-sm);color:var(--navy-dark)}.mission-card p{font-size:1rem;line-height:1.7;color:var(--gray-600);margin-bottom:0}.cta{background:linear-gradient(135deg,var(--gold-base),var(--gold-light));color:var(--warm-white);position:relative;overflow:hidden}.cta::before{content:'';position:absolute;top:-50%;right:-20%;width:60%;height:200%;background:radial-gradient(circle,rgba(255,255,255,0.15) 0%,transparent 70%);animation:pulse 20s ease-in-out infinite}@keyframes pulse{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.1) rotate(5deg)}}.cta-content{position:relative;z-index:1;max-width:800px;margin:0 auto;text-align:center}.cta h2{color:var(--warm-white);margin-bottom:var(--space-lg)}.cta p{font-size:1.25rem;line-height:1.8;color:rgba(255,255,255,0.95);margin-bottom:var(--space-xl)}.cta-actions{display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap}.footer{background:var(--navy-dark);color:rgba(255,255,255,0.7);padding:var(--space-3xl) 0 var(--space-xl)}.footer-grid{display:grid;grid-template-columns:2fr repeat(3,1fr);gap:var(--space-3xl);margin-bottom:var(--space-3xl)}.footer-brand{max-width:360px}.footer-logo{display:flex;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-md)}.footer-logo-icon{width:2.5rem;height:2.5rem;background:linear-gradient(135deg,var(--gold-base),var(--gold-light));border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.5rem}.footer-logo-text{font-family:var(--font-display);font-size:1.5rem;font-weight:600;color:var(--warm-white)}.footer-description{font-size:1rem;line-height:1.7;color:rgba(255,255,255,0.6);margin-bottom:var(--space-lg)}.footer-social{display:flex;gap:var(--space-sm)}.social-link{width:2.5rem;height:2.5rem;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);border-radius:var(--radius-md);color:rgba(255,255,255,0.7);text-decoration:none;transition:all var(--transition-base)}.social-link:hover{background:var(--gold-base);color:var(--warm-white);transform:translateY(-2px)}.footer-column h4{font-family:var(--font-body);font-size:0.9375rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--warm-white);margin-bottom:var(--space-md)}.footer-links{list-style:none;display:flex;flex-direction:column;gap:var(--space-sm)}.footer-link{color:rgba(255,255,255,0.6);text-decoration:none;transition:color var(--transition-fast)}.footer-link:hover{color:var(--gold-light)}.footer-bottom{padding-top:var(--space-xl);border-top:1px solid rgba(255,255,255,0.1);text-align:center;font-size:0.9375rem;color:rgba(255,255,255,0.5)}@media(max-width:1024px){.hero-grid{grid-template-columns:1fr;gap:var(--space-2xl)}.hero-visual{order:-1}.hero-accent-card{left:auto;right:-1rem}.footer-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:768px){:root{--space-3xl:4rem}.nav-menu{position:fixed;top:5rem;left:0;right:0;bottom:0;background:var(--warm-white);flex-direction:column;padding:var(--space-xl) var(--space-lg);gap:var(--space-lg);box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;transform:translateX(100%);transition:all var(--transition-base);overflow-y:auto}.nav-menu.active{opacity:1;visibility:visible;transform:translateX(0)}.nav-menu li{width:100%}.nav-link,.nav-cta{display:block;padding:var(--space-md);text-align:center;font-size:1.125rem}.nav-link::after{display:none}.mobile-toggle{display:flex}.hero-stats{grid-template-columns:1fr;gap:var(--space-lg)}.mission-grid{grid-template-columns:1fr}.hero-actions,.cta-actions{flex-direction:column;width:100%}.btn{width:100%;justify-content:center}.footer-grid{grid-template-columns:1fr;gap:var(--space-2xl)}.section-header{text-align:left}}@media(max-width:480px){.container{padding:0 var(--space-md)}.hero{padding-top:6rem}.brand-tagline{display:none}}</style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'ministry_home' %}" class="brand">
+                <div class="brand-icon">✝</div>
+                <div class="brand-text">
+                    <span class="brand-name">Global Crusade</span>
+                    <span class="brand-tagline">OUTREACH</span>
+                </div>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="{% url 'ministry_home' %}" class="nav-link active">Home</a></li>
+                <li><a href="{% url 'ministry_about' %}" class="nav-link">About</a></li>
+                <li><a href="{% url 'ministry_crusades' %}" class="nav-link">Crusades</a></li>
+                <li><a href="{% url 'ministry_testimonies' %}" class="nav-link">Testimonies</a></li>
+                <li><a href="{% url 'ministry_contact' %}" class="nav-link">Contact</a></li>
+                <li><a href="{% url 'donation_page' %}" class="nav-cta">Donate</a></li>
+            </ul>
+            <button class="mobile-toggle" id="mobileToggle">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <div class="hero-badge">Transforming Lives Since 2009</div>
+                    <h1 class="hero-title">Bringing the Gospel to<br><span class="highlight">Every Nation</span></h1>
+                    <p class="hero-description">Join us in our global mission to reach communities with powerful crusades, healing ministries, and life-changing encounters with God's transformative love.</p>
+                    <div class="hero-actions">
+                        <a href="{% url 'donation_page' %}" class="btn btn-primary btn-lg">Support Our Mission →</a>
+                        <a href="{% url 'ministry_crusades' %}" class="btn btn-secondary btn-lg">Upcoming Events</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">5+</div>
+                            <div class="stat-label">Nations Reached</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">1K+</div>
+                            <div class="stat-label">Lives Transformed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">20+</div>
+                            <div class="stat-label">Crusades Held</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-image-main">
+                        {% if hero_image %}
+                            <!-- ✅ UPLOADED HERO IMAGE -->
+                            <img src="{{ hero_image.image.url }}" 
+                                 alt="{{ hero_image.title }}"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <!-- PLACEHOLDER (shows when no image uploaded) -->
+                            <div class="hero-image-placeholder">🙏</div>
+                        {% endif %}
+                    </div>
+                    <div class="hero-accent-card">
+                        <div class="accent-card-label">Last Year</div>
+                        <div class="accent-card-value">$5k</div>
+                        <div class="accent-card-text">Raised for Global Outreach</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mission section-lg">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Our Mission</div>
+                <h2 class="section-title">Building God's Kingdom Across the Globe</h2>
+                <p class="section-description">Through powerful crusades and community engagement, we're transforming lives and bringing hope to nations around the world.</p>
+            </div>
+            <div class="mission-grid">
+                <div class="mission-card">
+                    <div class="mission-icon">🌍</div>
+                    <h3>Global Outreach</h3>
+                    <p>Bringing the Gospel to unreached nations through powerful crusades and strategic community partnerships.</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">🙏</div>
+                    <h3>Healing Ministry</h3>
+                    <p>Praying for the sick, delivering the oppressed, and witnessing God's miraculous power in action.</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">💖</div>
+                    <h3>Community Impact</h3>
+                    <p>Transforming communities through education, support, and sustainable development programs.</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">📖</div>
+                    <h3>Discipleship</h3>
+                    <p>Training and equipping believers to become effective witnesses in their local communities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ⭐ OPTIONAL: Gallery Section (if you uploaded gallery images) -->
+    {% if gallery_images %}
+    <section class="section" style="background: var(--gray-50);">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Our Ministry</div>
+                <h2 class="section-title">Gallery</h2>
+                <p class="section-description">Moments from our crusades and community outreach</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-lg);">
+                {% for image in gallery_images %}
+                <div style="border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md);">
+                    <img src="{{ image.image.url }}" 
+                         alt="{{ image.title }}"
+                         style="width: 100%; height: 300px; object-fit: cover;">
+                    <div style="padding: var(--space-md); background: var(--warm-white);">
+                        <h4 style="margin-bottom: var(--space-xs);">{{ image.title }}</h4>
+                        {% if image.description %}
+                        <p style="font-size: 0.9375rem; color: var(--gray-600); margin: 0;">{{ image.description }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <section class="cta section-lg">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Be Part of Something Eternal</h2>
+                <p>Join thousands of partners supporting this global mission to bring hope, healing, and salvation to nations around the world.</p>
+                <div class="cta-actions">
+                    <a href="{% url 'donation_page' %}" class="btn btn-light btn-lg">Give Now</a>
+                    <a href="{% url 'ministry_contact' %}" class="btn btn-outline-light btn-lg">Get Involved</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">✝</div>
+                        <div class="footer-logo-text">Global Crusade</div>
+                    </div>
+                    <p class="footer-description">Bringing hope to the nations through powerful crusades, healing ministries, and life-transforming encounters with God's love.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link">f</a>
+                        <a href="#" class="social-link">t</a>
+                        <a href="#" class="social-link">i</a>
+                        <a href="#" class="social-link">y</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Ministry</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'ministry_about' %}" class="footer-link">About Us</a></li>
+                        <li><a href="{% url 'ministry_crusades' %}" class="footer-link">Crusades</a></li>
+                        <li><a href="{% url 'ministry_testimonies' %}" class="footer-link">Testimonies</a></li>
+                        <li><a href="{% url 'ministry_contact' %}" class="footer-link">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'donation_page' %}" class="footer-link">Donate</a></li>
+                        <li><a href="#" class="footer-link">Prayer Requests</a></li>
+                        <li><a href="#" class="footer-link">Partner With Us</a></li>
+                        <li><a href="#" class="footer-link">Volunteer</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link">📧 eternityvoiceministry@gmail.com</li>
+                        <li class="footer-link">📱 +447411583033</li>
+                        <li class="footer-link">📍 Serving Globally</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Global Crusade Ministry. All rights reserved. Built with faith and purpose.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const t=document.getElementById('mobileToggle'),m=document.getElementById('navMenu');
+        t&&m&&(t.addEventListener('click',e=>{e.stopPropagation();t.classList.toggle('active');m.classList.toggle('active');document.body.style.overflow=m.classList.contains('active')?'hidden':''}),m.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>{t.classList.remove('active');m.classList.remove('active');document.body.style.overflow=''})),document.addEventListener('click',e=>{m.classList.contains('active')&&!m.contains(e.target)&&!t.contains(e.target)&&(t.classList.remove('active'),m.classList.remove('active'),document.body.style.overflow='')}));
+        window.addEventListener('scroll',()=>{const n=document.querySelector('.navbar');n&&(window.pageYOffset>100?n.classList.add('scrolled'):n.classList.remove('scrolled'))});
+    </script>
+</body>
+</html>

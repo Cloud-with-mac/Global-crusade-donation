@@ -1,8 +1,12 @@
 # File: donations/models.py
 # Location: ministry_donation_site/donations/models.py
+# UPDATED VERSION - WITH TESTIMONY MODEL ADDED
 
 from django.db import models
 from django.utils import timezone
+from django.db import models
+from django.core.validators import MinValueValidator
+from decimal import Decimal
 
 
 class Donor(models.Model):
@@ -261,3 +265,79 @@ class CrusadeFlyer(models.Model):
     
     def __str__(self):
         return self.title
+
+
+# ═══════════════════════════════════════════════════
+# MINISTRY WEBSITE IMAGES
+# ═══════════════════════════════════════════════════
+
+class MinistryImage(models.Model):
+    """
+    Store images for the ministry website
+    Different types: hero, about, crusade, testimony, gallery
+    """
+    IMAGE_TYPES = [
+        ('hero', 'Homepage Hero Image'),
+        ('about', 'About Page Image'),
+        ('crusade', 'Crusade Event Image'),
+        ('testimony', 'Testimony Image'),
+        ('gallery', 'Ministry Gallery'),
+    ]
+    
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='ministry_images/')
+    image_type = models.CharField(max_length=20, choices=IMAGE_TYPES, default='gallery')
+    is_active = models.BooleanField(default=True)
+    display_order = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['display_order', '-created_at']
+        verbose_name = 'Ministry Image'
+        verbose_name_plural = 'Ministry Images'
+    
+    def __str__(self):
+        return f"{self.get_image_type_display()} - {self.title}"
+
+
+# ═══════════════════════════════════════════════════
+# ⭐ NEW: TESTIMONY MODEL
+# ═══════════════════════════════════════════════════
+
+class Testimony(models.Model):
+    """Model to store testimonies for the ministry website"""
+    name = models.CharField(
+        max_length=200, 
+        help_text="Person's name (e.g., Mary Johnson)"
+    )
+    location = models.CharField(
+        max_length=200, 
+        help_text="City, Country (e.g., Lagos, Nigeria)"
+    )
+    testimony_text = models.TextField(
+        help_text="The full testimony content"
+    )
+    is_active = models.BooleanField(
+        default=True, 
+        help_text="Show on website?"
+    )
+    display_order = models.IntegerField(
+        default=0, 
+        help_text="Lower numbers appear first"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['display_order', '-created_at']
+        verbose_name = 'Testimony'
+        verbose_name_plural = 'Testimonies'
+    
+    def __str__(self):
+        return f"{self.name} - {self.location}"
+    
+    def get_initial(self):
+        """Get first letter of name for avatar"""
+        return self.name[0].upper() if self.name else "T"

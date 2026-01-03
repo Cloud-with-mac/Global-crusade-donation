@@ -1,188 +1,348 @@
-<!-- File: templates/admin_dashboard/donations_list.html -->
-<!-- OPTION A VERSION - CURRENCY AWARE + DELETE/VERIFY BUTTONS -->
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donations List - Ministry Admin</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+    <title>Donations List | Global Crusade Ministry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --navy-dark: #0f1419;
+            --navy-base: #1a2332;
+            --gold-base: #d4a574;
+            --gold-light: #e8c9a0;
+            --gold-dark: #b88a5f;
+            --cream: #faf8f5;
+            --warm-white: #ffffff;
+            --gray-50: #f9f7f4;
+            --gray-200: #e2ddd5;
+            --gray-500: #7a7269;
+            --gray-700: #3d3930;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'DM Sans', sans-serif;
         }
-
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f8f9fa;
+            font-family: var(--font-body);
+            background: var(--cream);
+            color: var(--gray-700);
         }
-
+        
+        /* Sidebar */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
             width: 260px;
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            background: linear-gradient(180deg, var(--navy-base), var(--navy-dark));
             padding: 2rem 0;
             z-index: 1000;
+            box-shadow: 4px 0 12px rgba(0,0,0,0.1);
         }
-
+        
         .sidebar-brand {
-            color: white;
+            color: var(--warm-white);
+            font-family: var(--font-display);
             font-size: 1.5rem;
             font-weight: 700;
             padding: 0 1.5rem;
             margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
-
+        
+        .sidebar-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
         .sidebar-nav {
             list-style: none;
         }
-
+        
         .sidebar-nav li {
             margin-bottom: 0.5rem;
         }
-
+        
         .sidebar-nav a {
-            color: #94a3b8;
+            color: var(--gold-light);
             text-decoration: none;
-            padding: 0.75rem 1.5rem;
-            display: block;
+            padding: 0.875rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             transition: all 0.3s;
+            font-weight: 500;
         }
-
+        
         .sidebar-nav a:hover,
         .sidebar-nav a.active {
-            background: rgba(59, 130, 246, 0.1);
-            color: #60a5fa;
-            border-left: 3px solid #3b82f6;
+            background: rgba(212, 165, 116, 0.15);
+            color: var(--warm-white);
+            border-left: 3px solid var(--gold-base);
         }
-
+        
+        /* Main Content */
         .main-content {
             margin-left: 260px;
             padding: 2rem;
         }
-
+        
         .header {
-            background: white;
-            padding: 1.5rem 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background: linear-gradient(135deg, var(--navy-base), var(--navy-dark));
+            color: var(--warm-white);
+            padding: 2rem;
+            border-radius: 12px;
             margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
-        .filter-bar {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        
+        .header h1 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
         }
-
-        .table-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        
+        .header p {
+            color: var(--gold-light);
         }
-
-        .badge-completed { background: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; }
-        .badge-pending { background: #f59e0b; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; }
-        .badge-failed { background: #ef4444; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; }
-        .badge-refunded { background: #6b7280; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; }
-
+        
         .btn-export {
-            background: #3b82f6;
-            color: white;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            color: var(--warm-white);
             border: none;
-            padding: 0.5rem 1.5rem;
-            border-radius: 5px;
-            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-
+        
         .btn-export:hover {
-            background: #2563eb;
-            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+            color: var(--warm-white);
         }
-
+        
+        /* Filter Bar */
+        .filter-bar {
+            background: var(--warm-white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 2px solid var(--gray-200);
+        }
+        
         .filter-btn {
-            padding: 0.5rem 1rem;
-            border: 2px solid #e5e7eb;
-            background: white;
-            border-radius: 5px;
+            padding: 0.625rem 1.25rem;
+            border: 2px solid var(--gray-200);
+            background: var(--warm-white);
+            border-radius: 8px;
             margin-right: 0.5rem;
             cursor: pointer;
             transition: all 0.3s;
-        }
-
-        .filter-btn.active {
-            background: #3b82f6;
-            color: white;
-            border-color: #3b82f6;
-        }
-
-        .filter-btn:hover {
-            border-color: #3b82f6;
-        }
-
-        /* CURRENCY BADGE */
-        .currency-badge {
+            text-decoration: none;
+            color: var(--gray-700);
+            font-weight: 500;
             display: inline-block;
-            background: #e0e7ff;
-            color: #4338ca;
-            padding: 0.25rem 0.5rem;
+        }
+        
+        .filter-btn.active {
+            background: var(--gold-base);
+            color: var(--warm-white);
+            border-color: var(--gold-base);
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--gold-base);
+            color: var(--navy-dark);
+        }
+        
+        /* Table Card */
+        .table-card {
+            background: var(--warm-white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 2px solid var(--gray-200);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: var(--gray-50);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--navy-dark);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--gray-200);
+        }
+        
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            color: var(--gray-700);
+        }
+        
+        tr:hover {
+            background: var(--gray-50);
+        }
+        
+        /* Badges */
+        .badge {
+            padding: 0.375rem 0.875rem;
+            border-radius: 100px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .badge-completed {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+        
+        .badge-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+        
+        .badge-failed {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+        
+        .currency-badge {
+            background: rgba(212, 165, 116, 0.15);
+            color: var(--gold-dark);
+            padding: 0.25rem 0.625rem;
             border-radius: 4px;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
         }
-
-        /* ACTION BUTTONS */
+        
+        /* Action Buttons */
         .action-buttons {
             display: flex;
             gap: 0.5rem;
         }
-
+        
         .btn-verify {
-            background: #10b981;
+            background: var(--success);
             color: white;
             border: none;
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
+            padding: 0.375rem 0.875rem;
+            border-radius: 6px;
             font-size: 0.875rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
-
+        
         .btn-verify:hover {
             background: #059669;
+            transform: translateY(-1px);
         }
-
+        
         .btn-delete {
-            background: #ef4444;
+            background: var(--danger);
             color: white;
             border: none;
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
+            padding: 0.375rem 0.875rem;
+            border-radius: 6px;
             font-size: 0.875rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
-
+        
         .btn-delete:hover {
             background: #dc2626;
+            transform: translateY(-1px);
+        }
+        
+        .amount-display {
+            font-family: var(--font-display);
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+        
+        /* Messages */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 2px solid;
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+            color: #065f46;
+        }
+        
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+            color: #991b1b;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--gray-500);
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -190,58 +350,55 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-brand">
-            ⛪ Ministry Admin
+            <div class="sidebar-icon">✝</div>
+            <span>Ministry</span>
         </div>
         <ul class="sidebar-nav">
             <li><a href="{% url 'admin_dashboard' %}">📊 Dashboard</a></li>
             <li><a href="{% url 'donations_list' %}" class="active">💰 Donations</a></li>
             <li><a href="{% url 'donors_list' %}">👥 Donors</a></li>
-            <li><a href="{% url 'prayer_requests_list' %}">🙏 Prayer Requests</a></li>
+            <li><a href="{% url 'prayer_requests_list' %}">🙏 Prayers</a></li>
             <li><a href="{% url 'dashboard_settings' %}">⚙️ Settings</a></li>
-            <li><a href="{% url 'donation_page' %}">🏠 Public Site</a></li>
+            <li><a href="{% url 'ministry_home' %}">🏠 Ministry Site</a></li>
+            <li><a href="{% url 'donation_page' %}">💵 Donation Page</a></li>
             <li><a href="{% url 'dashboard_logout' %}">🚪 Logout</a></li>
         </ul>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Header -->
         <div class="header">
             <div>
-                <h1 style="font-size: 1.75rem; font-weight: 700; color: #1e293b;">All Donations</h1>
-                <p style="color: #64748b;">Manage and track all donation transactions</p>
+                <h1>💰 All Donations</h1>
+                <p>Manage and track all donation transactions</p>
             </div>
             <a href="{% url 'export_donations_csv' %}" class="btn-export">📥 Export to CSV</a>
         </div>
 
         <!-- Messages -->
         {% if messages %}
-        <div class="mb-3">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            {% endfor %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
         </div>
+        {% endfor %}
         {% endif %}
 
         <!-- Filter Bar -->
         <div class="filter-bar">
-            <div class="d-flex align-items-center">
-                <span style="font-weight: 600; margin-right: 1rem;">Filter by Status:</span>
-                <a href="{% url 'donations_list' %}" class="filter-btn {% if status_filter == 'all' %}active{% endif %}">All</a>
-                <a href="?status=completed" class="filter-btn {% if status_filter == 'completed' %}active{% endif %}">Completed</a>
-                <a href="?status=pending" class="filter-btn {% if status_filter == 'pending' %}active{% endif %}">Pending</a>
-                <a href="?status=failed" class="filter-btn {% if status_filter == 'failed' %}active{% endif %}">Failed</a>
-            </div>
+            <span style="font-weight: 600; margin-right: 1rem; color: var(--navy-dark);">Filter by Status:</span>
+            <a href="{% url 'donations_list' %}" class="filter-btn {% if status_filter == 'all' %}active{% endif %}">All</a>
+            <a href="?status=completed" class="filter-btn {% if status_filter == 'completed' %}active{% endif %}">✓ Completed</a>
+            <a href="?status=pending" class="filter-btn {% if status_filter == 'pending' %}active{% endif %}">⏳ Pending</a>
+            <a href="?status=failed" class="filter-btn {% if status_filter == 'failed' %}active{% endif %}">✗ Failed</a>
         </div>
 
         <!-- Donations Table -->
         <div class="table-card">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead style="background: #f1f5f9;">
+            {% if donations %}
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
                         <tr>
                             <th>ID</th>
                             <th>Date</th>
@@ -258,19 +415,15 @@
                     <tbody>
                         {% for donation in donations %}
                         <tr>
-                            <td><strong>#{{ donation.id }}</strong></td>
+                            <td><strong style="color: var(--navy-dark);">#{{ donation.id }}</strong></td>
                             <td>{{ donation.created_at|date:"M d, Y H:i" }}</td>
                             <td><strong>{{ donation.donor.full_name }}</strong></td>
                             <td>{{ donation.donor.email }}</td>
-                            <td><strong style="color: #10b981;">{{ donation.formatted_amount }}</strong></td>
-                            <td>
-                                <span class="currency-badge">{{ donation.currency_code }}</span>
-                            </td>
+                            <td><span class="amount-display">{{ donation.formatted_amount }}</span></td>
+                            <td><span class="currency-badge">{{ donation.currency_code }}</span></td>
                             <td>{{ donation.get_donation_type_display }}</td>
                             <td>{{ donation.get_payment_gateway_display }}</td>
-                            <td>
-                                <span class="badge-{{ donation.status }}">{{ donation.get_status_display }}</span>
-                            </td>
+                            <td><span class="badge badge-{{ donation.status }}">{{ donation.get_status_display }}</span></td>
                             <td>
                                 <div class="action-buttons">
                                     {% if donation.status == 'pending' %}
@@ -281,20 +434,8 @@
                                     {% endif %}
                                     <form method="post" action="{% url 'delete_donation' donation.id %}" style="display: inline;">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this donation from {{ donation.donor.full_name }}?')">🗑️ Delete</button>
+                                        <button type="submit" class="btn-delete" onclick="return confirm('Delete donation from {{ donation.donor.full_name }}?')">🗑️</button>
                                     </form>
-                                </div>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="10" class="text-center" style="padding: 3rem;">
-                                <div style="color: #94a3b8;">
-                                    <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24" style="margin-bottom: 1rem;">
-                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                                    </svg>
-                                    <p><strong>No donations found</strong></p>
-                                    <p>Donations will appear here once people start donating</p>
                                 </div>
                             </td>
                         </tr>
@@ -303,17 +444,19 @@
                 </table>
             </div>
 
-            <!-- Summary -->
-            {% if donations %}
-            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
-                <p style="color: #64748b;">
-                    <strong>Total Donations:</strong> {{ donations|length }}
+            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid var(--gray-200);">
+                <p style="color: var(--gray-500); font-weight: 600;">
+                    <strong style="color: var(--navy-dark);">Total Donations:</strong> {{ donations|length }}
                 </p>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">💰</div>
+                <h3 style="color: var(--navy-dark); margin-bottom: 0.5rem;">No Donations Found</h3>
+                <p>Donations will appear here once people start donating</p>
             </div>
             {% endif %}
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

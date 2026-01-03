@@ -9,17 +9,15 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-from decouple import config
+
 from pathlib import Path
 from decouple import config
 import os
-import dj_database_url
-from decouple import config
+import dj_database_url  # ✅ FIXED: Uncommented this
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -30,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY', default='your-secret-key-for-development')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']  # Change to specific domains in production
 
 
 # Application definition
@@ -52,7 +50,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ← ADD THIS LINE
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -85,7 +83,7 @@ WSGI_APPLICATION = 'global_crusade.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 if 'DATABASE_URL' in os.environ:
-    # Production database (Render)
+    # Production database (Render PostgreSQL)
     DATABASES = {
         'default': dj_database_url.config(
             default=config('DATABASE_URL'),
@@ -94,7 +92,7 @@ if 'DATABASE_URL' in os.environ:
         )
     }
 else:
-    # Local development database
+    # Local development database (SQLite)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -141,13 +139,13 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
-]
+] if os.path.exists(os.path.join(BASE_DIR, 'static')) else []
 
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Whitenoise (for serving static files)
+# Whitenoise configuration for serving static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
@@ -160,26 +158,33 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 # Where to redirect after logout
 LOGOUT_REDIRECT_URL = '/'
 
-# EMAIL CONFIGURATION - Gmail
+# ✅ FIXED: EMAIL CONFIGURATION - Using environment variables
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'eternityvoiceministry@gmail.com'  # Your Gmail address
-EMAIL_HOST_PASSWORD = 'hwzx enba wwzm psad'  # App password (NOT your Gmail password!)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='eternityvoiceministry@gmail.com')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')  # ✅ FIXED: Now using config()
 DEFAULT_FROM_EMAIL = 'Global Crusade Ministry <eternityvoiceministry@gmail.com>'
-ADMIN_EMAIL = 'eternityvoiceministry@gmail.com'  # Where to receive admin notifications
-# SITE_URL = 'http://localhost:8000'  # Your website URL
+ADMIN_EMAIL = 'eternityvoiceministry@gmail.com'
 
+# Payment Gateway Configuration
+PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY', default='')
+PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY', default='')
 
-PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
-PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
-
-FLUTTERWAVE_PUBLIC_KEY = config('FLUTTERWAVE_PUBLIC_KEY')
-FLUTTERWAVE_SECRET_KEY = config('FLUTTERWAVE_SECRET_KEY')
-FLUTTERWAVE_ENCRYPTION_KEY = config('FLUTTERWAVE_ENCRYPTION_KEY')
-
+FLUTTERWAVE_PUBLIC_KEY = config('FLUTTERWAVE_PUBLIC_KEY', default='')
+FLUTTERWAVE_SECRET_KEY = config('FLUTTERWAVE_SECRET_KEY', default='')
+FLUTTERWAVE_ENCRYPTION_KEY = config('FLUTTERWAVE_ENCRYPTION_KEY', default='')
 
 DEFAULT_PAYMENT_GATEWAY = 'paystack'  # or 'flutterwave'
 
 PAYPAL_ME_USERNAME = 'eternityvoice2021'  # Your PayPal.Me username
+
+# Security settings for production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'

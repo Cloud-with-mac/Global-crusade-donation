@@ -31,7 +31,17 @@
                                 Dear {{ donor_name }},
                             </h2>
                             <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin: 0;">
-                                Thank you for your generous {{ donation_type }} donation of <strong style="color: #059669;">${{ amount }}</strong> to support our global crusade ministry. Your contribution is making a real difference in communities around the world!
+                                Thank you for your generous {{ donation_type }} donation of <strong style="color: #059669;">
+                                    {% if currency == 'NGN' %}
+                                        ₦{{ amount|floatformat:0 }}
+                                    {% elif currency == 'EUR' %}
+                                        €{{ amount|floatformat:2 }}
+                                    {% elif currency == 'GBP' %}
+                                        £{{ amount|floatformat:2 }}
+                                    {% else %}
+                                        ${{ amount|floatformat:2 }}
+                                    {% endif %}
+                                </strong> to support our global crusade ministry. Your contribution is making a real difference in communities around the world!
                             </p>
                         </td>
                     </tr>
@@ -57,7 +67,17 @@
                                             </tr>
                                             <tr style="border-top: 1px solid #e5e7eb;">
                                                 <td style="color: #6b7280; font-size: 14px; padding: 8px 0;">Amount:</td>
-                                                <td style="color: #059669; font-size: 18px; font-weight: 700; text-align: right; padding: 8px 0;">${{ amount }}</td>
+                                                <td style="color: #059669; font-size: 18px; font-weight: 700; text-align: right; padding: 8px 0;">
+                                                    {% if currency == 'NGN' %}
+                                                        ₦{{ amount|floatformat:0 }}
+                                                    {% elif currency == 'EUR' %}
+                                                        €{{ amount|floatformat:2 }}
+                                                    {% elif currency == 'GBP' %}
+                                                        £{{ amount|floatformat:2 }}
+                                                    {% else %}
+                                                        ${{ amount|floatformat:2 }}
+                                                    {% endif %}
+                                                </td>
                                             </tr>
                                             <tr style="border-top: 1px solid #e5e7eb;">
                                                 <td style="color: #6b7280; font-size: 14px; padding: 8px 0;">Type:</td>
@@ -134,13 +154,12 @@
                             <table cellpadding="5" cellspacing="0">
                                 <tr>
                                     <td>
-                                        <a href="#" style="color: #3b82f6; text-decoration: none; font-size: 14px;">📘 Facebook</a>
+                                        <span style="color: #6b7280; font-size: 14px;">📧 Email: eternityvoiceministry@gmail.com</span>
                                     </td>
-                                    <td style="padding-left: 15px;">
-                                        <a href="#" style="color: #3b82f6; text-decoration: none; font-size: 14px;">🐦 Twitter</a>
-                                    </td>
-                                    <td style="padding-left: 15px;">
-                                        <a href="#" style="color: #3b82f6; text-decoration: none; font-size: 14px;">📸 Instagram</a>
+                                </tr>
+                                <tr>
+                                    <td style="padding-top: 5px;">
+                                        <span style="color: #6b7280; font-size: 14px;">📱 Phone: +447411583033</span>
                                     </td>
                                 </tr>
                             </table>
@@ -155,7 +174,7 @@
                                 Bringing Hope to the Nations
                             </p>
                             <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-                                Questions? Contact us at <a href="mailto:info@ministry.org" style="color: #3b82f6; text-decoration: none;">info@ministry.org</a>
+                                Questions? Contact us at <a href="mailto:eternityvoiceministry@gmail.com" style="color: #3b82f6; text-decoration: none;">eternityvoiceministry@gmail.com</a>
                             </p>
                         </td>
                     </tr>

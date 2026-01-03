@@ -1,8 +1,9 @@
 # File: donations/views.py
-# OPTION A VERSION WITH AUTO-CURRENCY + AUTO-COMPLETE + AUTO-DELETE DONORS
+# COMPLETE VERSION WITH TESTIMONY MANAGEMENT
 # - Auto-detects correct currency (NGN, USD, EUR, GBP)
 # - Auto-completes all donations immediately (no pending status)
 # - Auto-deletes donors when they have no donations left
+# - ⭐ TESTIMONY MANAGEMENT INCLUDED
 # - Updates dashboard totals automatically
 # - Sends emails immediately
 
@@ -14,10 +15,12 @@ from django.db.models import Sum, Count, Q
 from django.utils import timezone
 from datetime import timedelta
 from decimal import Decimal
-
-from .models import Donation, Donor, CrusadeStats, PrayerRequest, CrusadeFlyer
+from django.core.mail import send_mail
+from .models import Donation, Donor, CrusadeStats, PrayerRequest, CrusadeFlyer, MinistryImage, Testimony  # ⭐ TESTIMONY ADDED
 from .forms import DonationForm
 from django.conf import settings
+
+
 
 
 # ═══════════════════════════════════════════════════
@@ -631,9 +634,18 @@ def custom_login(request):
 
 @login_required
 def dashboard_settings(request):
-    """Dashboard settings page"""
+    """Dashboard settings page with ministry image uploads AND TESTIMONY MANAGEMENT"""
     stats = CrusadeStats.get_stats()
     crusade_flyers = CrusadeFlyer.objects.all().order_by('display_order', '-created_at')
+    
+    # ⭐ GET MINISTRY IMAGES BY TYPE
+    ministry_images = {
+        'hero': MinistryImage.objects.filter(image_type='hero'),
+        'about': MinistryImage.objects.filter(image_type='about'),
+        'crusade': MinistryImage.objects.filter(image_type='crusade'),
+        'testimony': MinistryImage.objects.filter(image_type='testimony'),
+        'gallery': MinistryImage.objects.filter(image_type='gallery'),
+    }
     
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -688,10 +700,213 @@ def dashboard_settings(request):
             except CrusadeFlyer.DoesNotExist:
                 messages.error(request, 'Flyer not found.')
         
+        # ⭐ MINISTRY IMAGE HANDLERS
+        elif action == 'upload_ministry_image':
+            try:
+                title = request.POST.get('image_title')
+                description = request.POST.get('image_description', '')
+                image_type = request.POST.get('image_type')
+                image = request.FILES.get('ministry_image')
+                
+                if title and image and image_type:
+                    MinistryImage.objects.create(
+                        title=title,
+                        description=description,
+                        image=image,
+                        image_type=image_type,
+                        is_active=True
+                    )
+                    messages.success(request, f'✅ {title} uploaded successfully!')
+                else:
+                    messages.error(request, 'Please provide title, image type, and image file.')
+            except Exception as e:
+                messages.error(request, f'Error uploading image: {str(e)}')
+        
+        elif action == 'delete_ministry_image':
+            image_id = request.POST.get('image_id')
+            try:
+                image = MinistryImage.objects.get(id=image_id)
+                image.delete()
+                messages.success(request, 'Image deleted successfully!')
+            except MinistryImage.DoesNotExist:
+                messages.error(request, 'Image not found.')
+        
+        elif action == 'toggle_ministry_image':
+            image_id = request.POST.get('image_id')
+            try:
+                image = MinistryImage.objects.get(id=image_id)
+                image.is_active = not image.is_active
+                image.save()
+                status = "activated" if image.is_active else "deactivated"
+                messages.success(request, f'Image {status} successfully!')
+            except MinistryImage.DoesNotExist:
+                messages.error(request, 'Image not found.')
+        
+        # ═══════════════════════════════════════════════════════════════
+        # ⭐⭐⭐ TESTIMONY HANDLERS - ADDED! ⭐⭐⭐
+        # ═══════════════════════════════════════════════════════════════
+        
+        # Add Testimony
+        elif action == 'add_testimony':
+            try:
+                name = request.POST.get('testimony_name')
+                location = request.POST.get('testimony_location')
+                text = request.POST.get('testimony_text')
+                display_order = request.POST.get('display_order', 0)
+                
+                if name and location and text:
+                    Testimony.objects.create(
+                        name=name,
+                        location=location,
+                        testimony_text=text,
+                        display_order=int(display_order),
+                        is_active=True
+                    )
+                    messages.success(request, f'✅ Testimony from {name} added successfully!')
+                else:
+                    messages.error(request, 'Please fill all required fields.')
+            except Exception as e:
+                messages.error(request, f'Error adding testimony: {str(e)}')
+        
+        # Edit Testimony
+        elif action == 'edit_testimony':
+            testimony_id = request.POST.get('testimony_id')
+            try:
+                testimony = Testimony.objects.get(id=testimony_id)
+                testimony.name = request.POST.get('testimony_name')
+                testimony.location = request.POST.get('testimony_location')
+                testimony.testimony_text = request.POST.get('testimony_text')
+                testimony.display_order = int(request.POST.get('display_order', 0))
+                testimony.save()
+                messages.success(request, f'✅ Testimony from {testimony.name} updated!')
+            except Testimony.DoesNotExist:
+                messages.error(request, 'Testimony not found.')
+            except Exception as e:
+                messages.error(request, f'Error updating testimony: {str(e)}')
+        
+        # Delete Testimony
+        elif action == 'delete_testimony':
+            testimony_id = request.POST.get('testimony_id')
+            try:
+                testimony = Testimony.objects.get(id=testimony_id)
+                name = testimony.name
+                testimony.delete()
+                messages.success(request, f'✅ Testimony from {name} deleted!')
+            except Testimony.DoesNotExist:
+                messages.error(request, 'Testimony not found.')
+            except Exception as e:
+                messages.error(request, f'Error deleting testimony: {str(e)}')
+        
+        # Toggle Testimony Active Status
+        elif action == 'toggle_testimony':
+            testimony_id = request.POST.get('testimony_id')
+            try:
+                testimony = Testimony.objects.get(id=testimony_id)
+                testimony.is_active = not testimony.is_active
+                testimony.save()
+                status = "activated" if testimony.is_active else "deactivated"
+                messages.success(request, f'✅ Testimony {status}!')
+            except Testimony.DoesNotExist:
+                messages.error(request, 'Testimony not found.')
+            except Exception as e:
+                messages.error(request, f'Error toggling testimony: {str(e)}')
+        
         return redirect('dashboard_settings')
+    
+    # ⭐ GET TESTIMONIES FOR CONTEXT
+    testimonies = Testimony.objects.all().order_by('display_order', '-created_at')
     
     context = {
         'stats': stats,
         'crusade_flyers': crusade_flyers,
+        'ministry_images': ministry_images,
+        'testimonies': testimonies,  # ⭐ TESTIMONY ADDED!
     }
     return render(request, 'admin_dashboard/settings.html', context)
+
+
+# ============================================
+# MINISTRY PUBLIC PAGES
+# ============================================
+
+def ministry_home(request):
+    """Homepage with uploaded images"""
+    context = {
+        'hero_image': MinistryImage.objects.filter(image_type='hero', is_active=True).first(),
+        'gallery_images': MinistryImage.objects.filter(image_type='gallery', is_active=True)[:6],
+    }
+    return render(request, 'ministry/home.html', context)
+
+def ministry_about(request):
+    """About page with uploaded images"""
+    context = {
+        'about_images': MinistryImage.objects.filter(image_type='about', is_active=True),
+    }
+    return render(request, 'ministry/about.html', context)
+
+def ministry_crusades(request):
+    """Crusades page with uploaded images"""
+    context = {
+        'crusade_images': MinistryImage.objects.filter(image_type='crusade', is_active=True),
+    }
+    return render(request, 'ministry/crusades.html', context)
+
+def ministry_testimonies(request):
+    """Testimonies page with uploaded images AND database testimonies"""
+    context = {
+        'testimony_images': MinistryImage.objects.filter(image_type='testimony', is_active=True),
+        'testimonies': Testimony.objects.filter(is_active=True),  # ⭐ TESTIMONY ADDED!
+    }
+    return render(request, 'ministry/testimonies.html', context)
+
+def ministry_contact(request):
+    """Contact page with working form"""
+    if request.method == 'POST':
+        first_name = request.POST.get('firstName', '')
+        last_name = request.POST.get('lastName', '')
+        email = request.POST.get('email', '')
+        phone = request.POST.get('phone', '')
+        subject = request.POST.get('subject', '')
+        message = request.POST.get('message', '')
+        
+        full_name = f"{first_name} {last_name}"
+        
+        email_subject = f"Contact Form: {subject}"
+        email_body = f"""
+New Contact Form Submission from Ministry Website
+
+Name: {full_name}
+Email: {email}
+Phone: {phone}
+Subject: {subject}
+
+Message:
+{message}
+
+---
+Sent from Global Crusade Ministry Contact Form
+        """
+        
+        try:
+            send_mail(
+                email_subject,
+                email_body,
+                settings.EMAIL_HOST_USER,
+                ['eternityvoiceministry@gmail.com'],
+                fail_silently=False,
+            )
+            
+            context = {
+                'success': True,
+                'name': full_name
+            }
+            return render(request, 'ministry/contact.html', context)
+            
+        except Exception as e:
+            context = {
+                'error': True,
+                'message': 'Sorry, there was an error sending your message. Please try again or email us directly.'
+            }
+            return render(request, 'ministry/contact.html', context)
+    
+    return render(request, 'ministry/contact.html')

@@ -1,213 +1,326 @@
-<!-- File: templates/admin_dashboard/dashboard.html -->
-<!-- ALL 5 CARDS IN ONE ROW WITH BOLD BACKGROUNDS -->
-{% load humanize %}
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Ministry Donations</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+    <title>Dashboard | Global Crusade Ministry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --navy-dark: #0f1419;
+            --navy-base: #1a2332;
+            --gold-base: #d4a574;
+            --gold-light: #e8c9a0;
+            --gold-dark: #b88a5f;
+            --cream: #faf8f5;
+            --warm-white: #ffffff;
+            --gray-50: #f9f7f4;
+            --gray-200: #e2ddd5;
+            --gray-500: #7a7269;
+            --gray-700: #3d3930;
+            --success: #10b981;
+            --danger: #ef4444;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'DM Sans', sans-serif;
         }
-
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f0f2f5;
+            font-family: var(--font-body);
+            background: var(--cream);
+            color: var(--gray-700);
         }
-
+        
+        /* Sidebar */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
             width: 260px;
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            background: linear-gradient(180deg, var(--navy-base), var(--navy-dark));
             padding: 2rem 0;
             z-index: 1000;
+            box-shadow: 4px 0 12px rgba(0,0,0,0.1);
         }
-
+        
         .sidebar-brand {
-            color: white;
+            color: var(--warm-white);
+            font-family: var(--font-display);
             font-size: 1.5rem;
             font-weight: 700;
             padding: 0 1.5rem;
             margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
-
+        
+        .sidebar-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
         .sidebar-nav {
             list-style: none;
         }
-
+        
         .sidebar-nav li {
             margin-bottom: 0.5rem;
         }
-
+        
         .sidebar-nav a {
-            color: #94a3b8;
+            color: var(--gold-light);
             text-decoration: none;
-            padding: 0.75rem 1.5rem;
-            display: block;
+            padding: 0.875rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             transition: all 0.3s;
+            font-weight: 500;
         }
-
+        
         .sidebar-nav a:hover,
         .sidebar-nav a.active {
-            background: rgba(59, 130, 246, 0.1);
-            color: #60a5fa;
-            border-left: 3px solid #3b82f6;
+            background: rgba(212, 165, 116, 0.15);
+            color: var(--warm-white);
+            border-left: 3px solid var(--gold-base);
         }
-
+        
+        /* Main Content */
         .main-content {
             margin-left: 260px;
             padding: 2rem;
         }
-
+        
         .header {
-            background: white;
-            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, var(--navy-base), var(--navy-dark));
+            color: var(--warm-white);
+            padding: 2rem;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: var(--gold-light);
+            font-size: 1rem;
+        }
+        
+        /* Currency Cards Grid */
+        .currency-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .currency-card {
+            background: var(--warm-white);
+            border-radius: 12px;
+            padding: 1.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 2px solid var(--gray-200);
+            transition: all 0.3s;
+        }
+        
+        .currency-card:hover {
+            border-color: var(--gold-base);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        
+        .currency-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 2px solid #e5e7eb;
+            margin-bottom: 1rem;
         }
-
-        /* BOLD STAT CARDS WITH PROMINENT BACKGROUNDS */
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 3px solid #e5e7eb;
-            position: relative;
-            overflow: hidden;
+        
+        .currency-flag {
+            font-size: 2rem;
         }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        
+        .currency-code {
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            color: var(--warm-white);
+            padding: 0.375rem 0.875rem;
+            border-radius: 100px;
+            font-size: 0.875rem;
+            font-weight: 700;
         }
-
-        .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-        }
-
-        .stat-value {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: #1e293b;
+        
+        .currency-amount {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--navy-dark);
             margin-bottom: 0.5rem;
         }
-
-        .stat-label {
-            color: #64748b;
+        
+        .currency-label {
+            color: var(--gray-500);
             font-size: 0.875rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.05em;
         }
-
-        .stat-icon {
-            width: 50px;
-            height: 50px;
+        
+        .currency-count {
+            color: var(--gray-500);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--warm-white);
             border-radius: 12px;
+            padding: 1.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 2px solid var(--gray-200);
+        }
+        
+        .stat-icon {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.5rem;
             margin-bottom: 1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-
-        .icon-blue { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
-        .icon-green { background: linear-gradient(135deg, #10b981, #34d399); }
-        .icon-purple { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
-        .icon-orange { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
-        .icon-red { background: linear-gradient(135deg, #ef4444, #f87171); }
-        .icon-indigo { background: linear-gradient(135deg, #6366f1, #818cf8); }
-
-        .table-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-            margin-top: 2rem;
-            border: 3px solid #e5e7eb;
+        
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            margin-bottom: 0.5rem;
         }
-
-        .badge-completed { background: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; }
-        .badge-pending { background: #f59e0b; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; }
-        .badge-failed { background: #ef4444; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; }
-
-        .btn-export {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 0.5rem 1.5rem;
-            border-radius: 8px;
+        
+        .stat-label {
+            color: var(--gray-500);
+            font-size: 0.875rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 8px rgba(59,130,246,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-
-        .btn-export:hover {
-            background: #2563eb;
-            box-shadow: 0 4px 12px rgba(59,130,246,0.4);
-            transform: translateY(-2px);
+        
+        /* Section */
+        .section {
+            background: var(--warm-white);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 2px solid var(--gray-200);
         }
-
-        .btn-delete {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 0.25rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-delete:hover {
-            background: #dc2626;
-        }
-
-        .btn-verify {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 0.25rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-right: 0.5rem;
-        }
-
-        .btn-verify:hover {
-            background: #059669;
-        }
-
-        .action-buttons {
+        
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            margin-bottom: 1.5rem;
             display: flex;
-            gap: 0.5rem;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        /* Table */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table thead {
+            background: var(--gray-50);
+        }
+        
+        .table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--navy-dark);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--gray-200);
+        }
+        
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            color: var(--gray-700);
+        }
+        
+        .table tr:hover {
+            background: var(--gray-50);
+        }
+        
+        .badge {
+            padding: 0.375rem 0.875rem;
+            border-radius: 100px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+        
+        .badge-warning {
+            background: rgba(212, 165, 116, 0.1);
+            color: var(--gold-dark);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--gray-500);
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
@@ -215,223 +328,206 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-brand">
-            ⛪ Ministry Admin
+            <div class="sidebar-icon">✝</div>
+            <span>Ministry</span>
         </div>
         <ul class="sidebar-nav">
             <li><a href="{% url 'admin_dashboard' %}" class="active">📊 Dashboard</a></li>
             <li><a href="{% url 'donations_list' %}">💰 Donations</a></li>
             <li><a href="{% url 'donors_list' %}">👥 Donors</a></li>
-            <li><a href="{% url 'prayer_requests_list' %}">🙏 Prayer Requests</a></li>
+            <li><a href="{% url 'prayer_requests_list' %}">🙏 Prayers</a></li>
             <li><a href="{% url 'dashboard_settings' %}">⚙️ Settings</a></li>
-            <li><a href="{% url 'donation_page' %}">🏠 Public Site</a></li>
+            <li><a href="{% url 'ministry_home' %}">🏠 Ministry Site</a></li>
+            <li><a href="{% url 'donation_page' %}">💵 Donation Page</a></li>
             <li><a href="{% url 'dashboard_logout' %}">🚪 Logout</a></li>
         </ul>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Header -->
         <div class="header">
-            <div>
-                <h1 style="font-size: 1.75rem; font-weight: 700; color: #1e293b;">Dashboard Overview</h1>
-                <p style="color: #64748b;">Welcome back! Here's what's happening with your ministry.</p>
-            </div>
-            <div>
-                <span style="color: #64748b; font-weight: 600;">{{ user.username }}</span>
-            </div>
+            <h1>📊 Dashboard Overview</h1>
+            <p>Welcome back! Here's what's happening with your ministry.</p>
         </div>
 
-        <!-- Messages -->
-        {% if messages %}
-        <div class="mb-3">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <!-- Multi-Currency Overview -->
+        <h2 style="font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 1.5rem;">💰 Total Donations by Currency</h2>
+        
+        {% if currency_totals %}
+        <div class="currency-grid">
+            {% for code, data in currency_totals.items %}
+            <div class="currency-card">
+                <div class="currency-header">
+                    <div class="currency-flag">
+                        {% if code == 'NGN' %}🇳🇬
+                        {% elif code == 'USD' %}🇺🇸
+                        {% elif code == 'EUR' %}🇪🇺
+                        {% elif code == 'GBP' %}🇬🇧
+                        {% else %}💰{% endif %}
+                    </div>
+                    <div class="currency-code">{{ code }}</div>
+                </div>
+                <div class="currency-amount">{{ data.symbol }}{{ data.total|floatformat:2 }}</div>
+                <div class="currency-label">Total Raised</div>
+                <div class="currency-count">{{ data.count }} donation{{ data.count|pluralize }}</div>
             </div>
             {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">💰</div>
+            <h3>No Donations Yet</h3>
+            <p>Donations will appear here once they're received</p>
         </div>
         {% endif %}
 
-        <!-- ALL 5 CARDS IN ONE ROW -->
-        <div class="row g-3">
-            <!-- Currency Cards - Dynamic -->
-            {% for curr_code, curr_data in currency_totals.items %}
-            <div class="col">
-                <div class="stat-card">
-                    <div class="stat-icon {% if curr_code == 'NGN' %}icon-green{% elif curr_code == 'USD' %}icon-blue{% elif curr_code == 'EUR' %}icon-purple{% elif curr_code == 'GBP' %}icon-orange{% else %}icon-indigo{% endif %}">
-                        <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
-                        </svg>
-                    </div>
-                    <div class="stat-value">{{ curr_data.symbol }}{{ curr_data.total|floatformat:2|intcomma }}</div>
-                    <div class="stat-label">Total {{ curr_code }}</div>
-                </div>
+        <!-- Quick Stats -->
+        <h2 style="font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 1.5rem; margin-top: 2rem;">📈 Ministry Statistics</h2>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">💵</div>
+                <div class="stat-number">{{ stats.total_donations }}</div>
+                <div class="stat-label">Total Donations</div>
             </div>
-            {% empty %}
-            <!-- No donations yet card -->
-            <div class="col">
-                <div class="stat-card">
-                    <div class="stat-icon icon-blue">
-                        <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
-                        </svg>
-                    </div>
-                    <div class="stat-value">$0.00</div>
-                    <div class="stat-label">No Donations</div>
-                </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number">{{ stats.total_donors }}</div>
+                <div class="stat-label">Total Donors</div>
             </div>
-            {% endfor %}
-
-            <!-- Total Donors Card -->
-            <div class="col">
-                <div class="stat-card">
-                    <div class="stat-icon icon-green">
-                        <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
-                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-                        </svg>
-                    </div>
-                    <div class="stat-value">{{ stats.total_donors|default:"0" }}</div>
-                    <div class="stat-label">Total Donors</div>
-                </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">🙏</div>
+                <div class="stat-number">{{ stats.prayer_requests }}</div>
+                <div class="stat-label">Prayer Requests</div>
             </div>
-
-            <!-- Total Donations Card -->
-            <div class="col">
-                <div class="stat-card">
-                    <div class="stat-icon icon-purple">
-                        <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
-                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                        </svg>
-                    </div>
-                    <div class="stat-value">{{ stats.total_donations|default:"0" }}</div>
-                    <div class="stat-label">Total Donations</div>
-                </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">🌍</div>
+                <div class="stat-number">{{ crusade_stats.crusades_planned }}</div>
+                <div class="stat-label">Crusades Planned</div>
             </div>
         </div>
 
-        <!-- Recent Donations Table -->
-        <div class="table-card">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 style="color: #1e293b; font-weight: 700;">Recent Donations</h4>
-                <a href="{% url 'donations_list' %}" class="btn-export">View All</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead style="background: #f1f5f9;">
+        <!-- Recent Donations -->
+        <div class="section">
+            <h2 class="section-title">💰 Recent Donations</h2>
+            
+            {% if recent_donations %}
+            <div style="overflow-x: auto;">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <th>Date</th>
                             <th>Donor</th>
                             <th>Amount</th>
-                            <th>Currency</th>
-                            <th>Type</th>
+                            <th>Method</th>
+                            <th>Date</th>
                             <th>Status</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for donation in recent_donations %}
                         <tr>
-                            <td>{{ donation.created_at|date:"M d, Y H:i" }}</td>
-                            <td><strong>{{ donation.donor.full_name }}</strong></td>
-                            <td><strong>{{ donation.formatted_amount }}</strong></td>
-                            <td>
-                                <span style="background: #e0e7ff; color: #4338ca; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
-                                    {{ donation.currency_code }}
-                                </span>
+                            <td style="font-weight: 600;">{{ donation.donor.full_name }}</td>
+                            <td style="font-family: var(--font-display); font-size: 1.125rem; font-weight: 700; color: var(--navy-dark);">
+                                {{ donation.formatted_amount }}
                             </td>
-                            <td>{{ donation.get_donation_type_display }}</td>
+                            <td>{{ donation.get_payment_method_display }}</td>
+                            <td>{{ donation.created_at|date:"M d, Y" }}</td>
                             <td>
-                                <span class="badge-{{ donation.status }}">{{ donation.get_status_display }}</span>
+                                <span class="badge badge-success">✓ {{ donation.get_status_display }}</span>
                             </td>
-                            <td>
-                                <div class="action-buttons">
-                                    {% if donation.status == 'pending' %}
-                                    <form method="post" action="{% url 'manual_payment_verify' donation.id %}" style="display: inline;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn-verify" onclick="return confirm('Mark this donation as completed?')">✓ Verify</button>
-                                    </form>
-                                    {% endif %}
-                                    <form method="post" action="{% url 'delete_donation' donation.id %}" style="display: inline;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this donation from {{ donation.donor.full_name }}?')">🗑️ Delete</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="7" class="text-center">No donations yet</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">💵</div>
+                <p>No donations yet</p>
+            </div>
+            {% endif %}
         </div>
 
-        <!-- Top Donors Table -->
-        <div class="table-card">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 style="color: #1e293b; font-weight: 700;">Top Donors</h4>
-                <a href="{% url 'export_donors_csv' %}" class="btn-export">Export CSV</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead style="background: #f1f5f9;">
+        <!-- Top Donors -->
+        <div class="section">
+            <h2 class="section-title">🏆 Top Donors</h2>
+            
+            {% if top_donors %}
+            <div style="overflow-x: auto;">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Country</th>
+                            <th>Rank</th>
+                            <th>Donor</th>
                             <th>Total Donated</th>
+                            <th>Email</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for item in top_donors %}
                         <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td><strong>{{ item.donor.full_name }}</strong></td>
-                            <td>{{ item.donor.email }}</td>
-                            <td>{{ item.donor.country }}</td>
-                            <td>
-                                <strong>
-                                {% with first_donation=item.donor.donations.filter.first %}
-                                    {% if first_donation %}
-                                        {% if first_donation.currency == 'NGN' %}
-                                            ₦{{ item.total|floatformat:2|intcomma }}
-                                        {% elif first_donation.currency == 'EUR' %}
-                                            €{{ item.total|floatformat:2|intcomma }}
-                                        {% elif first_donation.currency == 'GBP' %}
-                                            £{{ item.total|floatformat:2|intcomma }}
-                                        {% else %}
-                                            ${{ item.total|floatformat:2|intcomma }}
-                                        {% endif %}
-                                    {% else %}
-                                        ${{ item.total|floatformat:2|intcomma }}
-                                    {% endif %}
-                                {% endwith %}
-                                </strong>
+                            <td style="font-weight: 700; color: var(--gold-base);">#{{ forloop.counter }}</td>
+                            <td style="font-weight: 600;">{{ item.donor.full_name }}</td>
+                            <td style="font-family: var(--font-display); font-size: 1.125rem; font-weight: 700; color: var(--navy-dark);">
+                                ${{ item.total|floatformat:2 }}
                             </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5" class="text-center">No donors yet</td>
+                            <td>{{ item.donor.email }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🏆</div>
+                <p>No donors yet</p>
+            </div>
+            {% endif %}
         </div>
 
-        <!-- Prayer Requests Alert -->
-        {% if stats.prayer_requests > 0 %}
-        <div class="alert alert-info mt-4" style="border-radius: 12px; border: 2px solid #3b82f6;">
-            <strong>🙏 Prayer Requests:</strong> You have {{ stats.prayer_requests }} unanswered prayer request(s). 
-            <a href="{% url 'prayer_requests_list' %}" style="font-weight: 700;">View them here</a>
+        <!-- Recent Prayer Requests -->
+        <div class="section">
+            <h2 class="section-title">🙏 Recent Prayer Requests</h2>
+            
+            {% if recent_prayers %}
+            <div style="overflow-x: auto;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>From</th>
+                            <th>Request</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prayer in recent_prayers %}
+                        <tr>
+                            <td style="font-weight: 600;">{{ prayer.donor.full_name }}</td>
+                            <td>{{ prayer.request_text|truncatewords:15 }}</td>
+                            <td>{{ prayer.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                {% if prayer.is_answered %}
+                                <span class="badge badge-success">✓ Answered</span>
+                                {% else %}
+                                <span class="badge badge-warning">⏳ Pending</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🙏</div>
+                <p>No prayer requests yet</p>
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
