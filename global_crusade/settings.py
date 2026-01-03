@@ -1,5 +1,5 @@
 """
-Django settings for global_crusade project - WITH CLOUDINARY
+Django settings for global_crusade project - COMPLETE & CORRECT
 """
 
 from pathlib import Path
@@ -64,9 +64,12 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -109,23 +112,11 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static files - NO COMPRESSION
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Remove STATICFILES_DIRS - let Django find admin static files
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static'),
-# ] if os.path.exists(os.path.join(BASE_DIR, 'static')) else []
-
-# Simple storage - no compression
-if DEBUG:
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-else:
-    # Use WhiteNoise but without manifest/compression
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-    WHITENOISE_AUTOREFRESH = True
-    WHITENOISE_USE_FINDERS = True
+# NO STATICFILES_DIRS - let Django collect admin files automatically
 
 
 # ═══════════════════════════════════════════════════════════════
