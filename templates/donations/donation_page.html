@@ -373,16 +373,12 @@
             color: white;
             pointer-events: none;
             z-index: 10;
-            display: none;
-        }
-
-        .currency-symbol.active {
-            display: block;
         }
 
         .amount-input {
             width: 100%;
             padding: 1.25rem 1.5rem;
+            padding-left: 50px;
             background: var(--navy-dark);
             border: 2px solid rgba(212, 165, 116, 0.3);
             border-radius: 8px;
@@ -390,10 +386,6 @@
             font-size: 1.5rem;
             font-weight: 600;
             transition: all 0.3s;
-        }
-
-        .amount-input.has-symbol {
-            padding-left: 50px;
         }
 
         .amount-input:focus {
@@ -534,6 +526,35 @@
             outline: none;
             border-color: var(--gold-base);
             box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+        }
+
+        /* PayPal Button */
+        .paypal-quick-btn {
+            display: inline-block;
+            background: #0070ba;
+            color: white;
+            padding: 1.5rem 4rem;
+            border-radius: 50px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 112, 186, 0.3);
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        .paypal-quick-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 112, 186, 0.4);
+            background: #005ea6;
+        }
+
+        .paypal-description {
+            color: var(--gold-light);
+            font-size: 0.875rem;
+            margin-top: 1rem;
         }
 
         /* Submit Button */
@@ -685,144 +706,138 @@
         </div>
 
         <div class="form-card">
-            <form method="post" id="donationForm">
-                {% csrf_token %}
+            <!-- PAYMENT METHOD SELECTOR -->
+            <div class="form-section">
+                <label class="form-label">Choose Your Payment Method</label>
+                <div class="payment-grid">
+                    <label class="payment-card selected" data-method="bank">
+                        <input type="radio" name="payment_method_choice" value="bank" checked>
+                        <div class="payment-icon">🏦</div>
+                        <div class="payment-label">Bank Transfer</div>
+                    </label>
+                    <label class="payment-card" data-method="paypal">
+                        <input type="radio" name="payment_method_choice" value="paypal">
+                        <div class="payment-icon">💳</div>
+                        <div class="payment-label">PayPal</div>
+                    </label>
+                </div>
+            </div>
 
-                <div class="form-section">
-                    <label class="form-label">Donation Amount *</label>
-                    <div class="amount-input-wrapper">
-                        <span class="currency-symbol" id="currencySymbol">₦</span>
-                        <input 
-                            type="number" 
-                            name="amount" 
-                            class="amount-input" 
-                            id="amountInput" 
-                            placeholder="Enter amount" 
-                            step="0.01" 
-                            min="1" 
-                            required
-                        >
+            <!-- BANK TRANSFER SECTION (WITH FORM) -->
+            <div id="bank-transfer-section">
+                <form method="post" id="bankTransferForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="payment_method" value="bank">
+                    <input type="hidden" name="currency" value="NGN">
+                    <input type="hidden" name="donation_type" value="one-time">
+
+                    <div class="form-section">
+                        <label class="form-label">Donation Type</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="one-time" name="donation_type" value="one-time" checked>
+                                <label for="one-time">One-Time</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="monthly" name="donation_type" value="monthly">
+                                <label for="monthly">💖 Monthly</label>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <select name="currency" id="currencySelect" style="display: none;">
-                        <option value="">Auto</option>
-                        <option value="NGN">NGN</option>
-                        <option value="USD">USD</option>
-                        <option value="EUR">EUR</option>
-                        <option value="GBP">GBP</option>
-                    </select>
-                    
-                    <p class="currency-note" id="currencyNote">
-                        💡 Bank transfers are in Nigerian Naira (₦)
+
+                    <div class="form-section">
+                        <label class="form-label">Donation Amount *</label>
+                        <div class="amount-input-wrapper">
+                            <span class="currency-symbol">₦</span>
+                            <input 
+                                type="number" 
+                                name="amount" 
+                                class="amount-input" 
+                                placeholder="Enter amount" 
+                                step="0.01" 
+                                min="1" 
+                                required
+                            >
+                        </div>
+                        <p class="currency-note">
+                            💡 Bank transfers are in Nigerian Naira (₦)
+                        </p>
+                    </div>
+
+                    <div id="bank-instructions" class="payment-instructions">
+                        <h4>🏦 Bank Transfer Details</h4>
+                        <div class="bank-detail">
+                            <div style="margin-bottom: 0.75rem;">
+                                <span class="bank-detail-label">Bank Name:</span>
+                                <div class="bank-detail-value">United Bank Africa PLC</div>
+                            </div>
+                            <div style="margin-bottom: 0.75rem;">
+                                <span class="bank-detail-label">Account Number:</span>
+                                <div class="bank-detail-value" style="font-family: monospace; font-size: 1.125rem;">1023888802</div>
+                            </div>
+                            <div>
+                                <span class="bank-detail-label">Account Name:</span>
+                                <div class="bank-detail-value">Eternity Voice International Ministry</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-grid two-cols">
+                        <div>
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" name="quick_name" class="text-input" placeholder="John Doe" required>
+                        </div>
+                        <div>
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" name="quick_email" class="text-input" placeholder="your@email.com" required>
+                        </div>
+                    </div>
+
+                    <div id="full-form" style="display: none;">
+                        <input type="hidden" name="full_name" id="full_name">
+                        <input type="hidden" name="email" id="email">
+                        <input type="hidden" name="country" id="country" value="Nigeria">
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        📝 Submit Bank Transfer Details
+                    </button>
+                </form>
+            </div>
+
+            <!-- PAYPAL SECTION (NO FORM - JUST BUTTON!) -->
+            <div id="paypal-section" style="display: none;">
+                <div class="payment-instructions">
+                    <h4>💳 Quick Donate with PayPal</h4>
+                    <p style="color: var(--gold-light); margin-bottom: 1.5rem;">
+                        Click the button below to donate via PayPal. You'll enter the amount on PayPal's secure payment page.
                     </p>
                 </div>
 
-                <div class="form-section">
-                    <label class="form-label">Donation Type</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="one-time" name="donation_type" value="one-time" checked>
-                            <label for="one-time">One-Time</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="monthly" name="donation_type" value="monthly">
-                            <label for="monthly">💖 Monthly</label>
-                        </div>
-                    </div>
+                <div style="text-align: center; padding: 2rem 0;">
+                    <a href="https://paypal.me/eternityvoice2021" 
+                       class="paypal-quick-btn"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        
+                        <svg style="width: 28px; height: 28px; vertical-align: middle; margin-right: 12px; margin-top: -4px;" 
+                             fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 00-.795.68l-.04.22-.63 3.993-.032.17a.805.805 0 01-.795.681H7.803a.483.483 0 01-.477-.558L9.965 5.27a.805.805 0 01.795-.681h4.127c1.268 0 2.253.264 2.931.786.749.575 1.164 1.434 1.249 2.577v.526z"/>
+                        </svg>
+                        
+                        DONATE WITH PAYPAL
+                    </a>
+                    
+                    <p class="paypal-description">
+                        🔒 Secure payment • No PayPal account required • All currencies accepted
+                    </p>
                 </div>
-
-                <div class="form-section">
-                    <label class="form-label">Payment Method</label>
-                    <div class="payment-grid">
-                        <label class="payment-card selected">
-                            <input type="radio" name="payment_method" value="bank" checked>
-                            <div class="payment-icon">🏦</div>
-                            <div class="payment-label">Bank Transfer</div>
-                        </label>
-                        <label class="payment-card">
-                            <input type="radio" name="payment_method" value="paypal">
-                            <div class="payment-icon">💳</div>
-                            <div class="payment-label">PayPal</div>
-                        </label>
-                    </div>
-                </div>
-
-                <div id="bank-instructions" class="payment-instructions">
-                    <h4>🏦 Bank Transfer Details</h4>
-                    <div class="bank-detail">
-                        <div style="margin-bottom: 0.75rem;">
-                            <span class="bank-detail-label">Bank Name:</span>
-                            <div class="bank-detail-value">United Bank Africa PLC</div>
-                        </div>
-                        <div style="margin-bottom: 0.75rem;">
-                            <span class="bank-detail-label">Account Number:</span>
-                            <div class="bank-detail-value" style="font-family: monospace; font-size: 1.125rem;">1023888802</div>
-                        </div>
-                        <div>
-                            <span class="bank-detail-label">Account Name:</span>
-                            <div class="bank-detail-value">Eternity Voice International Ministry</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="paypal-instructions" class="payment-instructions" style="display: none;">
-                    <h4>💳 PayPal Payment</h4>
-                    <p style="color: var(--gold-light);">You'll be redirected to PayPal to complete your donation securely.</p>
-                </div>
-
-                <div id="quick-form">
-                    <div class="input-grid">
-                        <div>
-                            <label class="form-label">Email Address *</label>
-                            <input type="email" name="quick_email" id="quick_email" class="text-input" placeholder="your@email.com" required>
-                        </div>
-                        <div>
-                            <label class="form-label">Full Name *</label>
-                            <input type="text" name="quick_name" id="quick_name" class="text-input" placeholder="John Doe" required>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="full-form" style="display: none;">
-                    <div class="input-grid">
-                        <div>
-                            <label class="form-label">Full Name *</label>
-                            <input type="text" name="full_name" id="full_name" class="text-input">
-                        </div>
-                    </div>
-                    <div class="input-grid two-cols" style="margin-top: 1.5rem;">
-                        <div>
-                            <label class="form-label">Email *</label>
-                            <input type="email" name="email" id="email" class="text-input">
-                        </div>
-                        <div>
-                            <label class="form-label">Phone</label>
-                            <input type="tel" name="phone" id="phone" class="text-input">
-                        </div>
-                    </div>
-                    <div class="input-grid" style="margin-top: 1.5rem;">
-                        <div>
-                            <label class="form-label">Country *</label>
-                            <select name="country" id="country" class="select-input">
-                                <option value="">Select country</option>
-                                <option value="Nigeria">Nigeria</option>
-                                <option value="United States">United States</option>
-                                <option value="United Kingdom">United Kingdom</option>
-                                <option value="Canada">Canada</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="submit-btn">
-                    <span id="submit-text">📝 Submit Donation Details</span>
-                </button>
-            </form>
+            </div>
         </div>
     </div>
 
     <script>
+        // Mobile menu toggle
         const mobileToggle = document.getElementById('mobileToggle');
         const navMenu = document.getElementById('navMenu');
         
@@ -832,58 +847,41 @@
             });
         }
 
-        function updateCurrencyDisplay() {
-            const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value;
-            const currencySymbol = document.getElementById('currencySymbol');
-            const currencySelect = document.getElementById('currencySelect');
-            const amountInput = document.getElementById('amountInput');
-            const currencyNote = document.getElementById('currencyNote');
-            
-            if (paymentMethod === 'bank') {
-                currencySymbol.classList.add('active');
-                amountInput.classList.add('has-symbol');
-                currencySelect.value = 'NGN';
-                currencyNote.innerHTML = '💡 Bank transfers are in Nigerian Naira (₦)';
-            } else {
-                currencySymbol.classList.remove('active');
-                amountInput.classList.remove('has-symbol');
-                currencySelect.value = '';
-                currencyNote.innerHTML = '💡 PayPal accepts all currencies';
-            }
-        }
+        // Payment method switcher
+        const bankSection = document.getElementById('bank-transfer-section');
+        const paypalSection = document.getElementById('paypal-section');
 
         document.querySelectorAll('.payment-card').forEach(card => {
             card.addEventListener('click', function() {
+                // Remove selected class from all cards
                 document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('selected'));
+                
+                // Add selected class to clicked card
                 this.classList.add('selected');
                 this.querySelector('input[type="radio"]').checked = true;
                 
-                const method = this.querySelector('input').value;
-                const bankInstructions = document.getElementById('bank-instructions');
-                const paypalInstructions = document.getElementById('paypal-instructions');
+                // Get payment method
+                const method = this.dataset.method;
                 
+                // Show/hide appropriate section
                 if (method === 'bank') {
-                    bankInstructions.style.display = 'block';
-                    paypalInstructions.style.display = 'none';
-                } else {
-                    bankInstructions.style.display = 'none';
-                    paypalInstructions.style.display = 'block';
+                    bankSection.style.display = 'block';
+                    paypalSection.style.display = 'none';
+                } else if (method === 'paypal') {
+                    bankSection.style.display = 'none';
+                    paypalSection.style.display = 'block';
                 }
-                
-                updateCurrencyDisplay();
             });
         });
 
-        document.getElementById('donationForm').addEventListener('submit', function() {
-            const quickEmail = document.getElementById('quick_email').value;
-            const quickName = document.getElementById('quick_name').value;
+        // Bank transfer form submission - populate hidden fields
+        document.getElementById('bankTransferForm').addEventListener('submit', function() {
+            const quickEmail = document.querySelector('input[name="quick_email"]').value;
+            const quickName = document.querySelector('input[name="quick_name"]').value;
             
             document.getElementById('full_name').value = quickName;
             document.getElementById('email').value = quickEmail;
-            document.getElementById('country').value = 'Other';
         });
-
-        updateCurrencyDisplay();
     </script>
 </body>
 </html>
