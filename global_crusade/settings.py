@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='your-secret-key-for-development')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['*']  # Change to specific domains in production
 
@@ -112,12 +112,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-] if os.path.exists(os.path.join(BASE_DIR, 'static')) else []
 
-# Whitenoise configuration - FIXED
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# Remove STATICFILES_DIRS - let Django find admin static files
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+# ] if os.path.exists(os.path.join(BASE_DIR, 'static')) else []
+
+# Simple storage - no compression
+if DEBUG:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+else:
+    # Use WhiteNoise but without manifest/compression
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+    WHITENOISE_AUTOREFRESH = True
+    WHITENOISE_USE_FINDERS = True
 
 
 # ═══════════════════════════════════════════════════════════════
