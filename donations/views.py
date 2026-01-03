@@ -211,14 +211,20 @@ def donation_page(request):
                 request_text=message
             )
         
+        
         # ⭐ SEND ALL EMAILS IMMEDIATELY
+        print(f"\n{'='*60}")
+        print(f"📧 STARTING EMAIL PROCESS...")
+        print(f"{'='*60}")
         try:
             from .email_utils import send_all_donation_emails
             send_all_donation_emails(donation, prayer_request)
-            print(f"✅ Confirmation emails sent!")
+            print(f"✅ ALL EMAILS SENT SUCCESSFULLY!")
         except Exception as e:
-            print(f"⚠️ Email sending failed: {e}")
-            pass
+            print(f"❌ EMAIL ERROR: {e}")
+            import traceback
+            traceback.print_exc()  # Print full error for debugging
+            # Don't stop the donation process if email fails
         
         # Route based on payment method
         if payment_method == 'paypal':

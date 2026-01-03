@@ -1,5 +1,5 @@
 <!-- File: templates/emails/admin_notification.html -->
-<!-- Location: ministry_donation_site/templates/emails/admin_notification.html -->
+<!-- Beautiful admin notification matching donor receipt style -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,119 +8,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Donation Received</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f3f4f6;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f3f4f6; padding: 40px 20px;">
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
         <tr>
             <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                     
                     <!-- Header -->
                     <tr>
-                        <td style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); padding: 30px; text-align: center;">
-                            <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;">
-                                🎉 New Donation Received!
-                            </h1>
+                        <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td align="center">
+                                        <div style="font-size: 48px; margin-bottom: 10px;">{% if is_first_time %}🎉{% else %}💰{% endif %}</div>
+                                        <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 600;">
+                                            {% if is_first_time %}First-Time Donor!{% else %}New Donation Received!{% endif %}
+                                        </h1>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
 
-                    <!-- Amount Highlight -->
+                    <!-- Greeting -->
                     <tr>
-                        <td style="padding: 40px 30px 30px; text-align: center;">
-                            <div style="background: linear-gradient(135deg, #10b981, #059669); padding: 30px; border-radius: 12px;">
-                                <p style="color: #d1fae5; font-size: 14px; margin: 0 0 10px; text-transform: uppercase; letter-spacing: 1px;">Donation Amount</p>
-                                <p style="color: #ffffff; font-size: 48px; font-weight: 700; margin: 0;">${{ amount }}</p>
+                        <td style="padding: 30px 30px 20px;">
+                            <p style="color: #333333; font-size: 16px; line-height: 1.5; margin: 0;">
+                                A new donation of <strong style="color: #10b981;">{{ formatted_amount }}</strong> has been received{% if is_first_time %} from a <strong style="color: #f59e0b;">first-time donor</strong>{% endif %}!
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Donor Information Box -->
+                    <tr>
+                        <td style="padding: 0 30px 20px;">
+                            <div style="background-color: #f9fafb; border-left: 4px solid #667eea; padding: 20px; border-radius: 4px;">
+                                <h2 style="color: #1f2937; margin: 0 0 15px; font-size: 18px; font-weight: 600;">
+                                    📋 Donor Information
+                                </h2>
+                                <table width="100%" cellpadding="6" cellspacing="0">
+                                    <tr>
+                                        <td style="color: #6b7280; font-size: 14px; width: 35%;">Name:</td>
+                                        <td style="color: #111827; font-size: 14px; font-weight: 600;">{{ donor_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #6b7280; font-size: 14px;">Email:</td>
+                                        <td style="color: #111827; font-size: 14px;">
+                                            <a href="mailto:{{ donor_email }}" style="color: #667eea; text-decoration: none;">{{ donor_email }}</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #6b7280; font-size: 14px;">Phone:</td>
+                                        <td style="color: #111827; font-size: 14px;">{{ donor_phone }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #6b7280; font-size: 14px;">Country:</td>
+                                        <td style="color: #111827; font-size: 14px;">{{ donor_country }}</td>
+                                    </tr>
+                                </table>
                             </div>
                         </td>
                     </tr>
 
-                    <!-- Donor Information -->
+                    <!-- Donation Details Box -->
                     <tr>
-                        <td style="padding: 0 30px 30px;">
-                            <h3 style="color: #1f2937; margin: 0 0 15px; font-size: 18px;">
-                                👤 Donor Information
-                            </h3>
-                            <table width="100%" cellpadding="10" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px;">
-                                <tr>
-                                    <td style="color: #6b7280; font-size: 14px; padding: 10px 15px;">Name:</td>
-                                    <td style="color: #1f2937; font-size: 14px; font-weight: 600; text-align: right; padding: 10px 15px;">{{ donor_name }}</td>
-                                </tr>
-                                <tr style="border-top: 1px solid #e5e7eb;">
-                                    <td style="color: #6b7280; font-size: 14px; padding: 10px 15px;">Email:</td>
-                                    <td style="color: #1f2937; font-size: 14px; font-weight: 600; text-align: right; padding: 10px 15px;">
-                                        <a href="mailto:{{ donor_email }}" style="color: #3b82f6; text-decoration: none;">{{ donor_email }}</a>
-                                    </td>
-                                </tr>
-                                {% if donor_phone %}
-                                <tr style="border-top: 1px solid #e5e7eb;">
-                                    <td style="color: #6b7280; font-size: 14px; padding: 10px 15px;">Phone:</td>
-                                    <td style="color: #1f2937; font-size: 14px; font-weight: 600; text-align: right; padding: 10px 15px;">{{ donor_phone }}</td>
-                                </tr>
-                                {% endif %}
-                                <tr style="border-top: 1px solid #e5e7eb;">
-                                    <td style="color: #6b7280; font-size: 14px; padding: 10px 15px;">Country:</td>
-                                    <td style="color: #1f2937; font-size: 14px; font-weight: 600; text-align: right; padding: 10px 15px;">{{ donor_country }}</td>
-                                </tr>
-                                <tr style="border-top: 1px solid #e5e7eb;">
-                                    <td style="color: #6b7280; font-size: 14px; padding: 10px 15px;">First Time Donor:</td>
-                                    <td style="text-align: right; padding: 10px 15px;">
-                                        {% if is_first_time %}
-                                            <span style="background-color: #10b981; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">YES - NEW!</span>
-                                        {% else %}
-                                            <span style="background-color: #6b7280; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">Returning</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            </table>
+                        <td style="padding: 0 30px 20px;">
+                            <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 20px; border-radius: 4px;">
+                                <h2 style="color: #065f46; margin: 0 0 15px; font-size: 18px; font-weight: 600;">
+                                    📄 Donation Details
+                                </h2>
+                                <table width="100%" cellpadding="6" cellspacing="0">
+                                    <tr>
+                                        <td style="color: #047857; font-size: 14px; width: 35%;">Amount:</td>
+                                        <td style="color: #065f46; font-size: 18px; font-weight: 700;">{{ formatted_amount }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #047857; font-size: 14px;">Date:</td>
+                                        <td style="color: #065f46; font-size: 14px;">{{ donation_date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #047857; font-size: 14px;">Type:</td>
+                                        <td style="color: #065f46; font-size: 14px;">{{ donation_type }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #047857; font-size: 14px;">Payment Method:</td>
+                                        <td style="color: #065f46; font-size: 14px; font-weight: 600;">{{ payment_method }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #047857; font-size: 14px;">Payment Gateway:</td>
+                                        <td style="color: #065f46; font-size: 14px;">{{ payment_gateway }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #047857; font-size: 14px;">Transaction ID:</td>
+                                        <td style="color: #065f46; font-size: 13px; font-family: monospace;">{{ transaction_id }}</td>
+                                    </tr>
+                                </table>
+                            </div>
                         </td>
                     </tr>
 
-                    <!-- Donation Details -->
-                    <tr>
-                        <td style="padding: 0 30px 30px;">
-                            <h3 style="color: #1f2937; margin: 0 0 15px; font-size: 18px;">
-                                💰 Donation Details
-                            </h3>
-                            <table width="100%" cellpadding="10" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px;">
-                                <tr>
-                                    <td style="color: #6b7280; font-size: 14px; padding: 10px 15px;">Donation ID:</td>
-                                    <td style="color: #1f2937; font-size: 14px; font-weight: 600; text-align: right; padding: 10px 15px;">#{{ donation_id }}</td>
-                                </tr>
-                                <tr style="border-top: 1px solid #e5e7eb;">
-                                    <td style="color: #6b7280; font-size: 14px; padding: 10px 15px;">Date & Time:</td>
-                                    <td style="color: #1f2937; font-size: 14px; font-weight: 600; text-align: right; padding: 10px 15px;">{{ donation_date }}</td>
-                                </tr>
-                                <tr style="border-top: 1px solid #e5e7eb;">
-                                    <td style="color: #6b7280; font-size: 14px; padding: 10px 15px;">Type:</td>
-                                    <td style="text-align: right; padding: 10px 15px;">
-                                        {% if donation_type == 'monthly' %}
-                                            <span style="background-color: #8b5cf6; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">MONTHLY</span>
-                                        {% else %}
-                                            <span style="background-color: #3b82f6; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">ONE-TIME</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                <tr style="border-top: 1px solid #e5e7eb;">
-                                    <td style="color: #6b7280; font-size: 14px; padding: 10px 15px;">Payment Method:</td>
-                                    <td style="color: #1f2937; font-size: 14px; font-weight: 600; text-align: right; padding: 10px 15px;">{{ payment_method|title }}</td>
-                                </tr>
-                                {% if transaction_id %}
-                                <tr style="border-top: 1px solid #e5e7eb;">
-                                    <td style="color: #6b7280; font-size: 14px; padding: 10px 15px;">Transaction ID:</td>
-                                    <td style="color: #1f2937; font-size: 11px; font-family: monospace; text-align: right; padding: 10px 15px;">{{ transaction_id }}</td>
-                                </tr>
-                                {% endif %}
-                            </table>
-                        </td>
-                    </tr>
-
+                    <!-- Prayer Request (if exists) -->
                     {% if prayer_request %}
-                    <!-- Prayer Request -->
                     <tr>
-                        <td style="padding: 0 30px 30px;">
-                            <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 20px; border-radius: 8px;">
-                                <h4 style="color: #1e40af; margin: 0 0 10px; font-size: 16px;">
-                                    🙏 Prayer Request Included
-                                </h4>
+                        <td style="padding: 0 30px 20px;">
+                            <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 20px; border-radius: 4px;">
+                                <h3 style="color: #1e40af; margin: 0 0 10px; font-size: 16px; font-weight: 600;">
+                                    🙏 Prayer Request
+                                </h3>
                                 <p style="color: #1e3a8a; font-size: 14px; line-height: 1.6; margin: 0; font-style: italic;">
                                     "{{ prayer_request }}"
                                 </p>
@@ -129,35 +123,36 @@
                     </tr>
                     {% endif %}
 
-                    <!-- Quick Actions -->
+                    <!-- First Time Donor Badge -->
+                    {% if is_first_time %}
+                    <tr>
+                        <td style="padding: 0 30px 30px;">
+                            <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 15px 20px; border-radius: 8px; border-left: 4px solid #f59e0b; text-align: center;">
+                                <p style="color: #92400e; margin: 0; font-weight: 600; font-size: 15px;">
+                                    ⭐ FIRST TIME DONOR - Consider sending a welcome message!
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    <!-- Action Button -->
                     <tr>
                         <td style="padding: 0 30px 40px; text-align: center;">
-                            <h3 style="color: #1f2937; margin: 0 0 20px; font-size: 18px;">
-                                Quick Actions
-                            </h3>
-                            <table cellpadding="10" cellspacing="10" width="100%">
-                                <tr>
-                                    <td align="center">
-                                        <a href="{{ dashboard_url }}" style="display: inline-block; background-color: #3b82f6; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-size: 14px; font-weight: 600;">
-                                            📊 View in Dashboard
-                                        </a>
-                                    </td>
-                                    <td align="center">
-                                        <a href="mailto:{{ donor_email }}" style="display: inline-block; background-color: #10b981; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-size: 14px; font-weight: 600;">
-                                            📧 Email Donor
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
+                            <a href="{{ dashboard_url }}" style="display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 6px; font-size: 15px; font-weight: 600;">
+                                📊 View in Dashboard
+                            </a>
                         </td>
                     </tr>
 
                     <!-- Footer -->
                     <tr>
-                        <td style="background-color: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
-                            <p style="color: #6b7280; font-size: 12px; margin: 0;">
-                                This is an automated notification from your donation system.<br>
-                                Sent on {{ notification_date }}
+                        <td style="background-color: #f9fafb; padding: 25px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                            <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 0 0 8px;">
+                                <strong>Global Crusade Ministry</strong>
+                            </p>
+                            <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                                Admin notification sent on {{ notification_date }}
                             </p>
                         </td>
                     </tr>

@@ -144,7 +144,7 @@ LOGIN_URL = '/admin/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
-# Email Configuration
+# Email Configuration - UPDATED FOR ETERNITYVOICEMINISTRY
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -153,6 +153,9 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='eternityvoiceministry@gmail
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = 'Global Crusade Ministry <eternityvoiceministry@gmail.com>'
 ADMIN_EMAIL = 'eternityvoiceministry@gmail.com'
+
+# Site URL for emails
+SITE_URL = 'https://globalcrusadeoutreach.org'
 
 # Payment Gateway Configuration
 PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY', default='')
