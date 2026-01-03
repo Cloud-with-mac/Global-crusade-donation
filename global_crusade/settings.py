@@ -10,6 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+# Add Cloudinary configuration
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 from pathlib import Path
 from decouple import config
 import os
@@ -42,9 +46,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'donations',
     'crispy_forms',
+    'cloudinary',
     'crispy_bootstrap4',
     'django.contrib.humanize',
 ]
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('dqupmxpwf'),
+    'API_KEY': os.getenv('425336727968135'),
+    'API_SECRET': os.getenv('ru1CI3kgkG0mTgxZum8P-sj7Ga8'),
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
