@@ -33,9 +33,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary_storage',  # ← ADD THIS (BEFORE staticfiles)
+    'cloudinary_storage',  # BEFORE staticfiles
     'django.contrib.staticfiles',
-    'cloudinary',  # ← ADD THIS (AFTER staticfiles)
+    'cloudinary',  # AFTER staticfiles
     'donations',
     'crispy_forms',
     'crispy_bootstrap4',
@@ -116,7 +116,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ] if os.path.exists(os.path.join(BASE_DIR, 'static')) else []
 
-# Whitenoise configuration
+# Whitenoise configuration - FIXED
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 
