@@ -1,5 +1,5 @@
 """
-Django settings for global_crusade project.
+Django settings for global_crusade project - WITH CLOUDINARY
 """
 
 from pathlib import Path
@@ -7,12 +7,14 @@ from decouple import config
 import os
 import dj_database_url
 
+# Cloudinary imports
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', default='your-secret-key-for-development')
@@ -31,7 +33,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',  # ← ADD THIS (BEFORE staticfiles)
     'django.contrib.staticfiles',
+    'cloudinary',  # ← ADD THIS (AFTER staticfiles)
     'donations',
     'crispy_forms',
     'crispy_bootstrap4',
@@ -63,7 +67,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media',  # For media files
             ],
         },
     },
@@ -73,10 +76,7 @@ WSGI_APPLICATION = 'global_crusade.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
 if 'DATABASE_URL' in os.environ:
-    # Production database (Render PostgreSQL)
     DATABASES = {
         'default': dj_database_url.config(
             default=config('DATABASE_URL'),
@@ -85,7 +85,6 @@ if 'DATABASE_URL' in os.environ:
         )
     }
 else:
-    # Local development database (SQLite)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -95,67 +94,58 @@ else:
 
 
 # Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ] if os.path.exists(os.path.join(BASE_DIR, 'static')) else []
 
-# Whitenoise configuration for serving static files
+# Whitenoise configuration
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # ═══════════════════════════════════════════════════════════════
-# MEDIA FILES (LOCAL STORAGE)
+# CLOUDINARY CONFIGURATION - MEDIA FILES
 # ═══════════════════════════════════════════════════════════════
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': config('CLOUDINARY_API_KEY'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET'),
+}
+
+# Use Cloudinary for media file storage
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Media files settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# ═══════════════════════════════════════════════════════════════
 
-# Where to redirect for login (use Django admin login)
+
+# Login/Logout redirects
 LOGIN_URL = '/admin/login/'
-
-# Where to redirect after successful login
 LOGIN_REDIRECT_URL = '/dashboard/'
-
-# Where to redirect after logout
 LOGOUT_REDIRECT_URL = '/'
 
-# EMAIL CONFIGURATION - Using environment variables
+# Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -173,9 +163,8 @@ FLUTTERWAVE_PUBLIC_KEY = config('FLUTTERWAVE_PUBLIC_KEY', default='')
 FLUTTERWAVE_SECRET_KEY = config('FLUTTERWAVE_SECRET_KEY', default='')
 FLUTTERWAVE_ENCRYPTION_KEY = config('FLUTTERWAVE_ENCRYPTION_KEY', default='')
 
-DEFAULT_PAYMENT_GATEWAY = 'paystack'  # or 'flutterwave'
-
-PAYPAL_ME_USERNAME = 'eternityvoice2021'  # Your PayPal.Me username
+DEFAULT_PAYMENT_GATEWAY = 'paystack'
+PAYPAL_ME_USERNAME = 'eternityvoice2021'
 
 # Security settings for production
 if not DEBUG:
