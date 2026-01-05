@@ -237,7 +237,7 @@
             font-weight: 600;
         }
 
-        .text-input {
+        .text-input, .select-input {
             width: 100%;
             padding: 1rem 1.5rem;
             background: var(--navy-dark);
@@ -245,6 +245,33 @@
             border-radius: 8px;
             color: white;
             font-size: 1rem;
+        }
+
+        .select-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.5em;
+            padding-right: 3rem;
+        }
+
+        .select-input option {
+            background: var(--navy-dark);
+            color: white;
+        }
+
+        .textarea-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: var(--navy-dark);
+            border: 2px solid rgba(212, 165, 116, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-family: var(--font-body);
+            min-height: 100px;
+            resize: vertical;
         }
 
         .input-grid {
@@ -316,6 +343,30 @@
             border-radius: 8px;
         }
 
+        .currency-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .currency-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: var(--navy-dark);
+            border: 2px solid rgba(212, 165, 116, 0.3);
+            border-radius: 8px;
+            color: var(--gold-light);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .currency-btn.active {
+            background: rgba(212, 165, 116, 0.2);
+            border-color: var(--gold-base);
+            color: white;
+        }
+
         @media (max-width: 768px) {
             .payment-grid {
                 grid-template-columns: 1fr;
@@ -370,7 +421,7 @@
                         <input type="radio" name="gateway" value="stripe" style="display: none;">
                         <div class="payment-icon">💳</div>
                         <div class="payment-label">Credit/Debit Card</div>
-                        <div class="payment-badge">🇬🇧 GBP</div>
+                        <div class="payment-badge">🌍 Multi-Currency</div>
                     </label>
 
                     <label class="payment-card">
@@ -427,19 +478,41 @@
                         </div>
                     </div>
 
+                    <div class="input-grid" style="margin-top: 1.5rem;">
+                        <div>
+                            <label class="form-label">Prayer Request (Optional)</label>
+                            <textarea name="message" class="textarea-input" placeholder="Share your prayer request with us..."></textarea>
+                        </div>
+                    </div>
+
                     <button type="submit" class="submit-btn">📝 Submit Bank Transfer Details</button>
                 </form>
             </div>
 
             <!-- STRIPE SECTION -->
             <div id="stripe-section" style="display: none;">
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Select Currency *</label>
+                    <div class="currency-selector">
+                        <button type="button" class="currency-btn active" data-currency="gbp" data-symbol="£">
+                            🇬🇧 GBP (£)
+                        </button>
+                        <button type="button" class="currency-btn" data-currency="usd" data-symbol="$">
+                            🇺🇸 USD ($)
+                        </button>
+                        <button type="button" class="currency-btn" data-currency="eur" data-symbol="€">
+                            🇪🇺 EUR (€)
+                        </button>
+                    </div>
+                </div>
+
                 <div style="margin-bottom: 2rem;">
                     <label class="form-label">Donation Amount *</label>
                     <div class="amount-input-wrapper">
-                        <span class="currency-symbol">£</span>
+                        <span class="currency-symbol" id="stripeCurrencySymbol">£</span>
                         <input type="number" id="stripeAmount" class="amount-input" placeholder="Enter amount" step="0.01" min="1" required>
                     </div>
-                    <p class="currency-note">💡 Card payments in British Pounds (£)</p>
+                    <p class="currency-note" id="stripeCurrencyNote">💡 Card payments in British Pounds (£)</p>
                 </div>
 
                 <div class="input-grid two-cols">
@@ -450,6 +523,13 @@
                     <div>
                         <label class="form-label">Email Address *</label>
                         <input type="email" id="stripeEmail" class="text-input" placeholder="your@email.com" required>
+                    </div>
+                </div>
+
+                <div class="input-grid" style="margin-top: 1.5rem;">
+                    <div>
+                        <label class="form-label">Prayer Request (Optional)</label>
+                        <textarea id="stripePrayerRequest" class="textarea-input" placeholder="Share your prayer request with us..."></textarea>
                     </div>
                 </div>
 
@@ -483,6 +563,13 @@
                         </div>
                     </div>
 
+                    <div class="input-grid" style="margin-top: 1.5rem;">
+                        <div>
+                            <label class="form-label">Prayer Request (Optional)</label>
+                            <textarea name="message" class="textarea-input" placeholder="Share your prayer request with us..."></textarea>
+                        </div>
+                    </div>
+
                     <button type="submit" class="submit-btn">💰 Continue to PayPal</button>
                 </form>
             </div>
@@ -491,7 +578,35 @@
 
     <script>
         const stripe = Stripe('{{ stripe_public_key }}');
+        let selectedCurrency = 'gbp';
 
+        // Currency selector for Stripe
+        document.querySelectorAll('.currency-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active from all
+                document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
+                // Add active to clicked
+                this.classList.add('active');
+                
+                // Update selected currency
+                selectedCurrency = this.dataset.currency;
+                const symbol = this.dataset.symbol;
+                
+                // Update symbol and note
+                document.getElementById('stripeCurrencySymbol').textContent = symbol;
+                
+                const currencyNames = {
+                    'gbp': 'British Pounds (£)',
+                    'usd': 'US Dollars ($)',
+                    'eur': 'Euros (€)'
+                };
+                
+                document.getElementById('stripeCurrencyNote').textContent = 
+                    `💡 Card payments in ${currencyNames[selectedCurrency]}`;
+            });
+        });
+
+        // Payment method switcher
         document.querySelectorAll('.payment-card').forEach(card => {
             card.addEventListener('click', function() {
                 document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('selected'));
@@ -500,19 +615,67 @@
                 
                 const gateway = this.querySelector('input').value;
                 
+                // Show/hide sections
                 document.getElementById('bank-section').style.display = gateway === 'bank' ? 'block' : 'none';
                 document.getElementById('stripe-section').style.display = gateway === 'stripe' ? 'block' : 'none';
                 document.getElementById('paypal-section').style.display = gateway === 'paypal' ? 'block' : 'none';
+                
+                // Clear PayPal form when selected
+                if (gateway === 'paypal') {
+                    document.querySelectorAll('#paypal-section input[type="number"]').forEach(input => {
+                        input.value = '';
+                    });
+                    document.querySelectorAll('#paypal-section input[type="text"]').forEach(input => {
+                        input.value = '';
+                    });
+                    document.querySelectorAll('#paypal-section input[type="email"]').forEach(input => {
+                        input.value = '';
+                    });
+                    document.querySelectorAll('#paypal-section textarea').forEach(textarea => {
+                        textarea.value = '';
+                    });
+                }
+                
+                // Clear Stripe fields when switching away
+                if (gateway !== 'stripe') {
+                    document.getElementById('stripeAmount').value = '';
+                    document.getElementById('stripeName').value = '';
+                    document.getElementById('stripeEmail').value = '';
+                    document.getElementById('stripePrayerRequest').value = '';
+                }
+                
+                // Clear Bank fields when switching away
+                if (gateway !== 'bank') {
+                    document.querySelectorAll('#bank-section input[type="number"]').forEach(input => {
+                        input.value = '';
+                    });
+                    document.querySelectorAll('#bank-section input[type="text"]').forEach(input => {
+                        input.value = '';
+                    });
+                    document.querySelectorAll('#bank-section input[type="email"]').forEach(input => {
+                        input.value = '';
+                    });
+                    document.querySelectorAll('#bank-section textarea').forEach(textarea => {
+                        textarea.value = '';
+                    });
+                }
             });
         });
 
+        // Stripe payment function
         async function payWithStripe() {
             const amount = document.getElementById('stripeAmount').value;
             const name = document.getElementById('stripeName').value;
             const email = document.getElementById('stripeEmail').value;
+            const prayerRequest = document.getElementById('stripePrayerRequest').value;
 
             if (!amount || !name || !email) {
-                alert('Please fill in all fields');
+                alert('Please fill in all required fields (amount, name, email)');
+                return;
+            }
+
+            if (amount < 1) {
+                alert('Please enter a valid amount');
                 return;
             }
 
@@ -522,9 +685,10 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         amount: amount,
-                        currency: 'gbp',
+                        currency: selectedCurrency,
                         name: name,
-                        email: email
+                        email: email,
+                        prayer_request: prayerRequest
                     })
                 });
                 
@@ -543,6 +707,7 @@
                     alert(result.error.message);
                 }
             } catch (error) {
+                console.error('Error:', error);
                 alert('Payment failed. Please try again.');
             }
         }

@@ -45,6 +45,7 @@ def create_stripe_session(request):
         currency = data.get('currency', 'gbp').lower()
         name = data.get('name', '')
         email = data.get('email', '')
+        prayer_request = data.get('prayer_request', '')  # ✅ GET PRAYER REQUEST
         
         if amount < 1:
             return JsonResponse({'error': 'Invalid amount'}, status=400)
@@ -53,6 +54,8 @@ def create_stripe_session(request):
         stripe_amount = int(amount * 100)
         
         print(f"💰 Creating Stripe session: {currency.upper()} {amount}")
+        if prayer_request:
+            print(f"🙏 Prayer request included: {prayer_request[:50]}...")
         
         # Create session
         session = stripe.checkout.Session.create(
@@ -75,6 +78,7 @@ def create_stripe_session(request):
             metadata={
                 'donor_name': name,
                 'donor_email': email,
+                'prayer_request': prayer_request,  # ✅ SAVE PRAYER REQUEST
             }
         )
         
@@ -118,6 +122,7 @@ def stripe_success(request):
             currency = session.currency.upper()
             email = session.metadata.get('donor_email', session.customer_email)
             name = session.metadata.get('donor_name', 'Anonymous Donor')
+            prayer_request_text = session.metadata.get('prayer_request', '')  # ✅ GET PRAYER REQUEST
             
             # Create donor
             donor, created = Donor.objects.get_or_create(
@@ -143,6 +148,16 @@ def stripe_success(request):
             
             print(f"✅ Stripe donation saved: #{donation.id} - {currency} {amount} from {name}")
             
+            # ✅ CREATE PRAYER REQUEST IF PROVIDED
+            prayer_request = None
+            if prayer_request_text:
+                prayer_request = PrayerRequest.objects.create(
+                    donor=donor,
+                    donation=donation,
+                    request_text=prayer_request_text
+                )
+                print(f"🙏 Prayer request saved: {prayer_request_text[:50]}...")
+            
             # Update stats
             stats = CrusadeStats.get_stats()
             stats.update_from_donations()
@@ -150,7 +165,7 @@ def stripe_success(request):
             # Send emails
             try:
                 from .email_utils import send_all_donation_emails
-                send_all_donation_emails(donation, None)
+                send_all_donation_emails(donation, prayer_request)  # ✅ PASS PRAYER REQUEST
             except Exception as e:
                 print(f"⚠️ Error sending emails: {str(e)}")
             
@@ -204,6 +219,7 @@ def stripe_webhook(request):
             currency = session.currency.upper()
             email = session.metadata.get('donor_email', session.customer_email)
             name = session.metadata.get('donor_name', 'Anonymous Donor')
+            prayer_request_text = session.metadata.get('prayer_request', '')  # ✅ GET PRAYER REQUEST
             
             donor, created = Donor.objects.get_or_create(
                 email=email,
@@ -225,6 +241,16 @@ def stripe_webhook(request):
                 completed_at=timezone.now()
             )
             
+            # ✅ CREATE PRAYER REQUEST IF PROVIDED
+            prayer_request = None
+            if prayer_request_text:
+                prayer_request = PrayerRequest.objects.create(
+                    donor=donor,
+                    donation=donation,
+                    request_text=prayer_request_text
+                )
+                print(f"🙏 Prayer request saved from webhook: {prayer_request_text[:50]}...")
+            
             # Update stats
             stats = CrusadeStats.get_stats()
             stats.update_from_donations()
@@ -232,7 +258,7 @@ def stripe_webhook(request):
             # Send emails
             try:
                 from .email_utils import send_all_donation_emails
-                send_all_donation_emails(donation, None)
+                send_all_donation_emails(donation, prayer_request)  # ✅ PASS PRAYER REQUEST
             except Exception as e:
                 print(f"⚠️ Error sending emails: {str(e)}")
         
@@ -319,7 +345,7 @@ def donation_page(request):
             full_name = request.POST.get('quick_name', request.POST.get('full_name', ''))
             phone = ''
             country = request.POST.get('country', 'Nigeria')
-            message = ''
+            message = request.POST.get('message', '')  # ✅ FIXED!
         else:
             email = request.POST.get('email', '')
             full_name = request.POST.get('full_name', '')
