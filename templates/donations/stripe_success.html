@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You! | Global Crusade Ministry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, #1a2332 0%, #0f1419 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .success-container {
+            max-width: 600px;
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin: 2rem;
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: bounce 0.6s ease;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            color: #1a2332;
+            margin-bottom: 1rem;
+        }
+        
+        .donation-amount {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #d4a574;
+            margin: 1.5rem 0;
+        }
+        
+        p {
+            color: #6b7280;
+            font-size: 1.125rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #d4a574, #e8c9a0);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 0.5rem;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #d4a574;
+            color: #d4a574;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">🎉</div>
+        <h1>Thank You for Your Donation!</h1>
+        
+        {% if donation %}
+        <div class="donation-amount">
+            {% if donation.currency == 'GBP' %}£{% elif donation.currency == 'USD' %}${% elif donation.currency == 'EUR' %}€{% else %}₦{% endif %}{{ donation.amount|floatformat:2 }}
+        </div>
+        {% endif %}
+        
+        <p>Your generous contribution has been received and will help us bring hope and transformation to communities worldwide.</p>
+        
+        <p style="font-size: 0.9rem; color: #9ca3af;">
+            📧 A receipt has been sent to your email<br>
+            ✅ Your donation is being processed securely
+        </p>
+        
+        <div style="margin-top: 2rem;">
+            <a href="{% url 'ministry_home' %}" class="btn">🏠 Return Home</a>
+            <a href="{% url 'donation_page' %}" class="btn btn-secondary">💝 Donate Again</a>
+        </div>
+    </div>
+</body>
+</html>

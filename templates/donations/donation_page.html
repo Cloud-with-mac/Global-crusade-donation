@@ -8,22 +8,17 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Stripe SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
+    
     <style>
         :root {
             --navy-dark: #0f1419;
             --navy-base: #1a2332;
             --gold-base: #d4a574;
             --gold-light: #e8c9a0;
-            --gold-dark: #b88a5f;
-            --cream: #faf8f5;
-            --warm-white: #ffffff;
-            --gray-50: #f9f7f4;
-            --gray-200: #e2ddd5;
-            --gray-500: #7a7269;
-            --gray-700: #3d3930;
             --font-display: 'Cormorant Garamond', serif;
             --font-body: 'DM Sans', sans-serif;
-            --transition-base: 250ms cubic-bezier(0.4,0,0.2,1);
         }
 
         * {
@@ -38,7 +33,6 @@
             min-height: 100vh;
         }
 
-        /* Professional Ministry Navbar */
         .navbar {
             position: fixed;
             top: 0;
@@ -48,11 +42,6 @@
             background: rgba(250, 248, 245, 0.98);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-            transition: all var(--transition-base);
-        }
-
-        .navbar.scrolled {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .nav-container {
@@ -70,11 +59,6 @@
             align-items: center;
             gap: 1rem;
             text-decoration: none;
-            transition: opacity 0.15s;
-        }
-
-        .brand:hover {
-            opacity: 0.8;
         }
 
         .brand-icon {
@@ -86,13 +70,11 @@
             background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
             border-radius: 8px;
             font-size: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
 
         .brand-text {
             display: flex;
             flex-direction: column;
-            line-height: 1.2;
         }
 
         .brand-name {
@@ -100,12 +82,11 @@
             font-size: 1.375rem;
             font-weight: 600;
             color: var(--navy-dark);
-            letter-spacing: -0.01em;
         }
 
         .brand-tagline {
             font-size: 0.75rem;
-            color: var(--gray-500);
+            color: #7a7269;
             text-transform: uppercase;
             letter-spacing: 0.08em;
         }
@@ -118,88 +99,30 @@
         }
 
         .nav-link {
-            position: relative;
-            color: var(--gray-700);
+            color: #3d3930;
             text-decoration: none;
             font-weight: 500;
             font-size: 0.9375rem;
-            transition: color 0.15s;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -0.5rem;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gold-base);
-            transition: width var(--transition-base);
-        }
-
-        .nav-link:hover {
-            color: var(--navy-dark);
-        }
-
-        .nav-link:hover::after,
-        .nav-link.active::after {
-            width: 100%;
         }
 
         .nav-cta {
             background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
-            color: var(--warm-white);
+            color: white;
             padding: 0.625rem 1.5rem;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 0.9375rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-            transition: all var(--transition-base);
             text-decoration: none;
-        }
-
-        .nav-cta:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .admin-login-nav {
             background: transparent;
-            color: var(--gray-700);
-            border: 2px solid var(--gray-700);
+            color: #3d3930;
+            border: 2px solid #3d3930;
             padding: 0.5rem 1rem;
             border-radius: 8px;
-            font-weight: 500;
-            font-size: 0.875rem;
             text-decoration: none;
-            transition: all var(--transition-base);
         }
 
-        .admin-login-nav:hover {
-            background: var(--navy-base);
-            color: white;
-            border-color: var(--navy-base);
-        }
-
-        .mobile-toggle {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        .mobile-toggle span {
-            width: 24px;
-            height: 2px;
-            background: var(--navy-base);
-            border-radius: 2px;
-            transition: all var(--transition-base);
-        }
-
-        /* Main Container */
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -225,118 +148,6 @@
             color: var(--gold-light);
         }
 
-        /* Flyers */
-        .flyers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .flyer-card {
-            background: rgba(250, 248, 245, 0.05);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(212, 165, 116, 0.2);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-
-        .flyer-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--gold-base);
-        }
-
-        .flyer-image {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-        }
-
-        .flyer-content {
-            padding: 1.5rem;
-        }
-
-        .flyer-title {
-            color: white;
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .flyer-description {
-            color: var(--gold-light);
-            font-size: 0.875rem;
-        }
-
-        /* Countries Section */
-        .countries-section {
-            background: rgba(212, 165, 116, 0.1);
-            border: 2px solid rgba(212, 165, 116, 0.3);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .countries-title {
-            color: white;
-            font-family: var(--font-display);
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .countries-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            justify-content: center;
-        }
-
-        .country-tag {
-            background: rgba(212, 165, 116, 0.2);
-            border: 1px solid rgba(212, 165, 116, 0.4);
-            color: var(--gold-light);
-            padding: 0.5rem 1rem;
-            border-radius: 2rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .stat-card {
-            background: rgba(250, 248, 245, 0.05);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(212, 165, 116, 0.2);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-family: var(--font-display);
-            font-size: 2rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--gold-light);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Form Card */
         .form-card {
             background: var(--navy-base);
             border-radius: 16px;
@@ -345,107 +156,11 @@
             border: 2px solid rgba(212, 165, 116, 0.1);
         }
 
-        .form-section {
-            margin-bottom: 2rem;
-        }
-
-        .form-label {
-            display: block;
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        /* Amount Input */
-        .amount-input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .currency-symbol {
-            position: absolute;
-            left: 20px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .amount-input {
-            width: 100%;
-            padding: 1.25rem 1.5rem;
-            padding-left: 50px;
-            background: var(--navy-dark);
-            border: 2px solid rgba(212, 165, 116, 0.3);
-            border-radius: 8px;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .amount-input:focus {
-            outline: none;
-            border-color: var(--gold-base);
-            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
-        }
-
-        .currency-note {
-            color: var(--gold-light);
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-            padding: 0.75rem 1rem;
-            background: rgba(212, 165, 116, 0.1);
-            border-left: 3px solid var(--gold-base);
-            border-radius: 8px;
-        }
-
-        /* Radio Options */
-        .radio-group {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .radio-option {
-            flex: 1;
-        }
-
-        .radio-option input[type="radio"] {
-            display: none;
-        }
-
-        .radio-option label {
-            display: block;
-            padding: 1rem;
-            background: var(--navy-dark);
-            border: 2px solid rgba(212, 165, 116, 0.3);
-            border-radius: 8px;
-            color: var(--gold-light);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-
-        .radio-option input[type="radio"]:checked + label {
-            background: var(--gold-base);
-            border-color: var(--gold-base);
-            color: white;
-        }
-
-        .radio-option label:hover {
-            border-color: var(--gold-base);
-        }
-
-        /* Payment Grid */
         .payment-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
+            margin-bottom: 2rem;
         }
 
         .payment-card {
@@ -478,7 +193,88 @@
             color: white;
         }
 
-        /* Instructions */
+        .payment-badge {
+            display: inline-block;
+            background: rgba(212, 165, 116, 0.3);
+            color: var(--gold-light);
+            font-size: 0.625rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .amount-input-wrapper {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .amount-input {
+            width: 100%;
+            padding: 1.25rem 1.5rem 1.25rem 50px;
+            background: var(--navy-dark);
+            border: 2px solid rgba(212, 165, 116, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: var(--navy-dark);
+            border: 2px solid rgba(212, 165, 116, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .input-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .input-grid.two-cols {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 165, 116, 0.4);
+        }
+
         .payment-instructions {
             background: rgba(212, 165, 116, 0.1);
             border: 2px solid var(--gold-base);
@@ -500,7 +296,7 @@
         }
 
         .bank-detail-label {
-            color: var(--gray-500);
+            color: #7a7269;
             font-size: 0.875rem;
         }
 
@@ -510,125 +306,27 @@
             font-size: 1rem;
         }
 
-        /* Input Fields */
-        .text-input, .select-input, .textarea-input {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            background: var(--navy-dark);
-            border: 2px solid rgba(212, 165, 116, 0.3);
-            border-radius: 8px;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .text-input:focus, .select-input:focus, .textarea-input:focus {
-            outline: none;
-            border-color: var(--gold-base);
-            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
-        }
-
-        /* PayPal Button */
-        .paypal-quick-btn {
-            display: inline-block;
-            background: #0070ba;
-            color: white;
-            padding: 1.5rem 4rem;
-            border-radius: 50px;
-            font-size: 1.25rem;
-            font-weight: 700;
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(0, 112, 186, 0.3);
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            letter-spacing: 0.5px;
-        }
-
-        .paypal-quick-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 112, 186, 0.4);
-            background: #005ea6;
-        }
-
-        .paypal-description {
+        .currency-note {
             color: var(--gold-light);
             font-size: 0.875rem;
-            margin-top: 1rem;
-        }
-
-        /* Submit Button */
-        .submit-btn {
-            width: 100%;
-            padding: 1.25rem;
-            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
-            color: white;
-            border: none;
+            margin-top: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: rgba(212, 165, 116, 0.1);
+            border-left: 3px solid var(--gold-base);
             border-radius: 8px;
-            font-size: 1.25rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 1.5rem;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(212, 165, 116, 0.4);
-        }
-
-        .input-grid {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .input-grid.two-cols {
-            grid-template-columns: repeat(2, 1fr);
         }
 
         @media (max-width: 768px) {
-            .nav-menu {
-                position: fixed;
-                top: 5rem;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: var(--warm-white);
-                flex-direction: column;
-                padding: 2rem;
-                gap: 1.5rem;
-                opacity: 0;
-                visibility: hidden;
-                transform: translateX(100%);
-                transition: all var(--transition-base);
-            }
-
-            .nav-menu.active {
-                opacity: 1;
-                visibility: visible;
-                transform: translateX(0);
-            }
-
-            .mobile-toggle {
-                display: flex;
-            }
-
             .payment-grid {
                 grid-template-columns: 1fr;
             }
-
             .input-grid.two-cols {
                 grid-template-columns: 1fr;
-            }
-
-            .brand-tagline {
-                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="{% url 'ministry_home' %}" class="brand">
@@ -639,132 +337,68 @@
                 </div>
             </a>
             
-            <ul class="nav-menu" id="navMenu">
+            <ul class="nav-menu">
                 <li><a href="{% url 'ministry_home' %}" class="nav-link">Home</a></li>
                 <li><a href="{% url 'ministry_about' %}" class="nav-link">About</a></li>
                 <li><a href="{% url 'ministry_crusades' %}" class="nav-link">Crusades</a></li>
                 <li><a href="{% url 'ministry_testimonies' %}" class="nav-link">Testimonies</a></li>
                 <li><a href="{% url 'ministry_contact' %}" class="nav-link">Contact</a></li>
-                <li><a href="{% url 'donation_page' %}" class="nav-cta active">Donate</a></li>
+                <li><a href="{% url 'donation_page' %}" class="nav-cta">Donate</a></li>
                 <li><a href="{% url 'custom_login' %}" class="admin-login-nav">🔐 Admin</a></li>
             </ul>
-            
-            <button class="mobile-toggle" id="mobileToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
         </div>
     </nav>
 
     <div class="container">
-        {% if crusade_flyers %}
-        <div class="flyers-grid">
-            {% for flyer in crusade_flyers %}
-            <div class="flyer-card">
-                <img src="{{ flyer.image.url }}" alt="{{ flyer.title }}" class="flyer-image">
-                <div class="flyer-content">
-                    <div class="flyer-title">{{ flyer.title }}</div>
-                    {% if flyer.description %}
-                    <div class="flyer-description">{{ flyer.description }}</div>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
         <div class="header">
             <h1>Support Our Global Crusade</h1>
-            <p>Your generous donation helps us bring hope and transformation to communities worldwide</p>
-        </div>
-
-        {% if stats.countries_list %}
-        <div class="countries-section">
-            <div class="countries-title">🌍 Global Crusade 2026</div>
-            <div class="countries-list">
-                {% for country in stats.get_countries_list %}
-                <div class="country-tag">📍 {{ country }}</div>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number">{{ stats.total_donors }}</div>
-                <div class="stat-label">Generous Donors</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">${{ stats.budgeted_amount|floatformat:0 }}</div>
-                <div class="stat-label">Budgeted</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ stats.crusades_planned }}</div>
-                <div class="stat-label">Crusades Planned</div>
-            </div>
+            <p>Your generous donation helps us bring hope worldwide</p>
         </div>
 
         <div class="form-card">
-            <!-- PAYMENT METHOD SELECTOR -->
-            <div class="form-section">
+            <div style="margin-bottom: 2rem;">
                 <label class="form-label">Choose Your Payment Method</label>
                 <div class="payment-grid">
-                    <label class="payment-card selected" data-method="bank">
-                        <input type="radio" name="payment_method_choice" value="bank" checked>
+                    <label class="payment-card selected">
+                        <input type="radio" name="gateway" value="bank" checked style="display: none;">
                         <div class="payment-icon">🏦</div>
                         <div class="payment-label">Bank Transfer</div>
+                        <div class="payment-badge">🇳🇬 NGN</div>
                     </label>
-                    <label class="payment-card" data-method="paypal">
-                        <input type="radio" name="payment_method_choice" value="paypal">
+
+                    <label class="payment-card">
+                        <input type="radio" name="gateway" value="stripe" style="display: none;">
                         <div class="payment-icon">💳</div>
+                        <div class="payment-label">Credit/Debit Card</div>
+                        <div class="payment-badge">🇬🇧 GBP</div>
+                    </label>
+
+                    <label class="payment-card">
+                        <input type="radio" name="gateway" value="paypal" style="display: none;">
+                        <div class="payment-icon">💰</div>
                         <div class="payment-label">PayPal</div>
+                        <div class="payment-badge">🌍 USD</div>
                     </label>
                 </div>
             </div>
 
-            <!-- BANK TRANSFER SECTION (WITH FORM) -->
-            <div id="bank-transfer-section">
-                <form method="post" id="bankTransferForm">
+            <!-- BANK TRANSFER SECTION -->
+            <div id="bank-section">
+                <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="payment_method" value="bank">
                     <input type="hidden" name="currency" value="NGN">
-                    <input type="hidden" name="donation_type" value="one-time">
 
-                    <div class="form-section">
-                        <label class="form-label">Donation Type</label>
-                        <div class="radio-group">
-                            <div class="radio-option">
-                                <input type="radio" id="one-time" name="donation_type" value="one-time" checked>
-                                <label for="one-time">One-Time</label>
-                            </div>
-                            <div class="radio-option">
-                                <input type="radio" id="monthly" name="donation_type" value="monthly">
-                                <label for="monthly">💖 Monthly</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
+                    <div style="margin-bottom: 2rem;">
                         <label class="form-label">Donation Amount *</label>
                         <div class="amount-input-wrapper">
                             <span class="currency-symbol">₦</span>
-                            <input 
-                                type="number" 
-                                name="amount" 
-                                class="amount-input" 
-                                placeholder="Enter amount" 
-                                step="0.01" 
-                                min="1" 
-                                required
-                            >
+                            <input type="number" name="amount" class="amount-input" placeholder="Enter amount" step="0.01" min="1" required>
                         </div>
-                        <p class="currency-note">
-                            💡 Bank transfers are in Nigerian Naira (₦)
-                        </p>
+                        <p class="currency-note">💡 Bank transfers are in Nigerian Naira (₦)</p>
                     </div>
 
-                    <div id="bank-instructions" class="payment-instructions">
+                    <div class="payment-instructions">
                         <h4>🏦 Bank Transfer Details</h4>
                         <div class="bank-detail">
                             <div style="margin-bottom: 0.75rem;">
@@ -793,95 +427,125 @@
                         </div>
                     </div>
 
-                    <div id="full-form" style="display: none;">
-                        <input type="hidden" name="full_name" id="full_name">
-                        <input type="hidden" name="email" id="email">
-                        <input type="hidden" name="country" id="country" value="Nigeria">
-                    </div>
-
-                    <button type="submit" class="submit-btn">
-                        📝 Submit Bank Transfer Details
-                    </button>
+                    <button type="submit" class="submit-btn">📝 Submit Bank Transfer Details</button>
                 </form>
             </div>
 
-            <!-- PAYPAL SECTION (NO FORM - JUST BUTTON!) -->
-            <div id="paypal-section" style="display: none;">
-                <div class="payment-instructions">
-                    <h4>💳 Quick Donate with PayPal</h4>
-                    <p style="color: var(--gold-light); margin-bottom: 1.5rem;">
-                        Click the button below to donate via PayPal. You'll enter the amount on PayPal's secure payment page.
-                    </p>
+            <!-- STRIPE SECTION -->
+            <div id="stripe-section" style="display: none;">
+                <div style="margin-bottom: 2rem;">
+                    <label class="form-label">Donation Amount *</label>
+                    <div class="amount-input-wrapper">
+                        <span class="currency-symbol">£</span>
+                        <input type="number" id="stripeAmount" class="amount-input" placeholder="Enter amount" step="0.01" min="1" required>
+                    </div>
+                    <p class="currency-note">💡 Card payments in British Pounds (£)</p>
                 </div>
 
-                <div style="text-align: center; padding: 2rem 0;">
-                    <a href="https://paypal.me/eternityvoice2021" 
-                       class="paypal-quick-btn"
-                       target="_blank"
-                       rel="noopener noreferrer">
-                        
-                        <svg style="width: 28px; height: 28px; vertical-align: middle; margin-right: 12px; margin-top: -4px;" 
-                             fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 00-.795.68l-.04.22-.63 3.993-.032.17a.805.805 0 01-.795.681H7.803a.483.483 0 01-.477-.558L9.965 5.27a.805.805 0 01.795-.681h4.127c1.268 0 2.253.264 2.931.786.749.575 1.164 1.434 1.249 2.577v.526z"/>
-                        </svg>
-                        
-                        DONATE WITH PAYPAL
-                    </a>
-                    
-                    <p class="paypal-description">
-                        🔒 Secure payment • No PayPal account required • All currencies accepted
-                    </p>
+                <div class="input-grid two-cols">
+                    <div>
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" id="stripeName" class="text-input" placeholder="John Doe" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" id="stripeEmail" class="text-input" placeholder="your@email.com" required>
+                    </div>
                 </div>
+
+                <button type="button" onclick="payWithStripe()" class="submit-btn">💳 Pay with Stripe</button>
+            </div>
+
+            <!-- PAYPAL SECTION -->
+            <div id="paypal-section" style="display: none;">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="payment_method" value="paypal">
+                    <input type="hidden" name="currency" value="USD">
+
+                    <div style="margin-bottom: 2rem;">
+                        <label class="form-label">Donation Amount *</label>
+                        <div class="amount-input-wrapper">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" name="amount" class="amount-input" placeholder="Enter amount" step="0.01" min="1" required>
+                        </div>
+                        <p class="currency-note">💡 PayPal payments in US Dollars ($)</p>
+                    </div>
+
+                    <div class="input-grid two-cols">
+                        <div>
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" name="quick_name" class="text-input" placeholder="John Doe" required>
+                        </div>
+                        <div>
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" name="quick_email" class="text-input" placeholder="your@email.com" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">💰 Continue to PayPal</button>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
-        // Mobile menu toggle
-        const mobileToggle = document.getElementById('mobileToggle');
-        const navMenu = document.getElementById('navMenu');
-        
-        if (mobileToggle && navMenu) {
-            mobileToggle.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-            });
-        }
-
-        // Payment method switcher
-        const bankSection = document.getElementById('bank-transfer-section');
-        const paypalSection = document.getElementById('paypal-section');
+        const stripe = Stripe('{{ stripe_public_key }}');
 
         document.querySelectorAll('.payment-card').forEach(card => {
             card.addEventListener('click', function() {
-                // Remove selected class from all cards
                 document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('selected'));
-                
-                // Add selected class to clicked card
                 this.classList.add('selected');
                 this.querySelector('input[type="radio"]').checked = true;
                 
-                // Get payment method
-                const method = this.dataset.method;
+                const gateway = this.querySelector('input').value;
                 
-                // Show/hide appropriate section
-                if (method === 'bank') {
-                    bankSection.style.display = 'block';
-                    paypalSection.style.display = 'none';
-                } else if (method === 'paypal') {
-                    bankSection.style.display = 'none';
-                    paypalSection.style.display = 'block';
-                }
+                document.getElementById('bank-section').style.display = gateway === 'bank' ? 'block' : 'none';
+                document.getElementById('stripe-section').style.display = gateway === 'stripe' ? 'block' : 'none';
+                document.getElementById('paypal-section').style.display = gateway === 'paypal' ? 'block' : 'none';
             });
         });
 
-        // Bank transfer form submission - populate hidden fields
-        document.getElementById('bankTransferForm').addEventListener('submit', function() {
-            const quickEmail = document.querySelector('input[name="quick_email"]').value;
-            const quickName = document.querySelector('input[name="quick_name"]').value;
-            
-            document.getElementById('full_name').value = quickName;
-            document.getElementById('email').value = quickEmail;
-        });
+        async function payWithStripe() {
+            const amount = document.getElementById('stripeAmount').value;
+            const name = document.getElementById('stripeName').value;
+            const email = document.getElementById('stripeEmail').value;
+
+            if (!amount || !name || !email) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            try {
+                const response = await fetch('/stripe/create-session/', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        amount: amount,
+                        currency: 'gbp',
+                        name: name,
+                        email: email
+                    })
+                });
+                
+                const session = await response.json();
+                
+                if (session.error) {
+                    alert(session.error);
+                    return;
+                }
+                
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.id
+                });
+                
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            } catch (error) {
+                alert('Payment failed. Please try again.');
+            }
+        }
     </script>
 </body>
 </html>
