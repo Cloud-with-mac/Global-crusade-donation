@@ -660,13 +660,32 @@ def donations_list(request):
 @login_required
 def prayer_requests_list(request):
     """List prayer requests"""
-    prayer_requests = PrayerRequest.objects.select_related('donor').order_by('-created_at')
+    prayer_requests_qs = PrayerRequest.objects.select_related('donor', 'donation').order_by('-created_at')
+    
+    # Add currency symbols
+    symbols = {'NGN': '₦', 'USD': '$', 'EUR': '€', 'GBP': '£'}
+    prayer_requests = []
+    
+    for prayer in prayer_requests_qs:
+        if prayer.donation:
+            currency_code = prayer.donation.currency or 'NGN'
+            symbol = symbols.get(currency_code, '₦')
+            amount = prayer.donation.amount
+        else:
+            currency_code = 'NGN'
+            symbol = '₦'
+            amount = 0
+        
+        prayer.currency_code = currency_code
+        prayer.currency_symbol = symbol
+        prayer.formatted_amount = f"{symbol}{amount:,.2f}" if amount > 0 else "N/A"
+        prayer_requests.append(prayer)
     
     context = {
         'prayer_requests': prayer_requests,
-        'total_count': prayer_requests.count(),
-        'unanswered_count': prayer_requests.filter(is_answered=False).count(),
-        'answered_count': prayer_requests.filter(is_answered=True).count(),
+        'total_count': len(prayer_requests),
+        'unanswered_count': prayer_requests_qs.filter(is_answered=False).count(),
+        'answered_count': prayer_requests_qs.filter(is_answered=True).count(),
     }
     return render(request, 'admin_dashboard/prayer_requests.html', context)
 

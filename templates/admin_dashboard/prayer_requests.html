@@ -258,7 +258,7 @@
             <div class="prayer-header">
                 <div class="donor-info">
                     <div class="donor-avatar">
-                        {{ prayer.donor.first_name.0|upper }}{{ prayer.donor.last_name.0|upper }}
+                        {{ prayer.donor.full_name.0|upper }}
                     </div>
                     <div>
                         <strong>{{ prayer.donor.full_name }}</strong>
@@ -282,7 +282,7 @@
                 <span style="font-size: 0.875rem; color: #64748b;">
                     📅 {{ prayer.created_at|date:"F d, Y" }} at {{ prayer.created_at|date:"H:i" }}
                     {% if prayer.donation %}
-                        • 💰 With ${{ prayer.donation.amount }} donation
+                        • 💰 With {{ prayer.formatted_amount }} donation
                     {% endif %}
                 </span>
                 <form method="post" action="{% url 'mark_prayer_answered' prayer.id %}" style="display: inline;">
