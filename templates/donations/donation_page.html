@@ -306,18 +306,19 @@
             background: rgba(212, 165, 116, 0.1);
             border: 2px solid var(--gold-base);
             border-radius: 12px;
-            padding: 1.5rem;
-            margin-top: 1rem;
+            padding: 2rem;
         }
 
         .payment-instructions h4 {
             color: white;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            text-align: center;
         }
 
         .bank-detail {
             background: var(--navy-dark);
-            padding: 1.25rem;
+            padding: 1.5rem;
             border-radius: 8px;
             margin-bottom: 1rem;
         }
@@ -325,12 +326,22 @@
         .bank-detail-label {
             color: #7a7269;
             font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .bank-detail-value {
             color: white;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.125rem;
+            margin-top: 0.5rem;
+        }
+
+        .account-number {
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            letter-spacing: 0.1em;
+            color: var(--gold-base);
         }
 
         .currency-note {
@@ -367,12 +378,29 @@
             color: white;
         }
 
+        .info-notice {
+            background: rgba(212, 165, 116, 0.1);
+            border-left: 4px solid var(--gold-base);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .info-notice p {
+            color: white;
+            line-height: 1.6;
+            margin: 0;
+        }
+
         @media (max-width: 768px) {
             .payment-grid {
                 grid-template-columns: 1fr;
             }
             .input-grid.two-cols {
                 grid-template-columns: 1fr;
+            }
+            .account-number {
+                font-size: 1.25rem;
             }
         }
     </style>
@@ -433,60 +461,30 @@
                 </div>
             </div>
 
-            <!-- BANK TRANSFER SECTION -->
+            <!-- BANK TRANSFER SECTION - ONLY BANK DETAILS -->
             <div id="bank-section">
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="payment_method" value="bank">
-                    <input type="hidden" name="currency" value="NGN">
-
-                    <div style="margin-bottom: 2rem;">
-                        <label class="form-label">Donation Amount *</label>
-                        <div class="amount-input-wrapper">
-                            <span class="currency-symbol">₦</span>
-                            <input type="number" name="amount" class="amount-input" placeholder="Enter amount" step="0.01" min="1" required>
-                        </div>
-                        <p class="currency-note">💡 Bank transfers are in Nigerian Naira (₦)</p>
+                <div class="payment-instructions">
+                    <h4>🏦 Bank Transfer Details</h4>
+                    
+                    <div class="bank-detail">
+                        <div class="bank-detail-label">Bank Name</div>
+                        <div class="bank-detail-value">United Bank Africa PLC</div>
                     </div>
 
-                    <div class="payment-instructions">
-                        <h4>🏦 Bank Transfer Details</h4>
-                        <div class="bank-detail">
-                            <div style="margin-bottom: 0.75rem;">
-                                <span class="bank-detail-label">Bank Name:</span>
-                                <div class="bank-detail-value">United Bank Africa PLC</div>
-                            </div>
-                            <div style="margin-bottom: 0.75rem;">
-                                <span class="bank-detail-label">Account Number:</span>
-                                <div class="bank-detail-value" style="font-family: monospace; font-size: 1.125rem;">1023888802</div>
-                            </div>
-                            <div>
-                                <span class="bank-detail-label">Account Name:</span>
-                                <div class="bank-detail-value">Eternity Voice International Ministry</div>
-                            </div>
-                        </div>
+                    <div class="bank-detail">
+                        <div class="bank-detail-label">Account Number</div>
+                        <div class="account-number">1023888802</div>
                     </div>
 
-                    <div class="input-grid two-cols">
-                        <div>
-                            <label class="form-label">Full Name *</label>
-                            <input type="text" name="quick_name" class="text-input" placeholder="John Doe" required>
-                        </div>
-                        <div>
-                            <label class="form-label">Email Address *</label>
-                            <input type="email" name="quick_email" class="text-input" placeholder="your@email.com" required>
-                        </div>
+                    <div class="bank-detail">
+                        <div class="bank-detail-label">Account Name</div>
+                        <div class="bank-detail-value">Eternity Voice International Ministry</div>
                     </div>
+                </div>
 
-                    <div class="input-grid" style="margin-top: 1.5rem;">
-                        <div>
-                            <label class="form-label">Prayer Request (Optional)</label>
-                            <textarea name="message" class="textarea-input" placeholder="Share your prayer request with us..."></textarea>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="submit-btn">📝 Submit Bank Transfer Details</button>
-                </form>
+                <div class="info-notice">
+                    <p>💡 <strong>Important:</strong> After making your transfer, please keep your transaction receipt. You will receive confirmation via email.</p>
+                </div>
             </div>
 
             <!-- STRIPE SECTION -->
@@ -642,22 +640,6 @@
                     document.getElementById('stripeName').value = '';
                     document.getElementById('stripeEmail').value = '';
                     document.getElementById('stripePrayerRequest').value = '';
-                }
-                
-                // Clear Bank fields when switching away
-                if (gateway !== 'bank') {
-                    document.querySelectorAll('#bank-section input[type="number"]').forEach(input => {
-                        input.value = '';
-                    });
-                    document.querySelectorAll('#bank-section input[type="text"]').forEach(input => {
-                        input.value = '';
-                    });
-                    document.querySelectorAll('#bank-section input[type="email"]').forEach(input => {
-                        input.value = '';
-                    });
-                    document.querySelectorAll('#bank-section textarea').forEach(textarea => {
-                        textarea.value = '';
-                    });
                 }
             });
         });
