@@ -154,9 +154,6 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = 'Global Crusade Ministry <eternityvoiceministry@gmail.com>'
 ADMIN_EMAIL = 'eternityvoiceministry@gmail.com'
 
-# Site URL for emails
-SITE_URL = 'https://globalcrusadeoutreach.org'
-
 # Payment Gateway Configuration
 PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY', default='')
 PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY', default='')
@@ -188,4 +185,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY', default='')
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default='')
 STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET', default='')
+
+# ═══════════════════════════════════════════════════
+# SITE URL (FIXED - ONLY ONE DEFINITION)
+# ═══════════════════════════════════════════════════
+
 SITE_URL = config('SITE_URL', default='https://global-crusade-donation.onrender.com')
+# SITE_URL = 'http://127.0.0.1:8000'

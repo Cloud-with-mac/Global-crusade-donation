@@ -158,7 +158,7 @@
 
         .payment-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
             margin-bottom: 2rem;
         }
@@ -435,9 +435,15 @@
         </div>
 
         <div class="form-card">
+            <!-- Hidden form for CSRF token -->
+            <form method="post" style="display: none;">
+                {% csrf_token %}
+            </form>
+
             <div style="margin-bottom: 2rem;">
                 <label class="form-label">Choose Your Payment Method</label>
                 <div class="payment-grid">
+                    <!-- Bank Transfer -->
                     <label class="payment-card selected">
                         <input type="radio" name="gateway" value="bank" checked style="display: none;">
                         <div class="payment-icon">🏦</div>
@@ -445,6 +451,15 @@
                         <div class="payment-badge">🇳🇬 NGN</div>
                     </label>
 
+                    <!-- Paystack -->
+                    <label class="payment-card">
+                        <input type="radio" name="gateway" value="paystack" style="display: none;">
+                        <div class="payment-icon">📱</div>
+                        <div class="payment-label">Paystack</div>
+                        <div class="payment-badge">🇳🇬 NGN</div>
+                    </label>
+
+                    <!-- Stripe -->
                     <label class="payment-card">
                         <input type="radio" name="gateway" value="stripe" style="display: none;">
                         <div class="payment-icon">💳</div>
@@ -452,6 +467,7 @@
                         <div class="payment-badge">🌍 Multi-Currency</div>
                     </label>
 
+                    <!-- PayPal -->
                     <label class="payment-card">
                         <input type="radio" name="gateway" value="paypal" style="display: none;">
                         <div class="payment-icon">💰</div>
@@ -485,6 +501,38 @@
                 <div class="info-notice">
                     <p>📧 <strong>Important:</strong> After making your transfer, please send your transaction receipt and prayer request to: <a href="mailto:info@globalcrusadeoutreach.org" style="color: var(--gold-base); text-decoration: underline; font-weight: 700;">info@globalcrusadeoutreach.org</a></p>
                 </div>
+            </div>
+
+            <!-- PAYSTACK SECTION (NEW!) -->
+            <div id="paystack-section" style="display: none;">
+                <div style="margin-bottom: 2rem;">
+                    <label class="form-label">Donation Amount *</label>
+                    <div class="amount-input-wrapper">
+                        <span class="currency-symbol">₦</span>
+                        <input type="number" id="paystackAmount" class="amount-input" placeholder="Enter amount" step="1" min="100" required>
+                    </div>
+                    <p class="currency-note">💡 Paystack payments in Nigerian Naira (₦). Minimum: ₦100</p>
+                </div>
+
+                <div class="input-grid two-cols">
+                    <div>
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" id="paystackName" class="text-input" placeholder="John Doe" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" id="paystackEmail" class="text-input" placeholder="your@email.com" required>
+                    </div>
+                </div>
+
+                <div class="input-grid" style="margin-top: 1.5rem;">
+                    <div>
+                        <label class="form-label">Prayer Request (Optional)</label>
+                        <textarea id="paystackPrayerRequest" class="textarea-input" placeholder="Share your prayer request with us..."></textarea>
+                    </div>
+                </div>
+
+                <button type="button" onclick="payWithPaystack()" class="submit-btn">📱 Pay with Paystack</button>
             </div>
 
             <!-- STRIPE SECTION -->
@@ -536,40 +584,43 @@
 
             <!-- PAYPAL SECTION -->
             <div id="paypal-section" style="display: none;">
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="payment_method" value="paypal">
-                    <input type="hidden" name="currency" value="USD">
-
-                    <div style="margin-bottom: 2rem;">
-                        <label class="form-label">Donation Amount *</label>
-                        <div class="amount-input-wrapper">
-                            <span class="currency-symbol">$</span>
-                            <input type="number" name="amount" class="amount-input" placeholder="Enter amount" step="0.01" min="1" required>
-                        </div>
-                        <p class="currency-note">💡 PayPal payments in US Dollars ($)</p>
+                <div style="margin-bottom: 2rem;">
+                    <label class="form-label">Donation Amount *</label>
+                    <div class="amount-input-wrapper">
+                        <span class="currency-symbol">$</span>
+                        <input type="number" id="paypalAmount" class="amount-input" placeholder="Enter amount" step="0.01" min="1" required>
                     </div>
+                    <p class="currency-note">💡 PayPal payments in US Dollars ($)</p>
+                </div>
 
-                    <div class="input-grid two-cols">
-                        <div>
-                            <label class="form-label">Full Name *</label>
-                            <input type="text" name="quick_name" class="text-input" placeholder="John Doe" required>
-                        </div>
-                        <div>
-                            <label class="form-label">Email Address *</label>
-                            <input type="email" name="quick_email" class="text-input" placeholder="your@email.com" required>
-                        </div>
+                <div class="input-grid two-cols">
+                    <div>
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" id="paypalName" class="text-input" placeholder="John Doe" required>
                     </div>
-
-                    <div class="input-grid" style="margin-top: 1.5rem;">
-                        <div>
-                            <label class="form-label">Prayer Request (Optional)</label>
-                            <textarea name="message" class="textarea-input" placeholder="Share your prayer request with us..."></textarea>
-                        </div>
+                    <div>
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" id="paypalEmail" class="text-input" placeholder="your@email.com" required>
                     </div>
+                </div>
 
-                    <button type="submit" class="submit-btn">💰 Continue to PayPal</button>
-                </form>
+                <div class="input-grid" style="margin-top: 1.5rem;">
+                    <div>
+                        <label class="form-label">Prayer Request (Optional)</label>
+                        <textarea id="paypalPrayerRequest" class="textarea-input" placeholder="Share your prayer request with us..."></textarea>
+                    </div>
+                </div>
+
+                <button type="button" onclick="openPayPal()" class="submit-btn">💰 Continue to PayPal</button>
+
+                <!-- Success message (hidden initially) -->
+                <div id="paypal-success-message" style="display: none; margin-top: 2rem; background: rgba(16, 185, 129, 0.1); border: 2px solid #10b981; border-radius: 12px; padding: 2rem; text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+                    <h3 style="color: white; margin-bottom: 1rem;">Thank You for Your Donation!</h3>
+                    <p style="color: var(--gold-light); margin-bottom: 1.5rem;">Please complete your payment in the PayPal window that just opened.</p>
+                    <p style="color: white; font-size: 0.875rem;">After completing payment, you can close the PayPal window and return here.</p>
+                    <button onclick="location.reload()" style="margin-top: 1.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, var(--gold-base), var(--gold-light)); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Make Another Donation</button>
+                </div>
             </div>
         </div>
     </div>
@@ -615,23 +666,25 @@
                 
                 // Show/hide sections
                 document.getElementById('bank-section').style.display = gateway === 'bank' ? 'block' : 'none';
+                document.getElementById('paystack-section').style.display = gateway === 'paystack' ? 'block' : 'none';
                 document.getElementById('stripe-section').style.display = gateway === 'stripe' ? 'block' : 'none';
                 document.getElementById('paypal-section').style.display = gateway === 'paypal' ? 'block' : 'none';
                 
+                // Clear Paystack form when selected
+                if (gateway === 'paystack') {
+                    document.getElementById('paystackAmount').value = '';
+                    document.getElementById('paystackName').value = '';
+                    document.getElementById('paystackEmail').value = '';
+                    document.getElementById('paystackPrayerRequest').value = '';
+                }
+                
                 // Clear PayPal form when selected
                 if (gateway === 'paypal') {
-                    document.querySelectorAll('#paypal-section input[type="number"]').forEach(input => {
-                        input.value = '';
-                    });
-                    document.querySelectorAll('#paypal-section input[type="text"]').forEach(input => {
-                        input.value = '';
-                    });
-                    document.querySelectorAll('#paypal-section input[type="email"]').forEach(input => {
-                        input.value = '';
-                    });
-                    document.querySelectorAll('#paypal-section textarea').forEach(textarea => {
-                        textarea.value = '';
-                    });
+                    document.getElementById('paypalAmount').value = '';
+                    document.getElementById('paypalName').value = '';
+                    document.getElementById('paypalEmail').value = '';
+                    document.getElementById('paypalPrayerRequest').value = '';
+                    document.getElementById('paypal-success-message').style.display = 'none';
                 }
                 
                 // Clear Stripe fields when switching away
@@ -643,6 +696,50 @@
                 }
             });
         });
+
+        // Paystack payment function (NEW!)
+        async function payWithPaystack() {
+            const amount = document.getElementById('paystackAmount').value;
+            const name = document.getElementById('paystackName').value;
+            const email = document.getElementById('paystackEmail').value;
+            const prayerRequest = document.getElementById('paystackPrayerRequest').value;
+
+            if (!amount || !name || !email) {
+                alert('Please fill in all required fields (amount, name, email)');
+                return;
+            }
+
+            if (amount < 100) {
+                alert('Minimum donation is ₦100');
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+                formData.append('amount', amount);
+                formData.append('email', email);
+                formData.append('name', name);
+                formData.append('prayer_request', prayerRequest);
+
+                const response = await fetch('/paystack/initialize/', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    // Redirect to Paystack checkout
+                    window.location.href = data.authorization_url;
+                } else {
+                    alert(data.error || 'Payment initialization failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Payment failed. Please try again.');
+            }
+        }
 
         // Stripe payment function
         async function payWithStripe() {
@@ -692,6 +789,55 @@
                 console.error('Error:', error);
                 alert('Payment failed. Please try again.');
             }
+        }
+
+        // PayPal payment function
+        function openPayPal() {
+            const amount = document.getElementById('paypalAmount').value;
+            const name = document.getElementById('paypalName').value;
+            const email = document.getElementById('paypalEmail').value;
+            const prayerRequest = document.getElementById('paypalPrayerRequest').value;
+
+            if (!amount || !name || !email) {
+                alert('Please fill in all required fields (amount, name, email)');
+                return;
+            }
+
+            if (amount < 1) {
+                alert('Please enter a valid amount');
+                return;
+            }
+
+            // Save donation to database
+            const formData = new FormData();
+            formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+            formData.append('payment_method', 'paypal');
+            formData.append('currency', 'USD');
+            formData.append('amount', amount);
+            formData.append('quick_name', name);
+            formData.append('quick_email', email);
+            formData.append('message', prayerRequest);
+
+            fetch('{% url "donation_page" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).then(response => {
+                // Hide form, show success message
+                document.getElementById('paypal-section').querySelectorAll('label, input, textarea, button:not([onclick*="reload"])').forEach(el => {
+                    el.style.display = 'none';
+                });
+                document.getElementById('paypal-success-message').style.display = 'block';
+
+                // Open PayPal in new tab
+                const paypalUrl = `https://paypal.me/eternityvoice/${amount}USD`;
+                window.open(paypalUrl, '_blank');
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Error processing donation. Please try again.');
+            });
         }
     </script>
 </body>

@@ -24,6 +24,10 @@ from django.conf import settings
 import json
 import stripe
 
+from pypaystack2 import Paystack
+import hashlib
+import hmac
+
 # Configure Stripe
 stripe.api_key = getattr(settings, 'STRIPE_SECRET_KEY', '')
 
@@ -1067,3 +1071,241 @@ Sent from Global Crusade Ministry Contact Form
             return render(request, 'ministry/contact.html', context)
     
     return render(request, 'ministry/contact.html')
+
+
+
+
+
+
+# ═══════════════════════════════════════════════════════════════
+# PAYSTACK PAYMENT VIEWS (3 functions) - CORRECTED INITIALIZATION
+# ═══════════════════════════════════════════════════════════════
+# REPLACE LINES 36-257 IN YOUR views.py WITH THIS CODE
+
+# CORRECTED PAYSTACK FUNCTIONS - HANDLES TUPLE RESPONSES
+# Replace your paystack_initialize and paystack_verify functions with these
+
+def paystack_initialize(request):
+    """Initialize Paystack payment - FULLY CORRECTED"""
+    
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request'}, status=400)
+    
+    try:
+        # Initialize Paystack with auth_key
+        paystack = Paystack(auth_key=getattr(settings, 'PAYSTACK_SECRET_KEY', ''))
+        
+        amount = Decimal(request.POST.get('amount', 0))
+        email = request.POST.get('email', '')
+        name = request.POST.get('name', '')
+        prayer_request = request.POST.get('prayer_request', '')
+        
+        if amount < 100:  # Minimum ₦100
+            return JsonResponse({'error': 'Minimum donation is ₦100'}, status=400)
+        
+        # Create donor
+        donor, created = Donor.objects.get_or_create(
+            email=email,
+            defaults={
+                'full_name': name,
+                'country': 'Nigeria'
+            }
+        )
+        
+        # Create donation (pending)
+        donation = Donation.objects.create(
+            donor=donor,
+            amount=amount,
+            currency='NGN',
+            donation_type='one-time',
+            payment_method='card',
+            payment_gateway='paystack',
+            message=prayer_request,
+            status='pending'
+        )
+        
+        # Create prayer request
+        if prayer_request:
+            PrayerRequest.objects.create(
+                donor=donor,
+                donation=donation,
+                request_text=prayer_request
+            )
+        
+        # Initialize payment with Paystack
+        # Amount in kobo (multiply by 100)
+        amount_kobo = int(amount * 100)
+        
+        # ✅ CORRECTED: Handle tuple response
+        response = paystack.transactions.initialize(
+            amount=amount_kobo,
+            email=email,
+            callback_url=f'{settings.SITE_URL}/paystack/verify/',
+            metadata={
+                'donation_id': donation.id,
+                'donor_name': name,
+                'prayer_request': prayer_request
+            }
+        )
+        
+        # Response format: (status_code, status_boolean, message, data)
+        status_code, status, message, data = response
+        
+        if status and data:
+            # Save reference
+            donation.payment_reference = data.get('reference', '')
+            donation.save()
+            
+            print(f"✅ Paystack payment initialized: ₦{amount} for {name}")
+            
+            # Return authorization URL
+            return JsonResponse({
+                'status': 'success',
+                'authorization_url': data.get('authorization_url', ''),
+                'reference': data.get('reference', '')
+            })
+        else:
+            return JsonResponse({'error': f'Payment initialization failed: {message}'}, status=400)
+            
+    except Exception as e:
+        print(f"❌ Paystack init error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def paystack_verify(request):
+    """Verify Paystack payment - FULLY CORRECTED"""
+    
+    reference = request.GET.get('reference')
+    
+    if not reference:
+        messages.error(request, 'Invalid payment reference')
+        return redirect('donation_page')
+    
+    try:
+        # Initialize Paystack with auth_key
+        paystack = Paystack(auth_key=getattr(settings, 'PAYSTACK_SECRET_KEY', ''))
+        
+        # ✅ CORRECTED: Handle tuple response
+        response = paystack.transactions.verify(reference=reference)
+        
+        # Response format: (status_code, status_boolean, message, data)
+        status_code, status, message, data = response
+        
+        if status and data and data.get('status') == 'success':
+            # Find donation
+            donation = Donation.objects.filter(payment_reference=reference).first()
+            
+            if not donation:
+                messages.error(request, 'Donation not found')
+                return redirect('donation_page')
+            
+            # Check if already completed
+            if donation.status == 'completed':
+                return render(request, 'donations/paystack_success.html', {
+                    'donation': donation
+                })
+            
+            # Update donation
+            amount_paid = Decimal(data.get('amount', 0)) / 100  # From kobo
+            donation.amount = amount_paid
+            donation.status = 'completed'
+            donation.completed_at = timezone.now()
+            donation.save()
+            
+            print(f"✅ Paystack payment verified: ₦{amount_paid} from {donation.donor.full_name}")
+            
+            # Update stats
+            stats = CrusadeStats.get_stats()
+            stats.update_from_donations()
+            
+            # Send emails
+            try:
+                from .email_utils import send_all_donation_emails
+                prayer_request = PrayerRequest.objects.filter(donation=donation).first()
+                send_all_donation_emails(donation, prayer_request)
+            except Exception as e:
+                print(f"⚠️ Error sending emails: {str(e)}")
+            
+            return render(request, 'donations/paystack_success.html', {
+                'donation': donation
+            })
+        else:
+            messages.error(request, f'Payment verification failed: {message}')
+            return redirect('donation_page')
+            
+    except Exception as e:
+        print(f"❌ Paystack verify error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        messages.error(request, 'Error verifying payment')
+        return redirect('donation_page')
+
+
+# ✅ Webhook function stays the same - it doesn't use Paystack instance
+@csrf_exempt
+def paystack_webhook(request):
+    """Handle Paystack webhook - NO CHANGES NEEDED"""
+    
+    # Verify webhook signature
+    paystack_signature = request.META.get('HTTP_X_PAYSTACK_SIGNATURE')
+    
+    if not paystack_signature:
+        return JsonResponse({'status': 'error', 'message': 'No signature'}, status=400)
+    
+    # Compute hash
+    secret_key = getattr(settings, 'PAYSTACK_SECRET_KEY', '')
+    hash_value = hmac.new(
+        secret_key.encode('utf-8'),
+        request.body,
+        hashlib.sha512
+    ).hexdigest()
+    
+    if hash_value != paystack_signature:
+        return JsonResponse({'status': 'error', 'message': 'Invalid signature'}, status=400)
+    
+    try:
+        event = json.loads(request.body)
+        
+        print(f"🔔 Paystack webhook: {event.get('event')}")
+        
+        if event.get('event') == 'charge.success':
+            data = event['data']
+            reference = data['reference']
+            
+            # Find donation
+            donation = Donation.objects.filter(payment_reference=reference).first()
+            
+            if not donation:
+                return JsonResponse({'status': 'error', 'message': 'Donation not found'})
+            
+            if donation.status == 'completed':
+                return JsonResponse({'status': 'success', 'message': 'Already processed'})
+            
+            # Update donation
+            amount_paid = Decimal(data['amount']) / 100
+            donation.amount = amount_paid
+            donation.status = 'completed'
+            donation.completed_at = timezone.now()
+            donation.save()
+            
+            print(f"✅ Paystack webhook processed: ₦{amount_paid}")
+            
+            # Update stats
+            stats = CrusadeStats.get_stats()
+            stats.update_from_donations()
+            
+            # Send emails
+            try:
+                from .email_utils import send_all_donation_emails
+                prayer_request = PrayerRequest.objects.filter(donation=donation).first()
+                send_all_donation_emails(donation, prayer_request)
+            except Exception as e:
+                print(f"⚠️ Error sending emails: {str(e)}")
+        
+        return JsonResponse({'status': 'success'})
+        
+    except Exception as e:
+        print(f"❌ Webhook error: {str(e)}")
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
