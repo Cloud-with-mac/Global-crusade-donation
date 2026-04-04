@@ -339,6 +339,49 @@ Global Crusade Ministry
         return False
 
 
+def send_volunteer_confirmation(volunteer):
+    """Send beautiful HTML confirmation email to a new volunteer"""
+    dept_labels = {
+        'usher': 'Usher', 'evangelist': 'Evangelist', 'intercessor': 'Intercessor',
+        'choir': 'Choir', 'media': 'Media & AV', 'security': 'Security',
+        'welcome': 'Welcome Desk', 'children': "Children's Ministry",
+        'prayer': 'Prayer Team', 'parking': 'Parking',
+    }
+    experience_labels = {
+        'first': 'First-time volunteer', '1-2': '1–2 crusades',
+        '3-5': '3–5 crusades', '6+': '6+ crusades',
+    }
+    depts = volunteer.get_departments_list()
+    department = ', '.join(dept_labels.get(d, d) for d in depts) or '—'
+
+    context = {
+        'first_name': volunteer.first_name,
+        'last_name': volunteer.last_name,
+        'email': volunteer.email,
+        'phone': volunteer.phone,
+        'gender': volunteer.gender,
+        'department': department,
+        'experience': experience_labels.get(volunteer.experience, volunteer.experience or '—'),
+        'needs_transport': volunteer.needs_transport,
+    }
+
+    subject = '✝ Volunteer Registration Confirmed – Global Crusade Ministry'
+    from_email = settings.DEFAULT_FROM_EMAIL
+    to_email = volunteer.email
+
+    try:
+        html_content = render_to_string('emails/volunteer_confirmation.html', context)
+        text_content = strip_tags(html_content)
+        email = EmailMultiAlternatives(subject=subject, body=text_content, from_email=from_email, to=[to_email])
+        email.attach_alternative(html_content, 'text/html')
+        email.send()
+        print(f"✅ Volunteer confirmation sent to {to_email}")
+        return True
+    except Exception as e:
+        print(f"❌ Error sending volunteer confirmation: {str(e)}")
+        return False
+
+
 def send_all_donation_emails(donation, prayer_request=None):
     """
     Send all relevant emails for a new donation

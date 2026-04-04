@@ -1074,6 +1074,7 @@ Sent from Global Crusade Ministry Contact Form
 
 
 @login_required
+@login_required
 def delete_volunteer(request, volunteer_id):
     from .models import Volunteer
     volunteer = get_object_or_404(Volunteer, id=volunteer_id)
@@ -1144,7 +1145,7 @@ def ministry_volunteer(request):
     if request.method == 'POST':
         from .models import Volunteer
         departments = request.POST.getlist('dept')
-        Volunteer.objects.create(
+        volunteer = Volunteer.objects.create(
             first_name=request.POST.get('first_name', '').strip(),
             last_name=request.POST.get('last_name', '').strip(),
             email=request.POST.get('email', '').strip(),
@@ -1160,6 +1161,8 @@ def ministry_volunteer(request):
             special_skills=request.POST.get('special_skills', '').strip(),
             needs_transport=request.POST.get('needs_transport') == 'yes',
         )
+        from .email_utils import send_volunteer_confirmation
+        send_volunteer_confirmation(volunteer)
         return render(request, 'ministry/volunteer.html', {'success': True})
     return render(request, 'ministry/volunteer.html')
 
