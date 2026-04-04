@@ -341,3 +341,60 @@ class Testimony(models.Model):
     def get_initial(self):
         """Get first letter of name for avatar"""
         return self.name[0].upper() if self.name else "T"
+
+
+class Volunteer(models.Model):
+    """Model to store crusade volunteer registrations"""
+    GENDER_CHOICES = [('male', 'Male'), ('female', 'Female')]
+    SESSION_CHOICES = [
+        ('morning', 'Morning Sessions'),
+        ('evening', 'Evening Sessions'),
+        ('all', 'All Sessions'),
+        ('weekends', 'Weekends Only'),
+    ]
+    EXPERIENCE_CHOICES = [
+        ('first', 'First-time volunteer'),
+        ('1-2', '1–2 crusades'),
+        ('3-5', '3–5 crusades'),
+        ('6+', '6+ crusades'),
+    ]
+    DEPARTMENT_CHOICES = [
+        ('usher', 'Usher'),
+        ('evangelist', 'Evangelist'),
+        ('intercessor', 'Intercessor'),
+        ('choir', 'Choir'),
+        ('media', 'Media & AV'),
+        ('security', 'Security'),
+        ('welcome', 'Welcome Desk'),
+        ('children', "Children's Ministry"),
+        ('prayer', 'Prayer Team'),
+        ('parking', 'Parking'),
+    ]
+
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=30)
+    date_of_birth = models.DateField(blank=True, null=True)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True)
+    home_church = models.CharField(max_length=200, blank=True)
+
+    available_from = models.DateField(blank=True, null=True)
+    available_until = models.DateField(blank=True, null=True)
+    session_preference = models.CharField(max_length=20, choices=SESSION_CHOICES, blank=True)
+
+    departments = models.CharField(max_length=200, blank=True, help_text='Comma-separated department keys')
+    experience = models.CharField(max_length=10, choices=EXPERIENCE_CHOICES, blank=True)
+    special_skills = models.TextField(blank=True)
+    needs_transport = models.BooleanField(default=False)
+
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-submitted_at']
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+    def get_departments_list(self):
+        return [d.strip() for d in self.departments.split(',') if d.strip()]

@@ -4,14 +4,15 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import (
-    Donor, 
-    Donation, 
-    CrusadeStats, 
-    PrayerRequest, 
-    Newsletter, 
+    Donor,
+    Donation,
+    CrusadeStats,
+    PrayerRequest,
+    Newsletter,
     CrusadeFlyer,
     MinistryImage,
-    Testimony  # ⭐ NEW!
+    Testimony,
+    Volunteer,
 )
 
 
@@ -265,3 +266,76 @@ class TestimonyAdmin(admin.ModelAdmin):
         updated = queryset.update(is_active=False)
         self.message_user(request, f'{updated} testimony(ies) deactivated.')
     deactivate_testimonies.short_description = 'Deactivate selected testimonies'
+
+
+# ═══════════════════════════════════════════════════
+# VOLUNTEER ADMIN
+# ═══════════════════════════════════════════════════
+
+@admin.register(Volunteer)
+class VolunteerAdmin(admin.ModelAdmin):
+    list_display = [
+        'full_name', 'email', 'phone', 'gender',
+        'departments_display', 'session_preference', 'experience', 'submitted_at',
+    ]
+    list_filter = ['gender', 'session_preference', 'experience', 'submitted_at']
+    search_fields = ['first_name', 'last_name', 'email', 'phone', 'home_church']
+    readonly_fields = ['submitted_at']
+    date_hierarchy = 'submitted_at'
+
+    fieldsets = (
+        ('Personal Information', {
+            'fields': ('first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'gender', 'home_church')
+        }),
+        ('Availability', {
+            'fields': ('available_from', 'available_until', 'session_preference')
+        }),
+        ('Service Details', {
+            'fields': ('departments', 'experience', 'special_skills')
+        }),
+        ('Submission', {
+            'fields': ('submitted_at',),
+            'classes': ('collapse',)
+        }),
+    )
+
+    actions = ['export_as_csv']
+
+    def full_name(self, obj):
+        return f"{obj.first_name} {obj.last_name}"
+    full_name.short_description = 'Name'
+    full_name.admin_order_field = 'last_name'
+
+    def departments_display(self, obj):
+        dept_labels = {
+            'usher': 'Usher', 'evangelist': 'Evangelist', 'intercessor': 'Intercessor',
+            'choir': 'Choir', 'media': 'Media & AV', 'security': 'Security',
+            'welcome': 'Welcome Desk', 'children': "Children's Min.", 'prayer': 'Prayer Team',
+            'parking': 'Parking',
+        }
+        depts = obj.get_departments_list()
+        labels = [dept_labels.get(d, d) for d in depts]
+        return ', '.join(labels) if labels else '—'
+    departments_display.short_description = 'Departments'
+
+    def export_as_csv(self, request, queryset):
+        import csv
+        from django.http import HttpResponse
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="volunteers.csv"'
+        writer = csv.writer(response)
+        writer.writerow([
+            'First Name', 'Last Name', 'Email', 'Phone', 'Date of Birth',
+            'Gender', 'Home Church', 'Available From', 'Available Until',
+            'Session Preference', 'Departments', 'Experience', 'Special Skills', 'Submitted At',
+        ])
+        for v in queryset:
+            writer.writerow([
+                v.first_name, v.last_name, v.email, v.phone,
+                v.date_of_birth or '', v.gender, v.home_church,
+                v.available_from or '', v.available_until or '',
+                v.session_preference, v.departments, v.experience,
+                v.special_skills, v.submitted_at.strftime('%Y-%m-%d %H:%M'),
+            ])
+        return response
+    export_as_csv.short_description = 'Export selected volunteers as CSV'

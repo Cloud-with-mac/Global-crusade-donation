@@ -1073,6 +1073,83 @@ Sent from Global Crusade Ministry Contact Form
     return render(request, 'ministry/contact.html')
 
 
+@login_required
+def delete_volunteer(request, volunteer_id):
+    from .models import Volunteer
+    volunteer = get_object_or_404(Volunteer, id=volunteer_id)
+    if request.method == 'POST':
+        volunteer.delete()
+    return redirect('volunteers_list')
+
+
+@login_required
+def export_volunteers_csv(request):
+    """Export volunteers as CSV"""
+    import csv
+    from django.http import HttpResponse
+    from .models import Volunteer
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="volunteers.csv"'
+    writer = csv.writer(response)
+    writer.writerow([
+        'First Name', 'Last Name', 'Email', 'Phone', 'Date of Birth',
+        'Gender', 'Home Church', 'Available From', 'Available Until',
+        'Session Preference', 'Departments', 'Experience', 'Special Skills', 'Submitted At',
+    ])
+    for v in Volunteer.objects.order_by('-submitted_at'):
+        writer.writerow([
+            v.first_name, v.last_name, v.email, v.phone,
+            v.date_of_birth or '', v.gender, v.home_church,
+            v.available_from or '', v.available_until or '',
+            v.session_preference, v.departments, v.experience,
+            v.special_skills, v.submitted_at.strftime('%Y-%m-%d %H:%M'),
+        ])
+    return response
+
+
+@login_required
+def volunteers_list(request):
+    """Admin: list all volunteer registrations"""
+    from .models import Volunteer
+    dept_labels = {
+        'usher': 'Usher', 'evangelist': 'Evangelist', 'intercessor': 'Intercessor',
+        'choir': 'Choir', 'media': 'Media & AV', 'security': 'Security',
+        'welcome': 'Welcome Desk', 'children': "Children's Min.", 'prayer': 'Prayer Team',
+        'parking': 'Parking',
+    }
+    volunteers_qs = Volunteer.objects.order_by('-submitted_at')
+    for v in volunteers_qs:
+        v.dept_labels = ', '.join(dept_labels.get(d, d) for d in v.get_departments_list()) or '—'
+    context = {
+        'volunteers': volunteers_qs,
+        'total': volunteers_qs.count(),
+    }
+    return render(request, 'admin_dashboard/volunteers_list.html', context)
+
+
+def ministry_volunteer(request):
+    """Volunteer registration page"""
+    if request.method == 'POST':
+        from .models import Volunteer
+        departments = request.POST.getlist('dept')
+        Volunteer.objects.create(
+            first_name=request.POST.get('first_name', '').strip(),
+            last_name=request.POST.get('last_name', '').strip(),
+            email=request.POST.get('email', '').strip(),
+            phone=request.POST.get('phone', '').strip(),
+            date_of_birth=request.POST.get('date_of_birth') or None,
+            gender=request.POST.get('gender', ''),
+            home_church=request.POST.get('home_church', '').strip(),
+            available_from=request.POST.get('available_from') or None,
+            available_until=request.POST.get('available_until') or None,
+            session_preference=request.POST.get('session_preference', ''),
+            departments=','.join(departments),
+            experience=request.POST.get('experience', ''),
+            special_skills=request.POST.get('special_skills', '').strip(),
+            needs_transport=request.POST.get('needs_transport') == 'yes',
+        )
+        return render(request, 'ministry/volunteer.html', {'success': True})
+    return render(request, 'ministry/volunteer.html')
 
 
 

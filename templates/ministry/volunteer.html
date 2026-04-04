@@ -1,0 +1,654 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volunteer – Global Crusade Ministry</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8CC80;
+    --gold-dark: #8B6914;
+    --navy: #0A0E1A;
+    --navy-mid: #111829;
+    --navy-light: #1A2540;
+    --cream: #F5EDD8;
+    --cream-dim: #E8D9B8;
+    --text: #F0E6CC;
+    --text-dim: #9A8C6A;
+    --nav-bg: rgba(250,248,245,0.98);
+  }
+
+  body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(201,168,76,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 15%, rgba(201,168,76,0.3) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 50% 70%, rgba(201,168,76,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 80%, rgba(201,168,76,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 60%, rgba(201,168,76,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 50%, rgba(255,255,255,0.15) 0%, transparent 100%),
+      radial-gradient(1px 1px at 65% 40%, rgba(255,255,255,0.1) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 85%, rgba(255,255,255,0.12) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Navbar (matches site style) ── */
+  .navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .nav-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 5rem;
+  }
+  .brand { display: flex; align-items: center; gap: 1rem; text-decoration: none; }
+  .brand-icon {
+    width: 2.5rem; height: 2.5rem;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #d4a574, #e8c9a0);
+    border-radius: 8px; font-size: 1.5rem;
+  }
+  .brand-name { font-family: 'Cormorant Garamond', serif; font-size: 1.375rem; font-weight: 600; color: #0f1419; }
+  .brand-tagline { font-size: 0.75rem; color: #7a7269; text-transform: uppercase; letter-spacing: 0.08em; }
+  .nav-menu { display: flex; align-items: center; gap: 2rem; list-style: none; }
+  .nav-link {
+    position: relative; color: #3d3930; text-decoration: none;
+    font-weight: 500; font-size: 0.9375rem; transition: color 150ms;
+  }
+  .nav-link::after {
+    content: ''; position: absolute; bottom: -0.5rem; left: 0;
+    width: 0; height: 2px; background: #d4a574; transition: width 250ms;
+  }
+  .nav-link:hover { color: #0f1419; }
+  .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+  .nav-cta {
+    background: linear-gradient(135deg, #d4a574, #e8c9a0);
+    color: #fff; padding: 0.625rem 1.5rem; border-radius: 8px;
+    font-weight: 600; font-size: 0.9375rem; text-decoration: none;
+    transition: all 250ms;
+  }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .mobile-toggle {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 0.5rem;
+  }
+  .mobile-toggle span { width: 24px; height: 2px; background: #0f1419; border-radius: 2px; transition: all 250ms; }
+  .mobile-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(6px,6px); }
+  .mobile-toggle.active span:nth-child(2) { opacity: 0; }
+  .mobile-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(6px,-6px); }
+
+  @media (max-width: 768px) {
+    .nav-menu {
+      position: fixed; top: 5rem; left: 0; right: 0; bottom: 0;
+      background: #faf8f5; flex-direction: column; padding: 2rem;
+      gap: 1.5rem; opacity: 0; visibility: hidden;
+      transform: translateX(100%); transition: all 250ms; overflow-y: auto;
+    }
+    .nav-menu.active { opacity: 1; visibility: visible; transform: translateX(0); }
+    .nav-menu li { width: 100%; }
+    .nav-link, .nav-cta { display: block; padding: 1rem; text-align: center; font-size: 1.125rem; }
+    .nav-link::after { display: none; }
+    .mobile-toggle { display: flex; }
+  }
+
+  /* ── Page content ── */
+  .page-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 120px 24px 80px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+    animation: fadeDown 0.9s ease both;
+  }
+
+  .cross-ornament {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; margin-bottom: 24px;
+  }
+  .cross-ornament::before, .cross-ornament::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold));
+  }
+  .cross-ornament::after { background: linear-gradient(to left, transparent, var(--gold)); }
+  .cross-icon { font-size: 28px; color: var(--gold); filter: drop-shadow(0 0 12px rgba(201,168,76,0.6)); }
+
+  .header-badge {
+    display: inline-block;
+    border: 1px solid var(--gold-dark);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    padding: 6px 20px; margin-bottom: 20px;
+    background: rgba(201,168,76,0.05);
+  }
+
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700; color: var(--cream);
+    line-height: 1.15; letter-spacing: 2px;
+    text-shadow: 0 0 40px rgba(201,168,76,0.3);
+    margin-bottom: 12px;
+  }
+  h1 span { color: var(--gold); }
+
+  .header-sub {
+    font-family: 'EB Garamond', serif; font-style: italic;
+    font-size: 18px; color: var(--text-dim); letter-spacing: 0.5px;
+  }
+  .header-verse {
+    margin-top: 16px; font-family: 'EB Garamond', serif; font-style: italic;
+    font-size: 14px; color: var(--gold-dark); letter-spacing: 1px;
+  }
+
+  /* Success banner */
+  .success-banner {
+    background: rgba(201,168,76,0.12);
+    border: 1px solid var(--gold);
+    border-left: 4px solid var(--gold);
+    padding: 24px 32px;
+    margin-bottom: 32px;
+    text-align: center;
+    animation: fadeUp 0.6s ease both;
+  }
+  .success-banner h2 {
+    font-family: 'Cinzel', serif; font-size: 20px;
+    color: var(--gold); margin-bottom: 8px;
+  }
+  .success-banner p { font-family: 'EB Garamond', serif; font-style: italic; color: var(--text-dim); margin: 0; }
+
+  /* Form Card */
+  .form-card {
+    background: linear-gradient(160deg, rgba(26,37,64,0.9) 0%, rgba(11,15,27,0.95) 100%);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-top: 2px solid var(--gold);
+    padding: 48px 52px;
+    position: relative;
+    animation: fadeUp 0.9s ease 0.2s both;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(201,168,76,0.1);
+  }
+  .form-card::before {
+    content: ''; position: absolute; top: -1px; left: 10%; right: 10%;
+    height: 2px; background: linear-gradient(to right, transparent, var(--gold-light), transparent);
+  }
+
+  .corner { position: absolute; width: 20px; height: 20px; border-color: var(--gold-dark); border-style: solid; }
+  .corner.tl { top: 12px; left: 12px; border-width: 1px 0 0 1px; }
+  .corner.tr { top: 12px; right: 12px; border-width: 1px 1px 0 0; }
+  .corner.bl { bottom: 12px; left: 12px; border-width: 0 0 1px 1px; }
+  .corner.br { bottom: 12px; right: 12px; border-width: 0 1px 1px 0; }
+
+  .section-title {
+    font-family: 'Cinzel', serif; font-size: 11px;
+    letter-spacing: 4px; color: var(--gold); text-transform: uppercase;
+    margin: 36px 0 20px; display: flex; align-items: center; gap: 12px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, rgba(201,168,76,0.4), transparent); }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .field { margin-bottom: 20px; }
+
+  label {
+    display: block; font-family: 'Cinzel', serif; font-size: 10px;
+    letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 8px;
+  }
+
+  input[type="text"], input[type="email"], input[type="tel"],
+  input[type="date"], select, textarea {
+    width: 100%; background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-bottom: 1px solid rgba(201,168,76,0.4);
+    color: var(--cream); font-family: 'EB Garamond', serif;
+    font-size: 16px; padding: 12px 16px; outline: none;
+    transition: all 0.3s ease; -webkit-appearance: none; appearance: none;
+  }
+  input::placeholder, textarea::placeholder { color: rgba(240,230,204,0.25); }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold); background: rgba(201,168,76,0.05);
+    box-shadow: 0 4px 20px rgba(201,168,76,0.1);
+  }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9A84C' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center;
+    padding-right: 40px; cursor: pointer;
+  }
+  select option { background: var(--navy-light); color: var(--cream); }
+  textarea { resize: vertical; min-height: 90px; }
+
+  .dept-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px; margin-top: 4px;
+  }
+  .dept-item { position: relative; }
+  .dept-item input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+  .dept-item label {
+    display: flex; align-items: center; gap: 10px; cursor: pointer;
+    padding: 12px 14px; border: 1px solid rgba(201,168,76,0.15);
+    background: rgba(255,255,255,0.02); font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; letter-spacing: 1px; color: var(--text-dim);
+    text-transform: none; transition: all 0.25s ease;
+  }
+  .dept-item input[type="radio"]:checked + label {
+    border-color: var(--gold); background: rgba(201,168,76,0.1);
+    color: var(--gold-light); box-shadow: 0 0 16px rgba(201,168,76,0.1);
+  }
+  .dept-item label::before {
+    content: ''; width: 14px; height: 14px;
+    border: 1px solid rgba(201,168,76,0.4); flex-shrink: 0; transition: all 0.2s ease;
+  }
+  .dept-item input:checked + label::before {
+    background: var(--gold); border-color: var(--gold); box-shadow: 0 0 8px rgba(201,168,76,0.5);
+  }
+  .dept-icon { font-size: 16px; }
+
+  .submit-wrap { margin-top: 40px; text-align: center; }
+  .submit-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+    background-size: 200% 200%; color: var(--navy);
+    font-family: 'Cinzel', serif; font-size: 12px;
+    letter-spacing: 4px; text-transform: uppercase;
+    padding: 18px 56px; border: none; cursor: pointer;
+    transition: all 0.4s ease; position: relative; overflow: hidden;
+  }
+  .submit-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+    transform: translateX(-100%); transition: transform 0.5s ease;
+  }
+  .submit-btn:hover::before { transform: translateX(100%); }
+  .submit-btn:hover {
+    background-position: right center;
+    box-shadow: 0 8px 32px rgba(201,168,76,0.4);
+    transform: translateY(-2px);
+  }
+  .submit-note {
+    margin-top: 16px; font-family: 'EB Garamond', serif;
+    font-style: italic; font-size: 13px; color: var(--text-dim);
+  }
+
+  .footer-ornament {
+    text-align: center; margin-top: 40px; color: var(--gold-dark);
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px;
+    animation: fadeUp 1s ease 0.5s both;
+  }
+
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp   { from { opacity: 0; transform: translateY(24px);  } to { opacity: 1; transform: translateY(0); } }
+
+  /* Transport options */
+  .transport-options { display: flex; flex-direction: column; gap: 12px; }
+  .transport-item { position: relative; }
+  .transport-item input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+  .transport-label {
+    display: flex; align-items: center; gap: 16px; cursor: pointer;
+    padding: 16px 20px; border: 1px solid rgba(201,168,76,0.2);
+    background: rgba(255,255,255,0.02);
+    transition: all 0.25s ease;
+  }
+  .transport-item input:checked + .transport-label {
+    border-color: var(--gold); background: rgba(201,168,76,0.1);
+    box-shadow: 0 0 16px rgba(201,168,76,0.1);
+  }
+  .transport-icon { font-size: 28px; flex-shrink: 0; }
+  .transport-text { display: flex; flex-direction: column; gap: 2px; }
+  .transport-text strong { font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 1px; color: var(--cream); }
+  .transport-text small { font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px; color: var(--text-dim); }
+
+  @media (max-width: 600px) {
+    .form-card { padding: 32px 24px; }
+    .field-row { grid-template-columns: 1fr; }
+  }
+
+  /* Toast notification */
+  .toast {
+    position: fixed;
+    top: 90px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #1a2540, #0e1624);
+    border: 1px solid var(--gold);
+    border-left: 4px solid var(--gold);
+    color: var(--cream);
+    padding: 16px 22px;
+    min-width: 280px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    transform: translateX(120%);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .toast.show { transform: translateX(0); }
+  .toast-icon { font-size: 22px; flex-shrink: 0; }
+  .toast-text strong { display: block; color: var(--gold); margin-bottom: 2px; }
+  .toast-text span { font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px; color: var(--text-dim); letter-spacing: 0; }
+  .toast-progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 3px;
+    background: var(--gold);
+    width: 100%;
+    transform-origin: left;
+    animation: shrink 3.5s linear forwards;
+  }
+  @keyframes shrink { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+</style>
+</head>
+<body>
+
+<!-- Toast -->
+<div class="toast" id="successToast">
+  <div class="toast-icon">✝</div>
+  <div class="toast-text">
+    <strong>Registration Successful</strong>
+    <span>Thank you for answering the call!</span>
+  </div>
+  <div class="toast-progress"></div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="{% url 'ministry_home' %}" class="brand">
+      <div class="brand-icon">✝</div>
+      <div class="brand-text">
+        <span class="brand-name">Global Crusade</span>
+        <span class="brand-tagline">OUTREACH</span>
+      </div>
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="{% url 'ministry_home' %}" class="nav-link">Home</a></li>
+      <li><a href="{% url 'ministry_about' %}" class="nav-link">About</a></li>
+      <li><a href="{% url 'ministry_crusades' %}" class="nav-link">Crusades</a></li>
+      <li><a href="{% url 'ministry_testimonies' %}" class="nav-link">Testimonies</a></li>
+      <li><a href="{% url 'ministry_volunteer' %}" class="nav-link active">Volunteer</a></li>
+      <li><a href="{% url 'ministry_contact' %}" class="nav-link">Contact</a></li>
+      <li><a href="{% url 'donation_page' %}" class="nav-cta">Donate</a></li>
+    </ul>
+    <button class="mobile-toggle" id="mobileToggle">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-badge">Holy Spirit Revival</div>
+    <div class="cross-ornament"><span class="cross-icon">✝</span></div>
+    <h1>CRUSADE <span>VOLUNTEER</span><br>REGISTRATION</h1>
+    <p class="header-sub">Join the Army of the Lord</p>
+    <p class="header-verse">"Here am I. Send me." — Isaiah 6:8</p>
+  </div>
+
+  {% if success %}
+  <div class="success-banner">
+    <h2>✝ Registration Received</h2>
+    <p>Thank you for answering the call. We will be in touch with you shortly. God bless you!</p>
+  </div>
+  {% endif %}
+
+  <!-- Form -->
+  <div class="form-card">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+
+    <form method="POST" action="{% url 'ministry_volunteer' %}">
+      {% csrf_token %}
+
+      <!-- Personal Info -->
+      <div class="section-title">Personal Information</div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="first_name">First Name</label>
+          <input type="text" id="first_name" name="first_name" placeholder="John" required>
+        </div>
+        <div class="field">
+          <label for="last_name">Last Name</label>
+          <input type="text" id="last_name" name="last_name" placeholder="Doe" required>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <label for="phone">Phone Number (Nigeria only)</label>
+          <input type="tel" id="phone" name="phone" placeholder="+234 800 000 0000 or 080 0000 0000" required>
+          <div id="phone-error" style="color:#e53e3e; font-size:12px; margin-top:6px; display:none;">
+            ✕ Please enter a valid Nigerian phone number (+234 or 0 followed by 10 digits).
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="date_of_birth">Date of Birth</label>
+          <input type="date" id="date_of_birth" name="date_of_birth">
+        </div>
+        <div class="field">
+          <label for="gender">Gender</label>
+          <select id="gender" name="gender">
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Department -->
+      <div class="section-title">Choose Your Department</div>
+
+      <div class="dept-grid">
+        <div class="dept-item">
+          <input type="radio" id="usher" name="dept" value="usher">
+          <label for="usher"><span class="dept-icon">🕊</span> Usher</label>
+        </div>
+        <div class="dept-item">
+          <input type="radio" id="evangelist" name="dept" value="evangelist">
+          <label for="evangelist"><span class="dept-icon">📖</span> Evangelist</label>
+        </div>
+        <div class="dept-item">
+          <input type="radio" id="intercessor" name="dept" value="intercessor">
+          <label for="intercessor"><span class="dept-icon">🙏</span> Intercessor</label>
+        </div>
+        <div class="dept-item">
+          <input type="radio" id="choir" name="dept" value="choir">
+          <label for="choir"><span class="dept-icon">🎵</span> Choir</label>
+        </div>
+        <div class="dept-item">
+          <input type="radio" id="media" name="dept" value="media">
+          <label for="media"><span class="dept-icon">📹</span> Media & AV</label>
+        </div>
+        <div class="dept-item">
+          <input type="radio" id="security" name="dept" value="security">
+          <label for="security"><span class="dept-icon">🛡</span> Security</label>
+        </div>
+        <div class="dept-item">
+          <input type="radio" id="welcome" name="dept" value="welcome">
+          <label for="welcome"><span class="dept-icon">🤝</span> Welcome Desk</label>
+        </div>
+        <div class="dept-item">
+          <input type="radio" id="children" name="dept" value="children">
+          <label for="children"><span class="dept-icon">👶</span> Children's Min.</label>
+        </div>
+        <div class="dept-item">
+          <input type="radio" id="prayer" name="dept" value="prayer">
+          <label for="prayer"><span class="dept-icon">✝</span> Prayer Team</label>
+        </div>
+        <div class="dept-item">
+          <input type="radio" id="parking" name="dept" value="parking">
+          <label for="parking"><span class="dept-icon">🚗</span> Parking</label>
+        </div>
+      </div>
+
+      <!-- Experience -->
+      <div class="section-title">Your Testimony</div>
+
+      <div class="field">
+        <label for="experience">Prior Volunteer Experience</label>
+        <select id="experience" name="experience">
+          <option value="">Select experience level</option>
+          <option value="first">First-time volunteer</option>
+          <option value="1-2">1–2 crusades</option>
+          <option value="3-5">3–5 crusades</option>
+          <option value="6+">6+ crusades</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="special_skills">Special Skills or Message</label>
+        <textarea id="special_skills" name="special_skills" placeholder="Share any special gifts, skills, or a brief message to the organizers..."></textarea>
+      </div>
+
+      <!-- Transport -->
+      <div class="section-title">Free Transport</div>
+
+      <div class="field">
+        <label>Do you need transport to the crusade venue?</label>
+        <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:var(--gold-dark); margin-bottom:14px;">
+          We are providing free transport for all volunteers. Let us know if you need a pickup.
+        </p>
+        <div class="transport-options">
+          <div class="transport-item">
+            <input type="radio" id="transport_yes" name="needs_transport" value="yes" required>
+            <label for="transport_yes" class="transport-label">
+              <span class="transport-icon">🚌</span>
+              <span class="transport-text">
+                <strong>Yes, I need transport</strong>
+                <small>We will arrange a free pickup for you</small>
+              </span>
+            </label>
+          </div>
+          <div class="transport-item">
+            <input type="radio" id="transport_no" name="needs_transport" value="no" required>
+            <label for="transport_no" class="transport-label">
+              <span class="transport-icon">🚗</span>
+              <span class="transport-text">
+                <strong>No, I have my own transport</strong>
+                <small>I will make my own way to the venue</small>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-wrap">
+        <button type="submit" class="submit-btn">Answer the Call</button>
+        <p class="submit-note">Your information is sacred and handled with care.</p>
+      </div>
+
+    </form>
+  </div>
+
+  <div class="footer-ornament">✦ &nbsp; GLORY &nbsp; ✦ &nbsp; GRACE &nbsp; ✦ &nbsp; GOSPEL &nbsp; ✦</div>
+
+</div>
+
+<script>
+  const toggle = document.getElementById('mobileToggle');
+  const menu = document.getElementById('navMenu');
+  toggle.addEventListener('click', () => {
+    toggle.classList.toggle('active');
+    menu.classList.toggle('active');
+  });
+
+  // Show toast on success
+  {% if success %}
+  (function() {
+    const toast = document.getElementById('successToast');
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => toast.classList.remove('show'), 4000);
+  })();
+  {% endif %}
+
+  // Nigeria phone validation
+  // Valid formats: +2340XXXXXXXXXX, 0XXXXXXXXXX (11 digits starting with 0)
+  const phoneInput = document.getElementById('phone');
+  const phoneError = document.getElementById('phone-error');
+
+  function isValidNigerianPhone(val) {
+    const cleaned = val.replace(/[\s\-().]/g, '');
+    // +234 followed by 10 digits (no leading 0 after country code)
+    if (/^\+234[789]\d{9}$/.test(cleaned)) return true;
+    // Local format: 0 followed by 10 digits
+    if (/^0[789]\d{9}$/.test(cleaned)) return true;
+    return false;
+  }
+
+  phoneInput.addEventListener('input', () => {
+    if (phoneInput.value && !isValidNigerianPhone(phoneInput.value)) {
+      phoneError.style.display = 'block';
+      phoneInput.style.borderColor = '#e53e3e';
+    } else {
+      phoneError.style.display = 'none';
+      phoneInput.style.borderColor = '';
+    }
+  });
+
+  document.querySelector('form').addEventListener('submit', (e) => {
+    if (!isValidNigerianPhone(phoneInput.value)) {
+      e.preventDefault();
+      phoneError.style.display = 'block';
+      phoneInput.style.borderColor = '#e53e3e';
+      phoneInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+</script>
+</body>
+</html>

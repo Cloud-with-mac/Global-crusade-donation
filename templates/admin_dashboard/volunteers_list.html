@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteers | Global Crusade Ministry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-dark: #0f1419;
+            --navy-base: #1a2332;
+            --gold-base: #d4a574;
+            --gold-light: #e8c9a0;
+            --gold-dark: #b88a5f;
+            --cream: #faf8f5;
+            --warm-white: #ffffff;
+            --gray-50: #f9f7f4;
+            --gray-200: #e2ddd5;
+            --gray-500: #7a7269;
+            --gray-700: #3d3930;
+            --success: #10b981;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { font-family: var(--font-body); background: var(--cream); color: var(--gray-700); }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed; top: 0; left: 0; height: 100vh; width: 260px;
+            background: linear-gradient(180deg, var(--navy-base), var(--navy-dark));
+            padding: 2rem 0; z-index: 1000; box-shadow: 4px 0 12px rgba(0,0,0,0.1);
+        }
+        .sidebar-brand {
+            color: var(--warm-white); font-family: var(--font-display); font-size: 1.5rem;
+            font-weight: 700; padding: 0 1.5rem; margin-bottom: 2rem;
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+        .sidebar-icon {
+            width: 2.5rem; height: 2.5rem;
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
+        }
+        .sidebar-nav { list-style: none; }
+        .sidebar-nav li { margin-bottom: 0.5rem; }
+        .sidebar-nav a {
+            display: block; padding: 0.75rem 1.5rem; color: rgba(255,255,255,0.7);
+            text-decoration: none; font-size: 0.9375rem; font-weight: 500;
+            transition: all 0.2s; border-left: 3px solid transparent;
+        }
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            color: var(--warm-white); background: rgba(255,255,255,0.08);
+            border-left-color: var(--gold-base);
+        }
+
+        /* Main */
+        .main-content { margin-left: 260px; padding: 2rem; min-height: 100vh; }
+
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 2rem; background: var(--navy-dark);
+            padding: 1.5rem 2rem; border-radius: 12px; color: var(--warm-white);
+        }
+        .header h1 { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; }
+        .header p { color: rgba(255,255,255,0.7); margin-top: 0.25rem; font-size: 0.9375rem; }
+
+        .btn-export {
+            background: linear-gradient(135deg, var(--gold-base), var(--gold-light));
+            color: var(--navy-dark); padding: 0.75rem 1.5rem; border-radius: 8px;
+            font-weight: 600; text-decoration: none; font-size: 0.875rem;
+            white-space: nowrap; transition: all 0.2s;
+        }
+        .btn-export:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(212,165,116,0.4); }
+
+        .stat-card {
+            background: var(--warm-white); border-radius: 12px;
+            padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+        }
+        .stat-icon { font-size: 2.5rem; }
+        .stat-label { font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray-500); }
+        .stat-value { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--navy-dark); line-height: 1; }
+
+        .table-card {
+            background: var(--warm-white); border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: var(--navy-dark); color: var(--warm-white); }
+        th { padding: 1rem 1.25rem; text-align: left; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+        td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200); font-size: 0.9375rem; vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--gray-50); }
+
+        .badge {
+            display: inline-block; padding: 0.25rem 0.625rem; border-radius: 100px;
+            font-size: 0.75rem; font-weight: 600; white-space: nowrap;
+        }
+        .badge-male   { background: #dbeafe; color: #1d4ed8; }
+        .badge-female { background: #fce7f3; color: #be185d; }
+        .badge-dept   { background: rgba(212,165,116,0.15); color: var(--gold-dark); margin: 2px; }
+
+        .empty-state { text-align: center; padding: 4rem 2rem; color: var(--gray-500); }
+        .empty-icon  { font-size: 4rem; margin-bottom: 1rem; opacity: 0.5; }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; }
+            .header { flex-direction: column; gap: 1rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="sidebar-brand">
+        <div class="sidebar-icon">✝</div>
+        <span>Ministry</span>
+    </div>
+    <ul class="sidebar-nav">
+        <li><a href="{% url 'admin_dashboard' %}">📊 Dashboard</a></li>
+        <li><a href="{% url 'donations_list' %}">💰 Donations</a></li>
+        <li><a href="{% url 'donors_list' %}">👥 Donors</a></li>
+        <li><a href="{% url 'prayer_requests_list' %}">🙏 Prayers</a></li>
+        <li><a href="{% url 'volunteers_list' %}" class="active">🕊 Volunteers</a></li>
+        <li><a href="{% url 'dashboard_settings' %}">⚙️ Settings</a></li>
+        <li><a href="{% url 'ministry_home' %}">🏠 Ministry Site</a></li>
+        <li><a href="{% url 'donation_page' %}">💵 Donation Page</a></li>
+        <li><a href="{% url 'dashboard_logout' %}">🚪 Logout</a></li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="header">
+        <div>
+            <h1>🕊 Volunteers</h1>
+            <p>All crusade volunteer registrations</p>
+        </div>
+        <a href="{% url 'export_volunteers_csv' %}" class="btn-export">📥 Export CSV</a>
+    </div>
+
+    <!-- Stat -->
+    <div class="stat-card">
+        <div class="stat-icon">🕊</div>
+        <div>
+            <div class="stat-label">Total Volunteers</div>
+            <div class="stat-value">{{ total }}</div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+        {% if volunteers %}
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Departments</th>
+                        <th>Experience</th>
+                        <th>Transport</th>
+                        <th>Registered</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in volunteers %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><strong style="color: var(--navy-dark);">{{ v.first_name }} {{ v.last_name }}</strong></td>
+                        <td>{{ v.email }}</td>
+                        <td>{{ v.phone }}</td>
+                        <td>
+                            {% if v.gender == 'male' %}
+                                <span class="badge badge-male">Male</span>
+                            {% elif v.gender == 'female' %}
+                                <span class="badge badge-female">Female</span>
+                            {% else %}—{% endif %}
+                        </td>
+                        <td>
+                            {% for dept in v.get_departments_list %}
+                                <span class="badge badge-dept">{{ dept }}</span>
+                            {% empty %}—{% endfor %}
+                        </td>
+                        <td>{{ v.get_experience_display|default:"—" }}</td>
+                        <td>
+                          {% if v.needs_transport %}
+                            <span class="badge" style="background:#dcfce7;color:#166534;">🚌 Yes</span>
+                          {% else %}
+                            <span class="badge" style="background:#f1f5f9;color:#64748b;">🚗 No</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ v.submitted_at|date:"M d, Y" }}</td>
+                        <td>
+                            <form method="POST" action="{% url 'delete_volunteer' v.id %}"
+                                  onsubmit="return confirm('Delete {{ v.first_name }} {{ v.last_name }}? This cannot be undone.');">
+                                {% csrf_token %}
+                                <button type="submit" style="background:#ef4444;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:0.8125rem;font-weight:600;cursor:pointer;transition:background 0.2s;"
+                                        onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">
+                                    🗑 Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🕊</div>
+            <h3 style="color: var(--navy-dark); margin-bottom: 0.5rem;">No Volunteers Yet</h3>
+            <p>When people register to volunteer, they'll appear here.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

@@ -47,4 +47,8 @@ urlpatterns = [
     path('crusades/', views.ministry_crusades, name='ministry_crusades'),
     path('testimonies/', views.ministry_testimonies, name='ministry_testimonies'),
     path('contact/', views.ministry_contact, name='ministry_contact'),
+    path('volunteer/', views.ministry_volunteer, name='ministry_volunteer'),
+    path('dashboard/volunteers/', views.volunteers_list, name='volunteers_list'),
+    path('export/volunteers/', views.export_volunteers_csv, name='export_volunteers_csv'),
+    path('dashboard/volunteers/<int:volunteer_id>/delete/', views.delete_volunteer, name='delete_volunteer'),
 ]
