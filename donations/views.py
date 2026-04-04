@@ -1092,17 +1092,29 @@ def export_volunteers_csv(request):
     response['Content-Disposition'] = 'attachment; filename="volunteers.csv"'
     writer = csv.writer(response)
     writer.writerow([
-        'First Name', 'Last Name', 'Email', 'Phone', 'Date of Birth',
-        'Gender', 'Home Church', 'Available From', 'Available Until',
-        'Session Preference', 'Departments', 'Experience', 'Special Skills', 'Submitted At',
+        'First Name', 'Last Name', 'Email', 'Phone',
+        'Gender', 'Departments', 'Experience', 'Needs Transport', 'Special Skills', 'Submitted At',
     ])
+    dept_labels = {
+        'usher': 'Usher', 'evangelist': 'Evangelist', 'intercessor': 'Intercessor',
+        'choir': 'Choir', 'media': 'Media & AV', 'security': 'Security',
+        'welcome': 'Welcome Desk', 'children': "Children's Ministry",
+        'prayer': 'Prayer Team', 'parking': 'Parking',
+    }
     for v in Volunteer.objects.order_by('-submitted_at'):
+        depts = ', '.join(dept_labels.get(d, d) for d in v.get_departments_list())
         writer.writerow([
-            v.first_name, v.last_name, v.email, v.phone,
-            v.date_of_birth or '', v.gender, v.home_church,
-            v.available_from or '', v.available_until or '',
-            v.session_preference, v.departments, v.experience,
-            v.special_skills, v.submitted_at.strftime('%Y-%m-%d %H:%M'),
+            v.first_name,
+            v.last_name,
+            v.email,
+            # Prefix with tab so Excel treats phone as text, not scientific notation
+            '\t' + v.phone,
+            v.get_gender_display() if v.gender else '',
+            depts,
+            v.get_experience_display() if v.experience else '',
+            'Yes' if v.needs_transport else 'No',
+            v.special_skills,
+            v.submitted_at.strftime('%Y-%m-%d %H:%M'),
         ])
     return response
 
