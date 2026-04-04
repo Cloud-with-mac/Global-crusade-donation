@@ -1145,6 +1145,16 @@ def ministry_volunteer(request):
     if request.method == 'POST':
         from .models import Volunteer
         departments = request.POST.getlist('dept')
+        # Server-side age check
+        from datetime import date
+        dob_str = request.POST.get('date_of_birth')
+        if dob_str:
+            dob = date.fromisoformat(dob_str)
+            today = date.today()
+            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+            if age < 18:
+                return render(request, 'ministry/volunteer.html', {'age_error': True})
+
         volunteer = Volunteer.objects.create(
             first_name=request.POST.get('first_name', '').strip(),
             last_name=request.POST.get('last_name', '').strip(),

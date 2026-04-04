@@ -479,6 +479,9 @@
         <div class="field">
           <label for="date_of_birth">Date of Birth</label>
           <input type="date" id="date_of_birth" name="date_of_birth">
+          <div id="dob-error" style="color:#e53e3e;font-size:12px;margin-top:6px;display:{% if age_error %}block{% else %}none{% endif %};">
+            ✕ You must be at least 18 years old to volunteer.
+          </div>
         </div>
         <div class="field">
           <label for="gender">Gender</label>
@@ -617,6 +620,35 @@
   })();
   {% endif %}
 
+  // Date of birth – must be 18+
+  const dobInput = document.getElementById('date_of_birth');
+  const dobError = document.getElementById('dob-error');
+
+  function isAtLeast18(dateStr) {
+    if (!dateStr) return true; // field is optional; server won't block empty
+    const dob = new Date(dateStr);
+    const today = new Date();
+    const cutoff = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    return dob <= cutoff;
+  }
+
+  // Set max date to today minus 18 years so the date picker itself limits selection
+  (function() {
+    const today = new Date();
+    const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    dobInput.max = maxDate.toISOString().split('T')[0];
+  })();
+
+  dobInput.addEventListener('change', () => {
+    if (!isAtLeast18(dobInput.value)) {
+      dobError.style.display = 'block';
+      dobInput.style.borderColor = '#e53e3e';
+    } else {
+      dobError.style.display = 'none';
+      dobInput.style.borderColor = '';
+    }
+  });
+
   // Nigeria phone validation
   // Valid formats: +2340XXXXXXXXXX, 0XXXXXXXXXX (11 digits starting with 0)
   const phoneInput = document.getElementById('phone');
@@ -642,11 +674,21 @@
   });
 
   document.querySelector('form').addEventListener('submit', (e) => {
+    let blocked = false;
+
+    if (!isAtLeast18(dobInput.value) && dobInput.value) {
+      e.preventDefault();
+      dobError.style.display = 'block';
+      dobInput.style.borderColor = '#e53e3e';
+      dobInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      blocked = true;
+    }
+
     if (!isValidNigerianPhone(phoneInput.value)) {
       e.preventDefault();
       phoneError.style.display = 'block';
       phoneInput.style.borderColor = '#e53e3e';
-      phoneInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (!blocked) phoneInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   });
 </script>
