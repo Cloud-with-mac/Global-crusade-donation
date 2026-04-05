@@ -384,7 +384,17 @@
 </head>
 <body>
 
-<!-- Toast -->
+<!-- Duplicate phone toast -->
+<div class="toast" id="duplicateToast" style="border-left-color:#e53e3e;border-color:rgba(229,62,62,0.5);">
+  <div class="toast-icon">⚠</div>
+  <div class="toast-text">
+    <strong style="color:#fc8181;">Already Registered</strong>
+    <span>This phone number is already registered. Each volunteer can only register once.</span>
+  </div>
+  <div class="toast-progress" style="background:#e53e3e;"></div>
+</div>
+
+<!-- Success toast -->
 <div class="toast" id="successToast">
   <div class="toast-icon">✝</div>
   <div class="toast-text">
@@ -615,6 +625,15 @@
     const toast = document.getElementById('successToast');
     setTimeout(() => toast.classList.add('show'), 100);
     setTimeout(() => toast.classList.remove('show'), 4000);
+  })();
+  {% endif %}
+
+  // Show toast on duplicate phone
+  {% if duplicate_phone %}
+  (function() {
+    const toast = document.getElementById('duplicateToast');
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => toast.classList.remove('show'), 5000);
   })();
   {% endif %}
 
