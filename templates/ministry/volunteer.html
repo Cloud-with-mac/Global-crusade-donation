@@ -468,9 +468,11 @@
         </div>
         <div class="field">
           <label for="phone">Phone Number (Nigeria only)</label>
-          <input type="tel" id="phone" name="phone" placeholder="+234 800 000 0000 or 080 0000 0000" required>
-          <div id="phone-error" style="color:#e53e3e; font-size:12px; margin-top:6px; display:none;">
-            ✕ Please enter a valid Nigerian phone number (+234 or 0 followed by 10 digits).
+          <input type="tel" id="phone" name="phone" placeholder="+234 800 000 0000 or 080 0000 0000" required
+                 style="{% if duplicate_phone %}border-color:#e53e3e;{% endif %}">
+          <div id="phone-error" style="color:#e53e3e;font-size:12px;margin-top:6px;display:{% if duplicate_phone %}block{% else %}none{% endif %};">
+            {% if duplicate_phone %}✕ This phone number is already registered. Each volunteer can only register once.
+            {% else %}✕ Please enter a valid Nigerian phone number (+234 or 0 followed by 10 digits).{% endif %}
           </div>
         </div>
       </div>
@@ -530,12 +532,8 @@
           <label for="children"><span class="dept-icon">👶</span> Children's Min.</label>
         </div>
         <div class="dept-item">
-          <input type="radio" id="prayer" name="dept" value="prayer">
-          <label for="prayer"><span class="dept-icon">✝</span> Prayer Team</label>
-        </div>
-        <div class="dept-item">
-          <input type="radio" id="parking" name="dept" value="parking">
-          <label for="parking"><span class="dept-icon">🚗</span> Parking</label>
+          <input type="radio" id="none" name="dept" value="none">
+          <label for="none"><span class="dept-icon">—</span> None</label>
         </div>
       </div>
 

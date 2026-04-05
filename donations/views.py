@@ -1145,6 +1145,11 @@ def ministry_volunteer(request):
     if request.method == 'POST':
         from .models import Volunteer
         departments = request.POST.getlist('dept')
+        # Check for duplicate phone number
+        phone = request.POST.get('phone', '').strip()
+        if Volunteer.objects.filter(phone=phone).exists():
+            return render(request, 'ministry/volunteer.html', {'duplicate_phone': True})
+
         # Server-side age check
         from datetime import date
         dob_str = request.POST.get('date_of_birth')
